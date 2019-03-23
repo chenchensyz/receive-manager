@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('注册页')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/regiest.css}">
+</head>
+
+<body>
+<div class="login_box">
+    <div class="login_l_img"><img th:src="@{/img/login-img.png}"/></div>
+    <div class="login">
+        <div class="regiest_name">
+            <p>注册账号</p>
+        </div>
+        <form id="regiestForm" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
+            <span class="errorMsg"></span>
+            <div class="layui-form-item company-div">
+                <label class="layui-form-label">公司名称</label>
+                <div class="layui-input-inline">
+                    <input  name="companyName" lay-verify="companyName" class="layui-input" type="text"/>
+                </div>
+                <label class="layui-form-label">联系电话</label>
+                <div class="layui-input-inline">
+                    <input  name="companyPhone"  class="layui-input" type="text"/>
+                </div>
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input  name="companyEmail"  class="layui-input" type="text"/>
+                </div>
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    <input  name="remark" class="layui-input" type="text"/>
+                </div>
+                <button class="layui-btn next-btn" type="button">下一步</button>
+            </div>
+
+            <div class="layui-form-item user-div" style="display: none">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input  name="userId" lay-verify="required" class="layui-input" type="text"/>
+                </div>
+                <label class="layui-form-label">昵称</label>
+                <div class="layui-input-inline">
+                    <input  name="nickName" lay-verify="required" class="layui-input" type="text"/>
+                </div>
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                    <input  name="password" lay-verify="required" class="layui-input" type="password"/>
+                </div>
+                <label class="layui-form-label">确认密码</label>
+                <div class="layui-input-inline">
+                    <input  name="cofirmPwd" lay-verify="required" class="layui-input confirm" type="password"/>
+                </div>
+                <label class="layui-form-label">联系电话</label>
+                <div class="layui-input-inline">
+                    <input  name="telephone"  class="layui-input" type="text"/>
+                </div>
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input  name="email" class="layui-input" type="text"/>
+                </div>
+               <button class="layui-btn before-btn" type="button" style="margin-left: 58px">上一步</button>
+               <button class="layui-btn regiest-btn" lay-submit="" lay-filter="regiestUser">注册用户</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div style="text-align:center;"></div>
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/js/regiest.js}"></script>
+</body>
+</html>

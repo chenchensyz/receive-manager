@@ -1,0 +1,27 @@
+.layui-layout-admin .layui-body {
+    top: 0px;
+    bottom: 44px;
+}
+
+.layui-layout-admin .layui-footer {
+    border-top: 1px solid #92bae1;
+    position: fixed;
+    left: 0px !important;
+    background-color: #eaf2f9;
+}
+.back-btn {
+    margin-top: 7px;
+}
+
+.lay-head-hr, .layui-table-box, .layui-table-view {
+    margin-right: 0px
+}
+
+.layui-table-body{
+    overflow: hidden;
+}
+
+/*修改密码弹出层*/
+.layer_self_wrap .layui-form-label{
+    width: 114px!important;
+}

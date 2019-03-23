@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.CompanyUserMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.cyber.model.CompanyUser" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+
+    <collection property="companyInfo" ofType="cn.com.cyber.model.CompanyInfo" column="company_id">
+      <result column="company_name"  property="companyName" />
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, company_id, user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from company_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from company_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="cn.com.cyber.model.CompanyUser" >
+    insert into company_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.cyber.model.CompanyUser" >
+    update company_user
+    <set >
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <sql id="sql_where" >
+    <where >
+      <if test="id != null" >
+         and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="companyId != null" >
+         and company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null and userId !=''" >
+         and user_id = #{userId,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.CompanyUser" >
+     select * from company_user
+    <include refid="sql_where" />
+  </select>
+
+  <delete id="deleteByCompanyId"  parameterType="long" >
+     delete from company_user where company_id = #{companyId}
+  </delete>
+
+  <select id="getUserCompanyInfo" resultMap="BaseResultMap" parameterType="string" >
+    SELECT cu.*,ci.company_name,ci.owner
+    FROM company_user cu,company_info ci
+    WHERE ci.id=cu.company_id and cu.user_id=#{userId}
+  </select>
+
+</mapper>

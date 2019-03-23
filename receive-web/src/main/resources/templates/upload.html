@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+   <form action="" method="post" enctype="multipart/form-data" >
+       <input type="file" name="file">
+       <input type="text" name="introduction" value="dgdfgdfgf">
+       <input type="text" name="size" value="1234556">
+       <input type="hidden" name="appKey" value="8B4920C5CAB74D8CB90C14E5D0FDC3AE">
+       <input type="hidden" name="serviceKey" value="3124E2E9E1774168866757E05B556CEB">
+       <input type="submit" value="提交">
+   </form>
+<div th:include="head :: commonjs"></div>
+<script>
+$(function() {
+  $('form').attr('action', getRootPath()+'/file/upload')
+
+  // var u = navigator.userAgent;
+  // var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+  // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+  // var isWeixin = u.toLowerCase().indexOf('micromessenger') != -1;
+  // alert('是否是Android：'+isAndroid);
+  // alert('是否是iOS：'+isiOS);
+  // alert('是否是微信：'+isWeixin);
+});
+
+</script>
+</body>
+</html>

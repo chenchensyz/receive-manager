@@ -1,0 +1,57 @@
+/*
+ * em-label
+ * badge
+ */
+.emlabel, .badge {
+  font-size: @baseFontSize * .9;
+  line-height: 1.2em;
+  color: @white;
+  vertical-align: baseline;
+  white-space: nowrap;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+  background-color: @primaryText;
+}
+.emlabel {
+  padding: 1px 4px 2px;
+  .border-radius(3px);
+}
+.badge {
+  padding: 1px 7px;
+  .border-radius(10px);
+}
+// Hover state, but only for links
+a {
+  &.emlabel:hover,
+  &.badge:hover {
+    color: @white;
+    text-decoration: none;
+  }
+}
+
+// style
+.emlabel, .badge {
+  // minor
+  &-minor {
+    background-color: @minorText;
+  }
+  // Important
+  &-important, &-error{
+    background-color: @errorText;
+  }
+  // Inverse
+  &-inverse {
+    background-color: @inverseText;
+  }
+  // Warn
+  &-warn {
+    background-color: @warnText;
+  }
+  // Success
+  &-success {
+    background-color: @successText;
+  }
+  // Info
+  &-info {
+    background-color: @infoText;
+  }
+}

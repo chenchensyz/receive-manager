@@ -1,0 +1,56 @@
+/**
+ * panel 面板
+ */
+.panel {
+  overflow:hidden;
+}
+.panel-title {
+  padding: 5px;
+  border: 1px solid @panelBorderColor;
+  background-color: @panelTitleBgColor;
+}
+.panel-content {
+  overflow:auto;
+  border: 1px solid @panelBorderColor;
+  border-top-width: 0;
+}
+
+// style
+.panel-noborder {
+   .panel-title {
+
+   }
+
+   .panel-content {
+     border-width: 0;
+   }
+ }
+.panel-inner {
+  .panel-title {
+    border-width: 0 0 1px 0px;
+  }
+
+  .panel-content {
+    border-width: 0px;
+  }
+}
+
+// theme
+.panel-primary {
+  .panel-title {
+    border-color: @panelPrimaryBorderColor;
+    background-color: @panelPrimaryTitleBgColor;
+  }
+  .panel-content {
+    border-color: @panelPrimaryBorderColor;
+  }
+}
+.panel-important {
+  .panel-title {
+    border-color: @panelImportantBorderColor;
+    background-color: @panelImportantTitleBgColor;
+  }
+  .panel-content {
+    border-color: @panelImportantBorderColor;
+  }
+}

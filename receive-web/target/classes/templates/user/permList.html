@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('权限列表')"></head>
+   <head>
+        <link rel="stylesheet" th:href="@{/table/css/jquery.treetable.css}">
+        <link rel="stylesheet" th:href="@{/table/css/jquery.treetable.theme.default.css}">
+        <link rel="stylesheet" th:href="@{/css/module/permessionList.css}">
+    </head>
+    <body>
+    <div class="layui-body" style="margin: 1%">
+
+     <div class="add-btn">
+             &nbsp;&nbsp;<button class="layui-btn" >开通权限</button>
+         </div>
+     <!--<hr class="layui-bg-blue"/>-->
+        <hr class="layui-bg-gray"/>
+       <table id="treeTable" class="layui-table">
+           <tr  class="treeTr">
+                <td>权限名称</td>
+                <td>权限编号</td>
+                <td style="width: 87px">权限地址</td>
+                <td style="text-align: center;width: 97px;">操作</td>
+            </tr>
+       </table>
+   </div>
+
+   <div id="permChild" class="layer_self_wrap">
+           <form id="permChildForm" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;margin-left: 44px;">
+              <input class="parentId" type="hidden" name="parentId"/>
+               <div class="layui-form-item">
+                   <div class="layui-inline">
+                       <label class="layui-form-label">上级权限名称</label>
+                       <div class="layui-input-inline">
+                           <input class="layui-input parentName" type="text" lay-verify="required"/>
+                       </div>
+                   </div>
+               </div>
+
+               <div class="layui-form-item">
+                   <div class="layui-inline">
+                       <label class="layui-form-label">权限名称</label>
+                       <div class="layui-input-inline">
+                           <input class="layui-input name" type="text" name="name" lay-verify="required"/>
+                       </div>
+                   </div>
+               </div>
+
+               <div class="layui-form-item">
+                   <div class="layui-inline">
+                       <label class="layui-form-label">权限编号</label>
+                       <div class="layui-input-inline">
+                           <input class="layui-input code" type="text" name="code"
+                                                              lay-verify="required"/>
+                       </div>
+                   </div>
+               </div>
+
+               <div class="layui-form-item">
+                   <div class="layui-inline">
+                       <label class="layui-form-label">权限地址</label>
+                       <div class="layui-input-inline">
+                           <input class="layui-input url" type="text" name="url"
+                                                              lay-verify="required"/>
+                       </div>
+                   </div>
+               </div>
+
+               <div class="layui-form-item">
+                   <div class="layui-input-block submit-div">
+                       <button class="layui-btn"  lay-submit="" lay-filter="permSubmit">提交</button>
+                       <button type="button"  class="layui-btn layui-btn-primary reset-btn">重置</button>
+                   </div>
+               </div>
+           </form>
+       </div>
+    <div th:include="head :: commonjs"></div>
+    <script  th:src="@{/table/jquery.treetable.js}"></script>
+    <script  th:src="@{/js/product/user/permList.js}"></script>
+    </body>
+</html>

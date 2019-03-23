@@ -1,0 +1,78 @@
+/*
+ * notify
+ * notify-icon.png
+ */
+.notify {
+  // default warn
+  position: relative;
+  border: 1px solid #DFD245;
+  padding: @gapSize;
+  background-color: #fcf8e3;
+  color: #c09853;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+  .border-radius(4px);
+  *zoom: 1; // ie hack
+
+  .notify-close {
+    .close();
+    right: @gapSize; top: @gapSize;
+  }
+  .notify-icon {
+    display:block;
+    float: left;
+    text-indent: -99999px;
+    margin-right: .5em;
+
+    width: 16px;
+    height: 16px;
+    background: ~"url('@{baseImgPath}/notify-icon.png')" no-repeat top left;
+    background-position: 0 -255px;
+  }
+  .notify-title {
+    margin-bottom: .4em;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .notify-content {
+    font-size: .9em;
+  }
+}
+// no border no radius
+.notify-noborder {
+  border: none;
+  border-radius: 0px;
+}
+
+// shadow
+.notify-shadow {
+  .box-shadow(0px 2px 10px rgba(50, 50, 50, 0.35));
+}
+
+// style
+.notify-info {
+  background-color: #d9edf7;
+  border-color: #86A0EF;
+  color: #3a87ad;
+  .notify-icon{
+    background-position: 0 -123px;
+  }
+}
+.notify-success {
+  background-color: #F4FFEF;
+  border-color: #4EBF3B;
+  color: #4F9F51;
+  .notify-icon{
+    background-position: 0 -189px;
+  }
+}
+.notify-warn {
+  // default
+}
+.notify-error {
+  background-color: #f2dede;
+  border-color: #DF7D7D;
+  color: #b94a48;
+  .notify-icon{
+    background-position: 0 -57px;
+  }
+}

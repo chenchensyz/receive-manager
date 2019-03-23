@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('应用详情')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/appInfo.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="strong">
+            <i class="layui-icon layui-icon-edit"></i>
+            <span class="header-title"><b>更新应用</b></span>
+        </div>
+    </div>
+    <div class="layui-body">
+        <form id="updateForm" class="layui-form layui-form-pane" action="=" method="post">
+            <input id="appId" type="hidden" name="id" th:value="${appId}"/>
+            <input class="state" type="hidden"/>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">应用名称：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input appName" type="text" name="appName" lay-verify="appName"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-hide">
+                <label class="layui-form-label">应用KEY：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input appKey"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">应用url前缀：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="urlPrefix" class="layui-input urlPrefix" lay-verify/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">应用描述：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="introduce" class="layui-input introduce"/>
+                </div>
+            </div>
+            <div class="layui-form-item layui-hide">
+                <label class="layui-form-label">公司：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input companyName"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-hide">
+                <div class="layui-inline">
+                    <label class="layui-form-label">创建人：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input createUser" type="text"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-hide">
+                <div class="layui-inline">
+                    <label class="layui-form-label">创建时间：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input createTime" type="text"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-hide">
+                <div class="layui-inline">
+                    <label class="layui-form-label">最后修改人：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input lastUpdateUser" type="text"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-hide">
+                <div class="layui-inline">
+                    <label class="layui-form-label">修改时间：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input lastUpdateTime" type="text"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block update-operation">
+                    <button class="layui-btn addOrEdit" lay-submit="" lay-filter="addOrEdit" data-type="0">立即提交</button>
+                    <button class="layui-btn saveOrRefuse" lay-submit="" lay-filter="addOrEdit" data-type="2">保存</button>
+                    <button type="button" class="layui-btn layui-btn-primary reset-btn">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="layui-footer">
+        <button class="layui-btn layui-btn-sm back-btn" onclick="javascript:history.back(-1);">返回</button>
+    </div>
+</div>
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/js/product/app/appInfo.js}"></script>
+</body>
+</html>

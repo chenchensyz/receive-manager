@@ -1,0 +1,152 @@
+package cn.com.cyber.util;
+
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.net.www.protocol.http.Handler;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Map;
+import java.util.UUID;
+
+public class HttpConnection {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpConnection.class);
+
+    /**
+     * 生成uuid
+     *
+     * @return
+     */
+    public static String getUUID() {
+        UUID uuid = UUID.randomUUID();
+        String str = uuid.toString();
+        String uuidStr = str.replace("-", "");
+        return uuidStr;
+    }
+
+    public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType) {
+        Map<String, Object> map = Maps.newHashMap();
+        String result = null;
+        HttpURLConnection conn = null;
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+        try {
+            URL url = new URL(null, requestUrl, new Handler());
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            //设置超时
+            CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
+            int maxTime = codeEnv.getRequest_maxtime();
+            conn.setConnectTimeout(maxTime);
+            conn.setReadTimeout(maxTime);
+            // 设置请求方式（GET/POST）
+            conn.setRequestMethod(method);
+            if (StringUtils.isNotBlank(contentType)) {
+                conn.setRequestProperty("Content-type", contentType);
+            }
+            // 当outputStr不为null时向输出流写数据
+            if (StringUtils.isNotBlank(outputStr)) {
+                outputStream = conn.getOutputStream();
+                outputStream.write(outputStr.getBytes("UTF-8"));// 注意编码格式
+            }
+            if (StringUtils.isBlank(responseType)) {
+                responseType = CodeUtil.RESPONSE_TEXT_TYPE; //指定返回值类型，默认为text
+            }
+            int responseCode = conn.getResponseCode();
+            if (CodeUtil.HTTP_OK == responseCode) {
+                inputStream = conn.getInputStream();
+                if (CodeUtil.RESPONSE_FILE_TYPE.equals(responseType)) { //文件类型
+                    String responseData = getBase64FromInputStream(inputStream);
+                    JSONObject json = new JSONObject();
+                    json.put("responseContent", conn.getContentType());
+                    json.put("responseLength", conn.getContentLength());
+                    json.put("responseData", responseData);
+                    result = json.toString();
+                } else {
+                    inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+                    bufferedReader = new BufferedReader(inputStreamReader);
+                    String str;
+                    StringBuffer buffer = new StringBuffer();
+                    while ((str = bufferedReader.readLine()) != null) {
+                        buffer.append(str);
+                    }
+                    result = buffer.toString();
+                }
+            } else {
+                LOGGER.error("响应异常code:{}, requestUrl:{} ,msg:{}", responseCode, requestUrl, conn.getResponseMessage());
+            }
+            map.put("code", responseCode);
+        } catch (Exception e) {
+            LOGGER.error("请求异常 requestUrl:{},error:{}", requestUrl, e);
+            map.put("error", e.toString());
+        } finally {
+            // 释放资源
+            try {
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+                if (inputStreamReader != null) {
+                    inputStreamReader.close();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (conn != null) {
+                    conn.disconnect();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        map.put("result", result);
+        return map;
+    }
+
+    public static String getBase64FromInputStream(InputStream in) {
+        // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
+        byte[] data = null;
+        // 读取图片字节数组
+        try {
+            ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+            byte[] buff = new byte[100];
+            int rc = 0;
+            while ((rc = in.read(buff, 0, 100)) > 0) {
+                swapStream.write(buff, 0, rc);
+            }
+            data = swapStream.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        String encode = new String(Base64.encodeBase64(data), CodeUtil.cs);
+        return encode;
+    }
+
+    public static void main(String[] args) {
+        String path = "http://localhost:8082/pmmanage/api/pmuser/photo/xieg";
+//        String path = "http://localhost:8082/pmmanage/pmuser/initdomains?pmUserId=xieg";
+        Map<String, Object> map = httpRequest(path, "GET",
+                null, null, CodeUtil.RESPONSE_FILE_TYPE);
+        System.out.println(map);
+    }
+}

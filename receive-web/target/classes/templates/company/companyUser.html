@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('开发者详情')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/userInfo.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="strong">
+        <i class="layui-icon layui-icon-edit"></i>
+        <span class="header-title"><b>更新用户</b></span>
+     </div>
+  </div>
+
+  <div class="layui-body">
+    <form id="updateForm" class="layui-form layui-form-pane" action="=" method="post">
+                <input id="companyUserId" type="hidden" name="id" th:value="${userId}"/>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">用户名：</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input userId" type="text" name="userId" lay-verify="required"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">昵称：</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input nickName" type="text" name="nickName"
+                                   lay-verify="required"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系电话：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="telephone" class="layui-input telephone"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="email" class="layui-input email"/>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-hide">
+                    <label class="layui-form-label">账号状态：</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  class="layui-input state"/>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-hide">
+                    <label class="layui-form-label">创建时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input createTime"/>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-hide" >
+                    <label class="layui-form-label">修改时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input updateTime"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block update-operation">
+                        <button class="layui-btn" lay-submit="" lay-filter="addOrEdit">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary" onclick="return resetForm();">重置</button>
+                    </div>
+                </div>
+            </form>
+  </div>
+
+  <div class="layui-footer">
+    <button class="layui-btn layui-btn-sm back-btn" onclick="javascript:history.back(-1);">返回</button>
+  </div>
+</div>
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/js/product/company/companyUser.js}"></script>
+</body>
+</html>
