@@ -1,6 +1,9 @@
 package cn.com.cyber.fileUpload;
 
-import java.io.File;
+/**
+ * 文件传输-封装对象
+ */
+
 import java.io.Serializable;
 
 public class FileUploadFile implements Serializable {

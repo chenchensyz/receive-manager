@@ -83,6 +83,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/redirect/**", "anon");
 		filterChainDefinitionMap.put("/file/**", "anon");
 		filterChainDefinitionMap.put("/repeatPlat/**", "anon");
+		filterChainDefinitionMap.put("/redirect_dl/**", "anon");
 
 		filterChainDefinitionMap.put("/img/**", "anon");//img
 		filterChainDefinitionMap.put("/css/**", "anon");//css

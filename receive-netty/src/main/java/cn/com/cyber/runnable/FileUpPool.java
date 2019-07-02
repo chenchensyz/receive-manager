@@ -1,6 +1,11 @@
 package cn.com.cyber.runnable;
 
-import java.util.concurrent.*;
+/**
+ * 文件传输服务--线程池
+ */
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FileUpPool {
 

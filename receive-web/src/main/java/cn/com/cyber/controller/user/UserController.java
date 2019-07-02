@@ -1,14 +1,14 @@
 package cn.com.cyber.controller.user;
 
 
-import cn.com.cyber.SysRoleService;
-import cn.com.cyber.SysUserRoleService;
-import cn.com.cyber.SysUserService;
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.controller.manager.filter.UserInfoFilter;
 import cn.com.cyber.model.SysRole;
 import cn.com.cyber.model.SysUser;
 import cn.com.cyber.model.SysUserRole;
+import cn.com.cyber.service.SysRoleService;
+import cn.com.cyber.service.SysUserRoleService;
+import cn.com.cyber.service.SysUserService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.EncryptUtils;
 import cn.com.cyber.util.MessageCodeUtil;
@@ -42,6 +42,7 @@ public class UserController extends BaseController {
 
     @Autowired
     private SysRoleService sysRoleService;
+
     @Autowired
     private SysUserRoleService sysUserRoleService;
 

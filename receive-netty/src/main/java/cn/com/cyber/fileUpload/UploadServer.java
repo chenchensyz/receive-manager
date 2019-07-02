@@ -1,6 +1,6 @@
 package cn.com.cyber.fileUpload;
 
-import cn.com.cyber.util.CodeEnv;
+import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.SpringUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -10,6 +10,7 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 
 public class UploadServer implements Runnable {
 
@@ -26,8 +27,8 @@ public class UploadServer implements Runnable {
                 @Override
                 protected void initChannel(Channel ch) {
                     LOGGER.warn("有客户端连接:" + ch.localAddress().toString());
-                    CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
-                    if ("inter".equals(codeEnv.getProject_environment())) {
+                    Environment env = SpringUtil.getBean(Environment.class);
+                    if ("inter".equals(env.getProperty(CodeUtil.PROJECT_ENVIRONMENT))) {
                         ch.pipeline().addLast(new UploadMsgServerHandler());
                     } else {
                         ch.pipeline().addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
@@ -35,9 +36,9 @@ public class UploadServer implements Runnable {
                     }
                 }
             });
-            CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
-            LOGGER.info("file server 等待连接:{}", codeEnv.getFile_sever_port());
-            ChannelFuture f = b.bind(codeEnv.getFile_sever_port()).sync();
+            Environment env = SpringUtil.getBean(Environment.class);
+            LOGGER.info("file server 等待连接:{}", env.getProperty(CodeUtil.FILE_SEVER_PORT));
+            ChannelFuture f = b.bind(Integer.valueOf(env.getProperty(CodeUtil.FILE_SEVER_PORT))).sync();
             f.channel().closeFuture().sync();
             LOGGER.info("file end");
         } catch (Exception e) {

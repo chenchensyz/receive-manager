@@ -1,13 +1,13 @@
 package cn.com.cyber.controller.appInfo;
 
-import cn.com.cyber.AppServiceService;
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.CodeInfo;
-import cn.com.cyber.util.CodeUtil;
-import cn.com.cyber.util.HttpClient;
-import cn.com.cyber.util.MessageCodeUtil;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.service.AppServiceService;
+import cn.com.cyber.util.*;
+import cn.com.cyber.util.excel.ExcelUtil;
+import cn.com.cyber.util.excel.ServiceKeyExcel;
+import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
@@ -20,8 +20,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +52,6 @@ public class AppServiceController extends BaseController {
     @RequestMapping("queryAppServiceListData")
     @ResponseBody
     public RestResponse queryAppInfoListData(AppService appService) {
-        appService.setState(1);
         PageHelper.startPage(appService.getPageNum(), appService.getPageSize());
         List<AppService> appServices = appServiceService.getList(appService);
         PageInfo<AppService> appServicePage = new PageInfo<AppService>(appServices);
@@ -80,30 +84,11 @@ public class AppServiceController extends BaseController {
     @PostMapping(value = "addOrEdit")
     @ResponseBody
     public RestResponse addOrEdit(@Valid AppService appService) {
-        int count = 0;
         int code = CodeUtil.SELECT_SUCCESS;
-        if (appService.getId() > 0) {
-            LOGGER.info("编辑接口:{}", appService.getId());
-            appService.setLastUpdateTime(new Date());
-            appService.setLastUpdateUserId(getShiroUser().id);
-            count = appServiceService.update(appService);
-        } else {
-            LOGGER.info("新增接口:{}");
-            appService.setCreateTime(new Date());
-            appService.setState(1);
-            String uuid;
-            long serviceKey;
-            do {
-                uuid = HttpClient.getUUID();
-                serviceKey = appServiceService.getCountServiceKey(uuid);
-            } while (serviceKey > 0);
-            appService.setServiceKey(HttpClient.getUUID());
-            appService.setCreateUserId(getShiroUser().id);
-            count = appServiceService.insert(appService);
-        }
-        if (count == 0) {
-            code = CodeUtil.APPINFO_ERR_OPERATION;
-            return RestResponse.res(code, messageCodeUtil.getMessage(code));
+        try {
+            appServiceService.addOrEditAppService(getShiroUser().id, appService);
+        } catch (ValueRuntimeException e) {
+            code = (Integer) e.getValue();
         }
         return RestResponse.res(code, messageCodeUtil.getMessage(code));
     }
@@ -119,20 +104,43 @@ public class AppServiceController extends BaseController {
         return RestResponse.success().setData(map);
     }
 
-    @RequestMapping("deleteAppService")
+    @RequestMapping("changeAppService")
     @ResponseBody
-    public RestResponse deleteAppService(@RequestParam("appServiceId") Long appServiceId,
+    public RestResponse changeAppService(@RequestParam("appServiceIds") String appServiceIds,
                                          @RequestParam("state") int state) {
-        LOGGER.info("删除接口appServiceId:{},state:{}", appServiceId, state);
-        AppService appService = new AppService();
-        appService.setId(appServiceId);
-        appService.setState(state);
-        appService.setLastUpdateUserId(getShiroUser().id);
-        int count = appServiceService.update(appService);
-        if (count == 0) {
-            return RestResponse.failure("操作失败");
+        LOGGER.info("删除接口appServiceId:{},state:{}", appServiceIds, state);
+        int code = CodeUtil.SELECT_SUCCESS;
+        try {
+            appServiceService.changeAppService(appServiceIds, state, getShiroUser().id);
+        } catch (ValueRuntimeException e) {
+            code = (Integer) e.getValue();
         }
-        return RestResponse.success();
+        return RestResponse.res(code, messageCodeUtil.getMessage(code));
+    }
+
+
+    //批量增加接口
+    @RequestMapping("uploadServiceFile")
+    @ResponseBody
+    public RestResponse uploadServiceFile(MultipartFile file, Long appId) {
+        int code = CodeUtil.SELECT_SUCCESS;
+        try {
+            appServiceService.uploadServiceFile(file, appId);
+        } catch (ValueRuntimeException e) {
+            code = (Integer) e.getValue();
+        }
+        return RestResponse.res(code, messageCodeUtil.getMessage(code));
+    }
+
+    //下载示例文件
+    @RequestMapping("/downLoadServiceExcel")
+    @ResponseBody
+    public RestResponse downLoadServiceExcel() {
+        CodeInfo codeInfo = CodeInfoUtils.getCodeByNameAndType().get(CodeUtil.CODE_SERVICE_EXCEL + "-" + CodeUtil.CODE_FILE_TYPE);
+        if (codeInfo == null) {
+            RestResponse.failure("下载失败");
+        }
+        return RestResponse.success().setData("/" + CodeUtil.CODE_FILE_TYPE + "/" + codeInfo.getName());
     }
 
 }

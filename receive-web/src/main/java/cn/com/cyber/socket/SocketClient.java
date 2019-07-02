@@ -1,11 +1,15 @@
 package cn.com.cyber.socket;
 
-import cn.com.cyber.util.CodeEnv;
+import cn.com.cyber.util.CodeUtil;
+import cn.com.cyber.util.exception.ValueRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.Socket;
 
 public class SocketClient {
@@ -16,25 +20,27 @@ public class SocketClient {
 
     private static synchronized void SocketConfig() {
         try {
-            CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
-            int port = codeEnv.getSocket_port();
-            String url = codeEnv.getSocket_url();
-            LOGGER.warn("SocketClient初始化 port:{},url:{}",port,url);
+            Environment env = SpringUtil.getBean(Environment.class);
+            int port = Integer.valueOf(env.getProperty(CodeUtil.SOCKET_PORT));
+            String url = env.getProperty(CodeUtil.SOCKET_URL);
+            LOGGER.warn("SocketClient初始化 port:{},url:{}", port, url);
             socket = new Socket(url, port);
             socket.setKeepAlive(true);
+        } catch (ConnectException e) {
+            throw new ValueRuntimeException(CodeUtil.CONNECT_ERR_MOBLIE);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void init(){
-        if (socket==null){
+    public static void init() {
+        if (socket == null) {
             SocketConfig();
         }
     }
 
-    public static Socket getSocket(){
-        if (socket==null){
+    public static Socket getSocket() {
+        if (socket == null) {
             SocketConfig();
         }
         return socket;

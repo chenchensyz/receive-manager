@@ -1,5 +1,9 @@
 package cn.com.cyber.runnable;
 
+/**
+ * 消息处理--线程池
+ */
+
 import cn.com.cyber.socket.SocketClient;
 import cn.com.cyber.util.*;
 import com.alibaba.fastjson.JSON;
@@ -12,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Map;
 
@@ -37,13 +40,15 @@ public class WorkerThread implements Runnable {
             //移动网接到互联网请求时间-------
             Map<String, String> map = Maps.newHashMap();
             if (messageId.startsWith("testTime:")) {
+                LOGGER.info("移动网接收command：{}", command);
+                LOGGER.info("移动网转换后json：{}", json);
                 map.put("mobileReceiveTime", DateUtil.format(new Date(), DateUtil.YMD_DASH_WITH_TIME));
                 jedis.hmset(CodeUtil.TIME_JEDIS_PREFIX + messageId, map);
             }
             //---------------------
 
-            CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
-            String result = JSON.toJSONString(RestResponse.res(1, "请检查应用接口配置是否完整")).toString();
+            MessageCodeUtil messageCodeUtil = SpringUtil.getBean(MessageCodeUtil.class);
+            String result = JSON.toJSONString(RestResponse.res(1, "请检查应用接口配置是否完整"));
             String params = getString(json, "params");
             String requestUrl = getString(json, "requestUrl");
             String method = getString(json, "method");
@@ -58,36 +63,7 @@ public class WorkerThread implements Runnable {
                     String paramsString = params;
                     params = "";
                     Map<String, Object> paramMap = (Map<String, Object>) JSONObject.parseObject(paramsString);
-                    if (CodeUtil.RESPONSE_POST.equals(method) && !CodeUtil.CONTEXT_JSON.equals(contentType)) {
-                        int i = 1;
-                        for (String key : paramMap.keySet()) {
-                            String value = paramMap.get(key).toString();
-                            params += key + "=" + URLEncoder.encode(value, "UTF-8");
-                            if (i < paramMap.size()) {
-                                params += "&";
-                            }
-                            i++;
-                        }
-                    } else if (CodeUtil.RESPONSE_GET.equals(method)) {
-                        if (requestUrl.contains("{")) { //拼在地址栏
-                            for (String key : paramMap.keySet()) {
-                                String value = paramMap.get(key).toString();
-                                String replace = requestUrl.replace("{" + key + "}", value);
-                                requestUrl = replace;
-                            }
-                        } else {
-                            requestUrl = requestUrl + "?";
-                            int i = 1;
-                            for (String key : paramMap.keySet()) {
-                                String value = paramMap.get(key).toString();
-                                requestUrl += key + "=" + URLEncoder.encode(value, "UTF-8");
-                                if (i < paramMap.size()) {
-                                    requestUrl += "&";
-                                }
-                                i++;
-                            }
-                        }
-                    }
+                    params = HttpConnection.newParams(paramMap, params, method, contentType, requestUrl);
                 }
 
 //                LOGGER.info("requestUrl:{} , method:{} , contentType:{}", requestUrl, method, contentType);
@@ -97,11 +73,12 @@ public class WorkerThread implements Runnable {
                     map = jedis.hgetAll(CodeUtil.TIME_JEDIS_PREFIX + messageId);
                     map.put("mobileRequsetTime", DateUtil.format(new Date(), DateUtil.YMD_DASH_WITH_TIME));
                     jedis.hmset(CodeUtil.TIME_JEDIS_PREFIX + messageId, map);
+                    LOGGER.info("移动网发送内网：{}", params);
                 }
                 //--------------------------
 
                 //请求http接口
-                Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, responseType);
+                Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, responseType, null);
 
                 //-----------------------
                 if (messageId.startsWith("testTime:")) {
@@ -111,14 +88,10 @@ public class WorkerThread implements Runnable {
                 }
                 //--------------------------
 
-                if (resultMap.get("code") != null) {
-                    if (CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
-                        result = resultMap.get("result").toString();
-                    } else {
-                        result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, codeEnv.getMessage(CodeUtil.REQUEST_USE_FILED) + resultMap.get("code"))).toString();
-                    }
+                if (resultMap.get("code") != null && CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
+                    result = resultMap.get("result").toString();
                 } else {
-                    result = resultMap.get("error").toString();
+                    result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED) + resultMap.get("error")));
                     //---------------------
                     if (messageId.startsWith("testTime:")) {
                         map = jedis.hgetAll(CodeUtil.TIME_JEDIS_PREFIX + messageId);

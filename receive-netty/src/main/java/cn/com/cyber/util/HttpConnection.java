@@ -6,11 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import sun.net.www.protocol.http.Handler;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,7 +31,7 @@ public class HttpConnection {
         return uuidStr;
     }
 
-    public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType) {
+    public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType, String serviceHeader) {
         Map<String, Object> map = Maps.newHashMap();
         String result = null;
         HttpURLConnection conn = null;
@@ -44,14 +46,20 @@ public class HttpConnection {
             conn.setDoInput(true);
             conn.setUseCaches(false);
             //设置超时
-            CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
-            int maxTime = codeEnv.getRequest_maxtime();
+            MessageCodeUtil messageCodeUtil = SpringUtil.getBean(MessageCodeUtil.class);
+            int maxTime = Integer.valueOf(messageCodeUtil.getMessage(CodeUtil.REQUEST_MAXTIME));
             conn.setConnectTimeout(maxTime);
             conn.setReadTimeout(maxTime);
             // 设置请求方式（GET/POST）
             conn.setRequestMethod(method);
             if (StringUtils.isNotBlank(contentType)) {
                 conn.setRequestProperty("Content-type", contentType);
+            }
+            if (StringUtils.isNotBlank(serviceHeader)) {  //传输头消息
+                Map<String, String> headMap = JSONObject.parseObject(serviceHeader, Map.class);
+                for (Map.Entry<String, String> entry : headMap.entrySet()) {
+                    conn.setRequestProperty(entry.getKey(), entry.getValue());
+                }
             }
             // 当outputStr不为null时向输出流写数据
             if (StringUtils.isNotBlank(outputStr)) {
@@ -82,6 +90,7 @@ public class HttpConnection {
                     result = buffer.toString();
                 }
             } else {
+                map.put("error", responseCode + ":" + conn.getResponseMessage());
                 LOGGER.error("响应异常code:{}, requestUrl:{} ,msg:{}", responseCode, requestUrl, conn.getResponseMessage());
             }
             map.put("code", responseCode);
@@ -113,6 +122,45 @@ public class HttpConnection {
         map.put("result", result);
         return map;
     }
+
+    public static String newParams(Map<String, Object> paramMap, String params, String method, String contentType, String requestUrl) throws UnsupportedEncodingException {
+        if (CodeUtil.RESPONSE_POST.equals(method)) {
+            if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
+                params = JSONObject.toJSON(paramMap).toString();
+            } else {
+                int i = 1;
+                for (String key : paramMap.keySet()) {
+                    String value = paramMap.get(key).toString();
+                    params += key + "=" + URLEncoder.encode(value, "UTF-8");
+                    if (i < paramMap.size()) {
+                        params += "&";
+                    }
+                    i++;
+                }
+            }
+        } else if (CodeUtil.RESPONSE_GET.equals(method)) {
+            if (requestUrl.contains("{")) { //拼在地址栏
+                for (String key : paramMap.keySet()) {
+                    String value = paramMap.get(key).toString();
+                    String replace = requestUrl.replace("{" + key + "}", value);
+                    requestUrl = replace;
+                }
+            } else {
+                requestUrl = requestUrl + "?";
+                int i = 1;
+                for (String key : paramMap.keySet()) {
+                    String value = paramMap.get(key).toString();
+                    requestUrl += key + "=" + URLEncoder.encode(value, "UTF-8");
+                    if (i < paramMap.size()) {
+                        requestUrl += "&";
+                    }
+                    i++;
+                }
+            }
+        }
+        return params;
+    }
+
 
     public static String getBase64FromInputStream(InputStream in) {
         // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
@@ -146,7 +194,7 @@ public class HttpConnection {
         String path = "http://localhost:8082/pmmanage/api/pmuser/photo/xieg";
 //        String path = "http://localhost:8082/pmmanage/pmuser/initdomains?pmUserId=xieg";
         Map<String, Object> map = httpRequest(path, "GET",
-                null, null, CodeUtil.RESPONSE_FILE_TYPE);
+                null, null, CodeUtil.RESPONSE_FILE_TYPE, null);
         System.out.println(map);
     }
 }

@@ -1,5 +1,8 @@
 package cn.com.cyber.runnable;
 
+/**
+ * 文件传输服务--转发内网
+ */
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.FileUpConnection;
 import cn.com.cyber.util.SpringUtil;

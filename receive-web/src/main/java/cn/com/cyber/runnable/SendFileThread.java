@@ -3,11 +3,10 @@ package cn.com.cyber.runnable;
 import cn.com.cyber.fileUpload.FileUploadFile;
 import cn.com.cyber.fileUpload.UploadClient;
 import cn.com.cyber.socket.SpringUtil;
-import cn.com.cyber.util.CodeEnv;
 import cn.com.cyber.util.CodeUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -22,7 +21,7 @@ public class SendFileThread implements Runnable {
     public void run() {
         JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
         Jedis jedis = jedisPool.getResource();
-        CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
+        Environment env = SpringUtil.getBean(Environment.class);
         try {
             while (true) {
                 Set<String> keys = jedis.keys(CodeUtil.FILE_JEDIS_PREFIX + "*");
@@ -38,7 +37,8 @@ public class SendFileThread implements Runnable {
                                 uploadFile.setUuid(map.get("uuid"));
                                 uploadFile.setUpUrl(map.get("upUrl"));
                                 uploadFile.setFileSize(Integer.valueOf(map.get("fileSize")));
-                                MyThreadPool.getThreadPool().execute(new UploadClient(codeEnv.getFile_sever_port(), codeEnv.getSocket_url(), uploadFile));
+                                MyThreadPool.getThreadPool().execute(
+                                        new UploadClient(Integer.valueOf(env.getProperty(CodeUtil.FILE_SEVER_PORT)), env.getProperty(CodeUtil.SOCKET_URL), uploadFile));
                                 map.put("state", "1");
                                 jedis.hmset(key, map);  //修改状态，保存到redis
                                 jedis.expire(key, 604800);

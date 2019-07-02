@@ -1,4 +1,7 @@
 package cn.com.cyber.nettyForward;
+/**
+ * 移动信息网转发服务，未使用
+ */
 
 import cn.com.cyber.util.CodeUtil;
 import io.netty.channel.ChannelHandlerContext;

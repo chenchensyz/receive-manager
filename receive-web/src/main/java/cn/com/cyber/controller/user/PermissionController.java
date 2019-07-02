@@ -1,8 +1,8 @@
 package cn.com.cyber.controller.user;
 
-import cn.com.cyber.SysPermissionService;
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.SysPermission;
+import cn.com.cyber.service.SysPermissionService;
 import cn.com.cyber.util.RestResponse;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/permission")

@@ -1,10 +1,14 @@
 package cn.com.cyber.controller.redirect;
+/**
+ * tcp版本
+ */
 
-import cn.com.cyber.AppInfoService;
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppModel;
+import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.socket.SocketClient;
 import cn.com.cyber.util.*;
+import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
@@ -60,54 +64,34 @@ public class RedirectController extends BaseController {
         String serviceKey = request.getHeader("serviceKey");
         String responseType = request.getHeader("responseType");
         int msgCode;
-        if (StringUtils.isBlank(appKey)) {
-            msgCode = CodeUtil.REQUEST_APPKEY_NULL;
-            setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));
-            return;
-        }
-        if (StringUtils.isBlank(serviceKey)) {
-            msgCode = CodeUtil.REQUEST_SERVICEKEY_NULL;
-            setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));
-            return;
-        }
-        JSONObject jsonObject = new JSONObject();
-        if (StringUtils.isNotBlank(jsonData)) {
-            jsonObject = JSONObject.parseObject(jsonData);
-        }
-        //根据appKey和serviceKey查询appinfo信息
-        AppModel appModel = appInfoService.getAppModel(serviceKey, appKey);
-        if (appModel == null) {
-            msgCode = CodeUtil.REQUEST_KEY_FILED;
-            setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));
-            return;
-        }
-        if (CodeUtil.APP_STATE_ENABLE != appModel.getState()) {
-            msgCode = CodeUtil.APPINFO_ERR_UNENABLE;
-            setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));
-            return;
-        }
-        jsonObject.put("messageId", messageId);
-        jsonObject.put("requestUrl", appModel.getUrlPrefix() + appModel.getUrlSuffix());
-        jsonObject.put("method", appModel.getMethod());
-        jsonObject.put("contentType", appModel.getContentType());
-        if (StringUtils.isNotBlank(responseType)) {
-            jsonObject.put("responseType", responseType);
-        }
-        //发送请求
-        String baseParam = "";
+        Jedis jedis = null;
         try {
-            byte[] bytes = Base64.encodeBase64(jsonObject.toString().getBytes(cs));
-            baseParam = new String(bytes, cs);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        SocketClient.send(baseParam);
-        int i = 0;
-        String cacheable = "";
-        int sleepTime = Integer.valueOf(messageCodeUtil.getMessage(CodeUtil.REQUEST_SLEEPTIME));
-        int maxTime = Integer.valueOf(messageCodeUtil.getMessage(CodeUtil.REQUEST_MAXTIME));
-        Jedis jedis = jedisPool.getResource();
-        try {
+            AppModel appModel = valiedParams(appKey, serviceKey);
+            JSONObject jsonObject = new JSONObject();
+            if (StringUtils.isNotBlank(jsonData)) {
+                jsonObject = JSONObject.parseObject(jsonData);
+            }
+            jsonObject.put("messageId", messageId);
+            jsonObject.put("requestUrl", appModel.getUrlPrefix() + appModel.getUrlSuffix());
+            jsonObject.put("method", appModel.getMethod());
+            jsonObject.put("contentType", appModel.getContentType());
+            if (StringUtils.isNotBlank(responseType)) {
+                jsonObject.put("responseType", responseType);
+            }
+            //发送请求
+            String baseParam = "";
+            try {
+                byte[] bytes = Base64.encodeBase64(jsonObject.toString().getBytes(cs));
+                baseParam = new String(bytes, cs);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            SocketClient.send(baseParam);
+            int i = 0;
+            String cacheable = "";
+            int sleepTime = Integer.valueOf(messageCodeUtil.getMessage(CodeUtil.REQUEST_SLEEPTIME));
+            int maxTime = Integer.valueOf(messageCodeUtil.getMessage(CodeUtil.REQUEST_MAXTIME));
+            jedis = jedisPool.getResource();
             do {
                 Thread.sleep(sleepTime);
                 cacheable = jedis.get(messageId);
@@ -117,34 +101,38 @@ public class RedirectController extends BaseController {
 
             if (StringUtils.isBlank(cacheable)) {
                 msgCode = CodeUtil.REQUEST_TIMEOUT;
-                setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)).setAny("messageId", messageId)));
-                return;
+                throw new ValueRuntimeException(msgCode);
             }
 //        LOGGER.info("本次请求结束 cacheable:{}", cacheable.length());
             if (StringUtils.isNotBlank(responseType) && CodeUtil.RESPONSE_FILE_TYPE.equals(responseType)) {
                 JSONObject result = JSONObject.parseObject(cacheable);
                 if (StringUtils.isBlank(result.getString("responseData"))) {
-                    setResponseText(response, cacheable);
+                    setResponseText(response, cacheable);  //返回json文本
                 } else {
-                    byte[] resultbytes =Base64.decodeBase64(result.getString("responseData").getBytes(cs));
-                    setResponseFile(response, resultbytes, result.getString("responseContent"));
+                    byte[] resultbytes = Base64.decodeBase64(result.getString("responseData").getBytes(cs));
+                    setResponseFile(response, resultbytes, result.getString("responseContent")); //输出文件流
                 }
             } else {
                 setResponseText(response, cacheable);
             }
+        } catch (ValueRuntimeException e) {
+            msgCode = (Integer) e.getValue();
+            response.setStatus(500);
+            setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            jedis.close();
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 
 
     //请求转发
-    @RequestMapping(value = "redirectTest", method = RequestMethod.POST)
+    @RequestMapping("/redirectTest")
     public void redirectTest(HttpServletResponse response, HttpServletRequest request,
-                             @RequestBody(required = false) String jsonData) {
-        LOGGER.info("进入请求{}");
+                            @RequestBody(required = false) String jsonData) {
         Map<String, String> map = Maps.newHashMap();
         map.put("interReceiveTime", DateUtil.format(new Date(), DateUtil.YMD_DASH_WITH_TIME));//接收请求时间
 
@@ -152,42 +140,19 @@ public class RedirectController extends BaseController {
         String appKey = request.getHeader("appKey");
         String serviceKey = request.getHeader("serviceKey");
         String responseType = request.getHeader("responseType");
-        String cacheable = "";
         LOGGER.info("appKey:{},serviceKey:{}", appKey, serviceKey);
         Jedis jedis = jedisPool.getResource();
         LOGGER.info("jedis获取:{}", CodeUtil.TIME_JEDIS_PREFIX + messageId);
+        int msgCode;
         try {
-
+            AppModel appModel = valiedParams(appKey, serviceKey);
             //---测试超时保存时间----------
             jedis.hmset(CodeUtil.TIME_JEDIS_PREFIX + messageId, map);
             //-----------------------------
             LOGGER.info("jedis保存：{}", map);
-            int msgCode;
-            if (StringUtils.isBlank(appKey)) {
-                msgCode = CodeUtil.REQUEST_APPKEY_NULL;
-                setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))).toString());
-                return;
-            }
-            if (StringUtils.isBlank(serviceKey)) {
-                msgCode = CodeUtil.REQUEST_SERVICEKEY_NULL;
-                setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))).toString());
-                return;
-            }
             JSONObject jsonObject = new JSONObject();
             if (StringUtils.isNotBlank(jsonData)) {
                 jsonObject = JSONObject.parseObject(jsonData);
-            }
-            //根据appKey和serviceKey查询appinfo信息
-            AppModel appModel = appInfoService.getAppModel(serviceKey, appKey);
-            if (appModel == null) {
-                msgCode = CodeUtil.REQUEST_KEY_FILED;
-                setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))).toString());
-                return;
-            }
-            if (CodeUtil.APP_STATE_ENABLE != appModel.getState()) {
-                msgCode = CodeUtil.APPINFO_ERR_UNENABLE;
-                setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))).toString());
-                return;
             }
             jsonObject.put("messageId", messageId);
             jsonObject.put("requestUrl", appModel.getUrlPrefix() + appModel.getUrlSuffix());
@@ -198,9 +163,13 @@ public class RedirectController extends BaseController {
             }
             //发送请求
             LOGGER.info("发送请求{}");
-
-            byte[] bytes = Base64.encodeBase64(jsonObject.toString().getBytes(cs));
-            String baseParam = new String(bytes, cs);
+            String baseParam = "";
+            try {
+                byte[] bytes = Base64.encodeBase64(jsonObject.toString().getBytes(cs));
+                baseParam = new String(bytes, cs);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             SocketClient.send(baseParam);
 
             //---测试超时保存时间----------
@@ -211,6 +180,7 @@ public class RedirectController extends BaseController {
             LOGGER.info("发送完毕 map:{}", map);
 
             int i = 0;
+            String cacheable;
             int sleepTime = Integer.valueOf(messageCodeUtil.getMessage(CodeUtil.REQUEST_SLEEPTIME));
             int maxTime = Integer.valueOf(messageCodeUtil.getMessage(CodeUtil.REQUEST_MAXTIME));
             do {
@@ -226,32 +196,32 @@ public class RedirectController extends BaseController {
                 map.put("error", "请求超时");
                 jedis.hmset(CodeUtil.TIME_JEDIS_PREFIX + messageId, map);
                 msgCode = CodeUtil.REQUEST_TIMEOUT;
-                setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)).setAny("messageId", messageId)).toString());
-                return;
+                throw new ValueRuntimeException(msgCode);
             }
 
             LOGGER.info("本次请求结束 cacheable:{}", cacheable);
-            LOGGER.info("responseType:{}", responseType);
+//        LOGGER.info("本次请求结束 cacheable:{}", cacheable.length());
             if (StringUtils.isNotBlank(responseType) && CodeUtil.RESPONSE_FILE_TYPE.equals(responseType)) {
                 JSONObject result = JSONObject.parseObject(cacheable);
                 if (StringUtils.isBlank(result.getString("responseData"))) {
-                    setResponseText(response, cacheable);
+                    setResponseText(response, cacheable);  //返回json文本
                 } else {
-
                     byte[] resultbytes = Base64.decodeBase64(result.getString("responseData").getBytes(cs));
-                    LOGGER.info("file.responseContent:{}", result.getString("responseContent"));
-                    setResponseFile(response, resultbytes, result.getString("responseContent"));
+                    setResponseFile(response, resultbytes, result.getString("responseContent")); //输出文件流
                 }
             } else {
-                LOGGER.info("text.responseType:{}", responseType);
                 setResponseText(response, cacheable);
             }
-
-
+        } catch (ValueRuntimeException e) {
+            msgCode = (Integer) e.getValue();
+            response.setStatus(500);
+            setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            jedis.close();
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 

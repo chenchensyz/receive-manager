@@ -1,11 +1,11 @@
 package cn.com.cyber.controller.manager;
 
-import cn.com.cyber.SysPermissionService;
-import cn.com.cyber.SysUserService;
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.CodeInfo;
 import cn.com.cyber.model.SysPermission;
 import cn.com.cyber.model.SysUser;
+import cn.com.cyber.service.SysPermissionService;
+import cn.com.cyber.service.SysUserService;
 import cn.com.cyber.util.CodeInfoUtils;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.EncryptUtils;

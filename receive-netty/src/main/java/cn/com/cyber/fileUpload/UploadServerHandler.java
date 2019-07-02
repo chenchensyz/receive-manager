@@ -6,6 +6,8 @@ package cn.com.cyber.fileUpload;
 
 import cn.com.cyber.runnable.FileReceiveThread;
 import cn.com.cyber.runnable.FileUpPool;
+import cn.com.cyber.util.CodeUtil;
+import cn.com.cyber.util.SpringUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -13,6 +15,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +25,6 @@ public class UploadServerHandler extends ChannelInboundHandlerAdapter {
 
     private Logger LOGGER = LoggerFactory.getLogger(UploadServerHandler.class);
 
-    private final static String fileSavePath = "/home/upFile";
-    //        private final static String fileSavePath = "D:\\source\\";
     private RandomAccessFile randomAccessFile;
     private boolean ok = false;
 
@@ -42,7 +43,8 @@ public class UploadServerHandler extends ChannelInboundHandlerAdapter {
                 if (fileUploadFile.getStartPos() == 0) {
                     String fileName = fileUploadFile.getFileName();
                     String suffix = fileName.substring(fileName.lastIndexOf("."));
-                    String path = fileSavePath + File.separator + fileUploadFile.getUuid() + suffix;
+                    Environment env = SpringUtil.getBean(Environment.class);
+                    String path = env.getProperty(CodeUtil.FILE_SAVE_PATH) + File.separator + fileUploadFile.getUuid() + suffix;
                     randomAccessFile = new RandomAccessFile(path, "rw");
                     fileUploadFile.setFilePath(path);
                 }

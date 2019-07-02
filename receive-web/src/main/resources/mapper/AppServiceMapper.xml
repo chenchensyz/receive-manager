@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.AppServiceMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.cyber.model.AppService" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="service_key" property="serviceKey" jdbcType="VARCHAR" />
+    <result column="app_id" property="appId" jdbcType="BIGINT" />
+    <result column="url_suffix" property="urlSuffix" jdbcType="VARCHAR" />
+    <result column="method" property="method" jdbcType="VARCHAR" />
+    <result column="content_type" property="contentType" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="BIGINT" />
+    <result column="last_update_user_id" property="lastUpdateUserId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+
+    <result column="cname" property="createUser" />
+    <result column="uname" property="lastUpdateUser" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, service_key, app_id, url_suffix, method, content_type, state, create_user_id, 
+    last_update_user_id, create_time, last_update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from app_service
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from app_service
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="cn.com.cyber.model.AppService" >
+    insert into app_service
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="serviceKey != null" >
+        service_key,
+      </if>
+      <if test="appId != null" >
+        app_id,
+      </if>
+      <if test="urlSuffix != null" >
+        url_suffix,
+      </if>
+      <if test="method != null" >
+        method,
+      </if>
+      <if test="contentType != null" >
+        content_type,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+        create_time
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceKey != null" >
+        #{serviceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=BIGINT},
+      </if>
+      <if test="urlSuffix != null" >
+        #{urlSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null" >
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null" >
+        #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+       sysdate()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.cyber.model.AppService" >
+    update app_service
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="urlSuffix != null" >
+        url_suffix = #{urlSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null" >
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null" >
+        content_type = #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="lastUpdateUserId != null" >
+        last_update_user_id = #{lastUpdateUserId,jdbcType=BIGINT},
+      </if>
+        last_update_time = sysdate()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <sql id="sql_where" >
+    <where >
+      <if test="id != null" >
+         and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="name != null and name !=''" >
+         and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="serviceKey != null and serviceKey !=''" >
+         and service_key = #{serviceKey,jdbcType=VARCHAR}
+      </if>
+      <if test="appId != null" >
+         and app_id = #{appId,jdbcType=BIGINT}
+      </if>
+      <if test="urlSuffix != null and urlSuffix !=''" >
+         and url_suffix = #{urlSuffix,jdbcType=VARCHAR}
+      </if>
+      <if test="method != null and method !=''" >
+         and method = #{method,jdbcType=VARCHAR}
+      </if>
+      <if test="contentType != null and contentType !=''" >
+         and content_type = #{contentType,jdbcType=VARCHAR}
+      </if>
+      <if test="state != null" >
+         and state = #{state,jdbcType=INTEGER}
+      </if>
+      <if test="createUserId != null" >
+         and create_user_id = #{createUserId,jdbcType=BIGINT}
+      </if>
+      <if test="lastUpdateUserId != null" >
+         and last_update_user_id = #{lastUpdateUserId,jdbcType=BIGINT}
+      </if>
+      <if test="createTime != null" >
+         and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="lastUpdateTime != null" >
+         and last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppService" >
+     select * from app_service
+    <include refid="sql_where" />
+  </select>
+
+  <select id="getCountServiceKey" resultType="int" parameterType="string">
+      SELECT count(id) FROM  app_service  WHERE service_key=#{serviceKey}
+    </select>
+
+  <select id="getEditByServiceId" resultMap="BaseResultMap" parameterType="long">
+      SELECT ais.*, cu.nick_name cname, cuu.nick_name uname FROM app_service ais
+        LEFT JOIN sys_user cu ON ais.create_user_id = cu.id
+        LEFT JOIN sys_user cuu ON ais.last_update_user_id = cuu.id
+        WHERE ais.id = #{serviceId}
+   </select>
+
+    <update id="updateMoreAppService" parameterType="map">
+      update app_service set state = #{state} WHERE id in
+      <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </update>
+
+    <delete id="deleteMoreAppService">
+      delete FROM  app_service  WHERE id in
+      <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </delete>
+
+</mapper>

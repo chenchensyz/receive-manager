@@ -1,5 +1,8 @@
 package cn.com.cyber.runnable;
 
+/**
+ * 消息处理--任务处理
+ */
 import java.util.concurrent.*;
 
 public class MyThreadPool {

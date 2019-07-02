@@ -1,6 +1,5 @@
 package cn.com.cyber.interceptor;
 
-import cn.com.cyber.controller.manager.CompanyInfoController;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 public class MyInteceptor implements WebMvcConfigurer {
 
-//    private final static String FILEPATH = "D:\\";
-    private final static String FILEPATH="/software/";
+    private final static String FILEPATH = "D:\\";
+//    private final static String FILEPATH="/software/";
 
 
     @Override

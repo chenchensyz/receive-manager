@@ -1,6 +1,6 @@
 package cn.com.cyber.netty;
 
-import cn.com.cyber.util.CodeEnv;
+import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.SpringUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -12,7 +12,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.core.env.Environment;
 
 /**
  * netty服务端 . <br>
@@ -34,8 +34,8 @@ public class NettyServer implements Runnable{
             //创建ServerBootstrap实例来引导绑定和启动服务器
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             //创建NioEventLoopGroup对象来处理事件，如接受新连接、接收数据、写数据等等
-            CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
-            int port = codeEnv.getSocket_server_port();
+            Environment env = SpringUtil.getBean(Environment.class);
+            int port = Integer.valueOf(env.getProperty(CodeUtil.SOCKET_SERVER_PORT));
             //指定通道类型为NioServerSocketChannel，设置InetSocketAddress让服务器监听某个端口已等待客户端连接。
             serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<Channel>() {

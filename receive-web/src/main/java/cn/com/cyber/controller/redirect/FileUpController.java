@@ -1,7 +1,7 @@
 package cn.com.cyber.controller.redirect;
 
-import cn.com.cyber.AppInfoService;
 import cn.com.cyber.model.AppModel;
+import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.RestResponse;
@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,8 +41,8 @@ public class FileUpController {
     @Autowired
     private MessageCodeUtil messageCodeUtil;
 
-    private final static String fileSavePath = "/home/upFile";
-//    private final static String fileSavePath = "D:\\source\\";
+    @Autowired
+    private Environment env;
 
     @RequestMapping("/getUpload")
     public String getUpload() {
@@ -71,7 +72,7 @@ public class FileUpController {
             msgCode = CodeUtil.REQUEST_KEY_FILED;
             return RestResponse.failure(messageCodeUtil.getMessage(msgCode));
         }
-        if (CodeUtil.APP_STATE_ENABLE != appModel.getState()) {
+        if (CodeUtil.APP_STATE_ENABLE != appModel.getAppState()) {
             msgCode = CodeUtil.APPINFO_ERR_UNENABLE;
             return RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode));
         }
@@ -89,7 +90,7 @@ public class FileUpController {
                 String uuid = UUID.randomUUID().toString();
                 LOGGER.info("fileName:{},fileSize:{}", uuid, fileSize);
                 String suffix = fileName.substring(fileName.lastIndexOf("."));
-                String filePath = fileSavePath + File.separator + uuid + suffix;
+                String filePath = env.getProperty(CodeUtil.FILE_SAVE_PATH) + File.separator + uuid + suffix;
                 File dest = new File(filePath);
                 if (!dest.getParentFile().exists()) { //判断文件父目录是否存在
                     dest.getParentFile().mkdir();

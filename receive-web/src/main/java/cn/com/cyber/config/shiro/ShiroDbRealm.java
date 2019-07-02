@@ -1,10 +1,10 @@
 package cn.com.cyber.config.shiro;
 
-import cn.com.cyber.CompanyInfoService;
-import cn.com.cyber.SysPermissionService;
-import cn.com.cyber.SysUserService;
 import cn.com.cyber.model.SysPermission;
 import cn.com.cyber.model.SysUser;
+import cn.com.cyber.service.CompanyInfoService;
+import cn.com.cyber.service.SysPermissionService;
+import cn.com.cyber.service.SysUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;

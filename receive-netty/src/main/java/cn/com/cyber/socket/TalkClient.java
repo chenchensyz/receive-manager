@@ -1,7 +1,8 @@
 package cn.com.cyber.socket;
 
-import java.io.*;
-import java.net.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 
 public class TalkClient {
 

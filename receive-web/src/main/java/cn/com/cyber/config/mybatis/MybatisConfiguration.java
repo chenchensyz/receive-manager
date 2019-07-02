@@ -37,7 +37,7 @@ public class MybatisConfiguration implements TransactionManagementConfigurer {
 
 			// 配置mapper的扫描，找到所有的mapper.xml映射文件
 			Resource[] resources = new PathMatchingResourcePatternResolver()
-					.getResources("classpath:cn/com/cyber/mapper/*.xml");
+					.getResources("classpath:mapper/*.xml");
 			sessionFactoryBean.setMapperLocations(resources);
 
 			// 加载全局的配置文件

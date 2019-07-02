@@ -1,9 +1,10 @@
 package cn.com.cyber.socket;
 
-import cn.com.cyber.util.CodeEnv;
+import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,9 +19,9 @@ public class SocketClient {
 
     private static synchronized void SocketConfig() {
         try {
-            CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
-            int port = codeEnv.getSocket_client_port();
-            String url = codeEnv.getSocket_url();
+            Environment env = SpringUtil.getBean(Environment.class);
+            int port = Integer.valueOf(env.getProperty(CodeUtil.SOCKET_CLIENT_PORT));
+            String url = env.getProperty(CodeUtil.SOCKET_URL);
             LOGGER.info("SocketClient初始化 port:{},url:{}", port, url);
             socket = new Socket(url, port);
             socket.setKeepAlive(true);

@@ -1,5 +1,9 @@
 package cn.com.cyber.runnable;
 
+/**
+ * 文件传输服务--定时任务
+ */
+
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.SpringUtil;
 import org.apache.commons.lang3.StringUtils;

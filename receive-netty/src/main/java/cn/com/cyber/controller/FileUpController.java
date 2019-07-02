@@ -1,6 +1,5 @@
 package cn.com.cyber.controller;
 
-import cn.com.cyber.util.CodeEnv;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.HttpConnection;
 import cn.com.cyber.util.RestResponse;
@@ -9,6 +8,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +32,7 @@ public class FileUpController extends BaseController {
     private JedisPool jedisPool;
 
     @Autowired
-    private CodeEnv codeEnv;
+    private Environment env;
 
     @RequestMapping("/getUpload")
     public String getUpload() {
@@ -55,7 +55,7 @@ public class FileUpController extends BaseController {
             if (fileSize == 0) {
                 continue;
             }
-            String filePath = codeEnv.getFile_save_path() + File.separator + "new" + File.separator + fileName;
+            String filePath = env.getProperty(CodeUtil.FILE_SAVE_PATH) + File.separator + "new" + File.separator + fileName;
             File dest = new File(filePath);
             if (!dest.getParentFile().exists()) { //判断文件父目录是否存在
                 dest.getParentFile().mkdir();
@@ -96,7 +96,7 @@ public class FileUpController extends BaseController {
         String path = "http://localhost:8082/pmmanage/api/pmuser/photo/xieg";
 //        String path = "http://localhost:8082/pmmanage/pmuser/initdomains?pmUserId=xieg";
         Map<String, Object> map = HttpConnection.httpRequest(path, "GET",
-                null, null, CodeUtil.RESPONSE_FILE_TYPE);
+                null, null, CodeUtil.RESPONSE_FILE_TYPE, null);
         if ((Integer) map.get("code") == 200) {
             JSONObject result = JSONObject.parseObject(map.get("result").toString());
             byte[] resultbytes = Base64.decodeBase64(result.get("responseData").toString().getBytes(CodeUtil.cs));

@@ -2,7 +2,6 @@ package cn.com.cyber.netty;
 
 import cn.com.cyber.runnable.MyThreadPool;
 import cn.com.cyber.runnable.WorkerThread;
-import cn.com.cyber.util.CodeEnv;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.DateUtil;
 import cn.com.cyber.util.SpringUtil;
@@ -13,6 +12,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -68,8 +68,8 @@ public class NettyIoHandler extends ChannelInboundHandlerAdapter {
                     stringBuffer.append(new String(selectByte, cs));
 //                    LOGGER.info("找到结束标志  stringBuffer.length:{}", stringBuffer.length());
                 }
-                CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
-                if ("inter".equals(codeEnv.getProject_environment())) {
+                Environment env = SpringUtil.getBean(Environment.class);
+                if ("inter".equals(env.getProperty(CodeUtil.PROJECT_ENVIRONMENT))) {
                     decodeResponseMsg(stringBuffer);
                 } else {
                     decodeRequestMsg(stringBuffer);
@@ -106,7 +106,7 @@ public class NettyIoHandler extends ChannelInboundHandlerAdapter {
         JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
         Jedis jedis = jedisPool.getResource();
         try {
-            byte[] cacheMsgbytes =  Base64.decodeBase64(cacheMsg.toString().getBytes(cs));
+            byte[] cacheMsgbytes = Base64.decodeBase64(cacheMsg.toString().getBytes(cs));
             String baseRequestMsg = new String(cacheMsgbytes, cs);
             JSONObject json = JSONObject.parseObject(baseRequestMsg);
             String messageId = json.get("messageId").toString();
@@ -123,8 +123,8 @@ public class NettyIoHandler extends ChannelInboundHandlerAdapter {
             //---------------------
 
             //保存到redis
-            CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
-            jedis.setex(messageId, codeEnv.getCache_time(), params);
+            Environment env = SpringUtil.getBean(Environment.class);
+            jedis.setex(messageId, Integer.valueOf(env.getProperty(CodeUtil.CACHE_TIME)), params);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

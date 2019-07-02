@@ -13,8 +13,8 @@ public class CodeUtil {
     public static final int HTTP_OK = 200;
     public static final String RESPONSE_POST = "POST";
     public static final String RESPONSE_GET = "GET";
-    public static final String RESPONSE_FILE_TYPE ="file";
-    public static final String RESPONSE_TEXT_TYPE ="text";
+    public static final String RESPONSE_FILE_TYPE = "file";
+    public static final String RESPONSE_TEXT_TYPE = "text";
 
     public static final String FILE_UPLOAD_PATH = "D:\\source\\";  //文件保存位置
     public static final String FILE_JEDIS_PREFIX = "file:";  //保存到redis前缀
@@ -22,6 +22,20 @@ public class CodeUtil {
     public static final String TIME_JEDIS_PREFIX = "time:";  //测试请求时间保存
 
     public static final Charset cs = Charset.forName("UTF-8");
+
+    //接口响应时间设置
+    public static final String REQUEST_MAXTIME = "request_maxtime";  //最大超时时间
+    public static final String REQUEST_SLEEPTIME = "request_sleeptime";  //扫描响应结果间隔时间
+
+    public static final String PROJECT_ENVIRONMENT = "project_environment";
+    public static final String SOCKET_URL = "socket_url";
+    public static final String SOCKET_SERVER_PORT = "socket_server_port";
+    public static final String SOCKET_CLIENT_PORT = "socket_client_port";
+    public static final String THREADPOOLSIZE = "threadPoolSize";
+    public static final String FILE_SEVER_PORT = "file_sever_port";
+    public static final String FILE_SAVE_PATH = "file_save_path";
+    public static final String CACHE_TIME = "cache_time";
+    public static final String SOCKET_OPEN = "socket_open";
 
     //响应状态码
     public static final int REQUEST_TIMEOUT = 99101; //服务接口请求超时

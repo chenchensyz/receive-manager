@@ -1,8 +1,10 @@
 package cn.com.cyber.runnable;
 
+/**
+ * 文件传输服务--接收互联网文件
+ */
 import cn.com.cyber.fileUpload.FileUploadFile;
 import cn.com.cyber.socket.TalkClient;
-import cn.com.cyber.util.CodeEnv;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.SpringUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -13,6 +15,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -28,10 +31,10 @@ public class FileReceiveThread implements Runnable {
     private RandomAccessFile randomAccessFile;
     private ChannelHandlerContext ctx;
 
-    public FileReceiveThread(FileUploadFile fileUploadFile, RandomAccessFile randomAccessFile,ChannelHandlerContext ctx) {
+    public FileReceiveThread(FileUploadFile fileUploadFile, RandomAccessFile randomAccessFile, ChannelHandlerContext ctx) {
         this.fileUploadFile = fileUploadFile;
         this.randomAccessFile = randomAccessFile;
-        this.ctx=ctx;
+        this.ctx = ctx;
     }
 
     @Override
@@ -67,15 +70,17 @@ public class FileReceiveThread implements Runnable {
 //                receiveMsg(key);
                 LOGGER.info("文件保存成功 uuid:{},size:{}", fileUploadFile.getUuid(), size);
                 //文件保存成功，返回移动网状态为2
-                CodeEnv codeEnv = SpringUtil.getBean(CodeEnv.class);
+                Environment env = SpringUtil.getBean(Environment.class);
                 JSONObject param = new JSONObject();
                 param.put("success", true);
                 param.put("uuid", map.get("uuid"));
                 param.put("state", 2);
 //                LOGGER.info("url:{},port:{}", codeEnv.getSocket_url(), codeEnv.getFile_sever_port());
-                byte[] baseByte =  Base64.encodeBase64(param.toString().getBytes(CodeUtil.cs));
+                byte[] baseByte = Base64.encodeBase64(param.toString().getBytes(CodeUtil.cs));
                 String baseParam = new String(baseByte, CodeUtil.cs);
-                TalkClient.send(codeEnv.getSocket_url(), codeEnv.getFile_sever_port(), baseParam);
+                int port = Integer.valueOf(env.getProperty(CodeUtil.FILE_SEVER_PORT));
+                String url = env.getProperty(CodeUtil.SOCKET_URL);
+                TalkClient.send(url, port, baseParam);
             }
         } catch (Exception e) {
             try {

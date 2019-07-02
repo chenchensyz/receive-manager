@@ -1,11 +1,10 @@
 package cn.com.cyber.controller.appInfo;
 
-import cn.com.cyber.AppInfoService;
-import cn.com.cyber.SysUserService;
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppInfo;
-import cn.com.cyber.model.SysPermission;
 import cn.com.cyber.model.SysUser;
+import cn.com.cyber.service.AppInfoService;
+import cn.com.cyber.service.SysUserService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.HttpClient;
 import cn.com.cyber.util.MessageCodeUtil;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

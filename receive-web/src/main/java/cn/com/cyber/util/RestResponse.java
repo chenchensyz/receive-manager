@@ -23,7 +23,7 @@ public class RestResponse extends HashMap<String, Object> {
         return restResponse;
     }
 
-    public static RestResponse res(Integer code,String message){
+    public static RestResponse res(Integer code, String message){
         RestResponse restResponse = new RestResponse();
         restResponse.setCode(code);
         restResponse.setMessage(message);

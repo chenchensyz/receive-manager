@@ -1,6 +1,5 @@
 package cn.com.cyber.fileUpload;
 
-import java.io.File;
 import java.io.Serializable;
 
 public class FileUploadFile implements Serializable {

@@ -1,9 +1,9 @@
 package cn.com.cyber.controller.user;
 
-import cn.com.cyber.SysPermissionService;
-import cn.com.cyber.SysRoleService;
 import cn.com.cyber.model.SysPermission;
 import cn.com.cyber.model.SysRole;
+import cn.com.cyber.service.SysPermissionService;
+import cn.com.cyber.service.SysRoleService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.RestResponse;

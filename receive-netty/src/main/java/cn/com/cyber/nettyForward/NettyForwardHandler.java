@@ -11,7 +11,7 @@ import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 
 /**
- * 服务端处理器 . <br>
+ * 移动信息网转发服务，未使用  <br>
  *
  * @author hkb
  */
