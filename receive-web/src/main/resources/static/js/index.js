@@ -342,7 +342,7 @@ function downLoadText() {
     }, function () {
         $.get(getRootPath() + "/index/downLoadText", function (res) {
             if (res.code == 0) {
-                location.href = getRootPath() + res.data;
+                location.href = res.data;
                 layer.closeAll();
             } else {
                 layer.alert(res.message, function () {

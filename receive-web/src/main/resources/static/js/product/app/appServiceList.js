@@ -174,7 +174,7 @@ appServiceList.prototype = {
             }, function () {
                 $.get(getRootPath() + "/appService/downLoadServiceExcel", function (res) {
                     if (res.code == 0) {
-                        location.href = getRootPath() + res.data;
+                        location.href = res.data;
                         layer.closeAll();
                     } else {
                         layer.alert(res.message, function () {layer.closeAll(); });

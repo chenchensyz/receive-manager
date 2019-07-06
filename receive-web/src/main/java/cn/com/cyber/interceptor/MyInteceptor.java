@@ -1,10 +1,12 @@
 package cn.com.cyber.interceptor;
 
+import cn.com.cyber.util.CodeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,6 +23,8 @@ public class MyInteceptor implements WebMvcConfigurer {
     private final static String FILEPATH = "D:\\";
 //    private final static String FILEPATH="/software/";
 
+@Autowired
+private Environment environment;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -30,8 +34,9 @@ public class MyInteceptor implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //将所有/static/** 访问都映射到classpath:/static/ 目录下
+        String fileRootPath = environment.getProperty(CodeUtil.FILE_ROOT_PATH);
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/file/**").addResourceLocations("file:" + FILEPATH);
+        registry.addResourceHandler("/file/**").addResourceLocations("file:" + fileRootPath);
     }
 
 //    @Override

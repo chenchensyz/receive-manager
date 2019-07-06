@@ -37,7 +37,7 @@ public class FileUpConnection {
         String MULTIPART_FROM_DATA = "multipart/form-data";
         String CHARSET = "UTF-8";
         DataOutputStream outStream = null;
-        BufferedReader reader = null;
+        BufferedReader bufferedReader = null;
         Map<String, Object> map = Maps.newHashMap();
         try {
             URL uri = new URL(actionUrl);
@@ -103,10 +103,10 @@ public class FileUpConnection {
             int res = conn.getResponseCode();
             if (res == CodeUtil.HTTP_OK) {
                 // 读取返回数据
-                reader = new BufferedReader(new InputStreamReader(
+                bufferedReader = new BufferedReader(new InputStreamReader(
                         conn.getInputStream(), "UTF-8")); //$NON-NLS-1$
                 String line = null;
-                while ((line = reader.readLine()) != null) {
+                while ((line = bufferedReader.readLine()) != null) {
                     sb2.append(line).append("\n"); //$NON-NLS-1$
                 }
                 map.put("code", res);
@@ -126,9 +126,9 @@ public class FileUpConnection {
                 }
             }
 
-            if (reader != null) {
+            if (bufferedReader != null) {
                 try {
-                    reader.close();
+                    bufferedReader.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -212,13 +212,13 @@ public class FileUpConnection {
         int res = conn.getResponseCode();
         if (res == 200) {
             // 读取返回数据
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                     conn.getInputStream(), "UTF-8")); //$NON-NLS-1$
             String line = null;
-            while ((line = reader.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 sb2.append(line).append("\n"); //$NON-NLS-1$
             }
-            reader.close();
+            bufferedReader.close();
         }
         outStream.close();
         conn.disconnect();

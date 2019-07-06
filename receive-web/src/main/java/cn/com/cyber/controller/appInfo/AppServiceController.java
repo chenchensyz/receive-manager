@@ -137,10 +137,11 @@ public class AppServiceController extends BaseController {
     @ResponseBody
     public RestResponse downLoadServiceExcel() {
         CodeInfo codeInfo = CodeInfoUtils.getCodeByNameAndType().get(CodeUtil.CODE_SERVICE_EXCEL + "-" + CodeUtil.CODE_FILE_TYPE);
-        if (codeInfo == null) {
+        CodeInfo fileCode = CodeInfoUtils.getCodeByNameAndType().get(CodeUtil.FILE_DOWNLOAD_URL + "-" + CodeUtil.CODE_FILE_TYPE);
+        if (codeInfo == null || fileCode == null) {
             RestResponse.failure("下载失败");
         }
-        return RestResponse.success().setData("/" + CodeUtil.CODE_FILE_TYPE + "/" + codeInfo.getName());
+        return RestResponse.success().setData(fileCode.getName() + codeInfo.getName());
     }
 
 }

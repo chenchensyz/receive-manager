@@ -10,6 +10,7 @@ public class CodeUtil {
     public static final String CODE_CONTENTTYPE = "contentType";
     public static final String CODE_INSTRUCTIONSPATH = "instructionsPath";
     public static final String CODE_SERVICE_EXCEL = "serviceExcel";
+    public static final String FILE_DOWNLOAD_URL = "fileDownloadUrl";
     public static final String CODE_FILE_TYPE = "file";
 
     public static final String DEFAULT_PASSWORD = "888888";  //默认密码
@@ -42,6 +43,7 @@ public class CodeUtil {
     public static final String FILE_SEVER_PORT = "file_sever_port";
     public static final String FILE_SAVE_PATH = "file_save_path";
     public static final String SOCKET_OPEN = "socket_open";
+    public static final String FILE_ROOT_PATH = "file_root_path";
 
     //响应状态码
     public static final int SELECT_SUCCESS = 0; //请求成功
@@ -99,4 +101,5 @@ public class CodeUtil {
 
     public static final long ROLE_COMPMANAGER = 2l;  //公司管理员角色id
     public static final long ROLE_COMPDEVELOPER = 3l;  //公司开发者角色id
+
 }

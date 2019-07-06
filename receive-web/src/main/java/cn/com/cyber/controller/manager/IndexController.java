@@ -48,7 +48,7 @@ public class IndexController extends BaseController {
         List<SysPermission> permissons = Lists.newArrayList();
         try {
             if (getShiroUser().getPermissions() == null) {
-                LOGGER.info("获取权限菜单userId:{}",getShiroUser().userId);
+                LOGGER.info("获取权限菜单userId:{}", getShiroUser().userId);
                 String permStr = sysPermissionService.getPermByUserId(getShiroUser().userId);
                 if (StringUtils.isNotBlank(permStr)) {
                     String[] permissionArr = permStr.split(",");
@@ -101,9 +101,10 @@ public class IndexController extends BaseController {
     public RestResponse downLoadText() {
         LOGGER.info("下载操作指南");
         CodeInfo codeInfo = CodeInfoUtils.getCodeByNameAndType().get(CodeUtil.CODE_INSTRUCTIONSPATH + "-" + CodeUtil.CODE_FILE_TYPE);
-        if (codeInfo == null) {
+        CodeInfo fileCode = CodeInfoUtils.getCodeByNameAndType().get(CodeUtil.FILE_DOWNLOAD_URL + "-" + CodeUtil.CODE_FILE_TYPE);
+        if (codeInfo == null || fileCode == null) {
             RestResponse.failure("下载失败");
         }
-        return RestResponse.success().setData("/" + CodeUtil.CODE_FILE_TYPE + "/" + codeInfo.getName());
+        return RestResponse.success().setData(fileCode.getName() + codeInfo.getName());
     }
 }
