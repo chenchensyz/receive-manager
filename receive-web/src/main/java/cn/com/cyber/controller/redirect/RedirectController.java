@@ -44,9 +44,6 @@ public class RedirectController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RedirectController.class);
 
     @Autowired
-    private AppInfoService appInfoService;
-
-    @Autowired
     private JedisPool jedisPool;
 
     @Value("${server.port}")

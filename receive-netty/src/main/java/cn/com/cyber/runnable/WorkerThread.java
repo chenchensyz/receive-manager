@@ -49,11 +49,12 @@ public class WorkerThread implements Runnable {
 
             MessageCodeUtil messageCodeUtil = SpringUtil.getBean(MessageCodeUtil.class);
             String result = JSON.toJSONString(RestResponse.res(1, "请检查应用接口配置是否完整"));
-            String params = getString(json, "params");
-            String requestUrl = getString(json, "requestUrl");
-            String method = getString(json, "method");
-            String contentType = getString(json, "contentType");
-            String responseType = getString(json, "responseType");
+            String params = json.getString("params");
+            String requestUrl = json.getString("requestUrl");
+            String method = json.getString("method");
+            String contentType = json.getString("contentType");
+            String responseType = json.getString("responseType");
+            String serviceHeader = json.getString("serviceHeader");
 //            LOGGER.info("接收请求json.length:{}", json.toString().length());
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("messageId", messageId);
@@ -78,7 +79,7 @@ public class WorkerThread implements Runnable {
                 //--------------------------
 
                 //请求http接口
-                Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, responseType, null);
+                Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, responseType, serviceHeader);
 
                 //-----------------------
                 if (messageId.startsWith("testTime:")) {
@@ -125,16 +126,6 @@ public class WorkerThread implements Runnable {
         return this.command;
     }
 
-
-    public String getString(JSONObject json, String key) {
-        Object value = json.get(key);
-
-        if (value == null) {
-            return "";
-        }
-
-        return value.toString();
-    }
 
     public static void main(String[] args) {
         String url = "http://10.48.3.189:9982/pmmanage/api/pmuser/photo/{userId}/{uww}";

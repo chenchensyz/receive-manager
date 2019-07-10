@@ -36,6 +36,7 @@ public class ModelRedirectController extends BaseController {
         String requestUrl = getString(json, "requestUrl");
         String method = getString(json, "method");
         String contentType = getString(json, "contentType");
+        String responseType = json.getString("responseType");
         String serviceHeader = getString(json, "serviceHeader");
         LOGGER.info("接收请求json：{}", json);
         String result = "";
@@ -49,7 +50,7 @@ public class ModelRedirectController extends BaseController {
                 }
                 //请求http接口
                 LOGGER.info("请求内网参数：{}", params);
-                Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, null, serviceHeader);
+                Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, responseType, serviceHeader);
                 if (resultMap.get("code") != null && CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
                     result = resultMap.get("result").toString();
                 } else {
