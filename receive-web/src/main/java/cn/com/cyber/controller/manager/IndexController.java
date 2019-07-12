@@ -36,19 +36,19 @@ public class IndexController extends BaseController {
     @Autowired
     private SysUserService sysUserService;
 
+    //首页
     @RequestMapping()
     public String getIndex() {
-        LOGGER.info("首页:{}");
         return "index";
     }
 
+    //获取权限菜单
     @RequestMapping("/getPermMenu")
     @ResponseBody
     public RestResponse getPermMenu() {
         List<SysPermission> permissons = Lists.newArrayList();
         try {
             if (getShiroUser().getPermissions() == null) {
-                LOGGER.info("获取权限菜单userId:{}", getShiroUser().userId);
                 String permStr = sysPermissionService.getPermByUserId(getShiroUser().userId);
                 if (StringUtils.isNotBlank(permStr)) {
                     String[] permissionArr = permStr.split(",");
@@ -70,12 +70,12 @@ public class IndexController extends BaseController {
         return RestResponse.success().setData(permissons);
     }
 
+    //修改密码
     @RequestMapping("/modifyPassword")
     @ResponseBody
     public RestResponse modifyPassword(@RequestParam("oldPassword") String oldPassword,
                                        @RequestParam("password") String password,
                                        @RequestParam("confirmPassword") String confirmPassword) {
-        LOGGER.info("修改密码");
         try {
             SysUser sysUser = sysUserService.getByUserId(getShiroUser().userId);
             if (!EncryptUtils.MD5Encode(oldPassword).equals(sysUser.getPassword())) { //原密码不匹配

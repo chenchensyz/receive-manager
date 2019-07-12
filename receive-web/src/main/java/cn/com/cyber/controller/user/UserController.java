@@ -49,16 +49,22 @@ public class UserController extends BaseController {
     @Autowired
     private MessageCodeUtil messageCodeUtil;
 
+    /**
+     * 获取用户表数据
+     * @return
+     */
     @RequestMapping("/getUserList")
     public String getUserList() {
-        LOGGER.info("获取用户表数据:{}");
         return "user/userList";
     }
 
+    /**
+     * 获取用户表数据
+     * @return
+     */
     @RequestMapping("/queryUserListData")
     @ResponseBody
     public RestResponse queryUserListData(SysUser sysUser) {
-        LOGGER.info("获取用户表数据:{}");
         if (sysUser.getState() == null) {
             sysUser.setState(CodeUtil.APP_STATE_ENABLE);
         }
@@ -72,17 +78,24 @@ public class UserController extends BaseController {
                 .setTotal(usersPage.getTotal()).setPage(usersPage.getLastPage());
     }
 
+    /**
+     * 跳转用户新增/编辑页面
+     * @return
+     */
     @RequestMapping("getUserInfo")
     public String getUserInfo(@RequestParam(value = "userId", defaultValue = "0") Long userId, Model model) {
-        LOGGER.info("跳转用户新增/编辑页面:{}", userId);
         model.addAttribute("userId", userId);
         return "user/userInfo";
     }
 
+
+    /**
+     * 获取用户编辑数据
+     * @return
+     */
     @RequestMapping("getUserInfoData")
     @ResponseBody
     public RestResponse getUserInfoData(@RequestParam("userId") Long userId) {
-        LOGGER.info("获取用户编辑数据:{}", userId);
         int code;
         SysUser sysUser = sysUserService.getUserAndRoles(userId);
         if (sysUser == null) {
@@ -98,11 +111,14 @@ public class UserController extends BaseController {
         return RestResponse.success().setData(map);
     }
 
+    /**
+     * 新增编辑用户
+     * @return
+     */
     @RequestMapping("addOrEditUser")
     @ResponseBody
     public RestResponse addOrEditUser(@Valid SysUser sysUser, @RequestParam("roleIds") String roleIds,
                                       String confirmPassword) {
-        LOGGER.info("新增编辑用户:{}", sysUser.getUserId());
         int added;
         List<String> roleList = Arrays.asList(roleIds.split(","));
         if (sysUser != null && sysUser.getId() > 0) {
@@ -154,10 +170,13 @@ public class UserController extends BaseController {
         return RestResponse.success().setData(sysUser);
     }
 
+    /**
+     * 删除用户
+     * @return
+     */
     @RequestMapping("deleteUser")
     @ResponseBody
     public RestResponse deleteUser(String userId, int state) {
-        LOGGER.info("删除用户userId:{}", userId);
         int del = sysUserService.deleteUserState(userId, state);
         if (del == 0) {
             int code = CodeUtil.USERINFO_ERR_DEL;
@@ -166,10 +185,13 @@ public class UserController extends BaseController {
         return RestResponse.success();
     }
 
+    /**
+     * 修改密码
+     * @return
+     */
     @RequestMapping("releasePassword")
     @ResponseBody
     public RestResponse releasePassword(long userId, String oldPassword, String newPassword) {
-        LOGGER.info("修改密码userId:{}", userId);
         SysUser sysUser = sysUserService.getById(userId);
         oldPassword = EncryptUtils.MD5Encode(oldPassword);
         if (sysUser != null && !sysUser.getPassword().equals(oldPassword)) {
@@ -178,10 +200,13 @@ public class UserController extends BaseController {
         return RestResponse.success();
     }
 
+    /**
+     * 首页 用户详情页面
+     * @return
+     */
     @RequestMapping("getUserSerf")
     @ResponseBody
     public RestResponse getUserSerf() {
-        LOGGER.info("首页 用户详情页面:{}");
         SysUser sysUser = null;
         try {
             sysUser = sysUserService.getByUserId(getShiroUser().userId);
@@ -194,10 +219,13 @@ public class UserController extends BaseController {
         return RestResponse.success().setData(sysUser);
     }
 
+    /**
+     * 首页 编辑用户详情
+     * @return
+     */
     @RequestMapping("editUserSerf")
     @ResponseBody
     public RestResponse editUserSerf(@Valid SysUser sysUser) {
-        LOGGER.info("首页 编辑用户详情:{}");
         int count = 0;
         try {
             sysUser.setId(getShiroUser().id);
@@ -215,7 +243,6 @@ public class UserController extends BaseController {
     @RequestMapping("reSetPassword")
     @ResponseBody
     public RestResponse reSetPassword(Long userId) {
-        LOGGER.info("重置密码userId:{}", userId);
         SysUser sysUser = new SysUser();
         sysUser.setId(userId);
         sysUser.setPassword(EncryptUtils.MD5Encode(CodeUtil.DEFAULT_PASSWORD));

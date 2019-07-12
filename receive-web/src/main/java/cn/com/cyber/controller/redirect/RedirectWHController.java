@@ -36,13 +36,10 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/repeatPlat")
-public class RepeatPlatController extends BaseController {
+@RequestMapping("/redirect_wh")
+public class RedirectWHController extends BaseController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RepeatPlatController.class);
-
-    @Autowired
-    private AppInfoService appInfoService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(RedirectWHController.class);
 
     @Autowired
     private Environment env;

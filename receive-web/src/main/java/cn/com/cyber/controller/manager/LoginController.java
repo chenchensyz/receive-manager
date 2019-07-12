@@ -24,19 +24,18 @@ public class LoginController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
+    //跳转登录页
     @RequestMapping("toLogin")
     public String toLogin() {
-        LOGGER.info("跳转登录页:{}");
         return "login";
     }
 
+    //登录
     @RequestMapping("login")
     @ResponseBody
     public RestResponse login(@RequestParam("userId") String userId,
                               @RequestParam("password") String password,
                               HttpServletRequest request) {
-        LOGGER.info("登录:{}");
-
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(password)) {
             return RestResponse.failure("请填写完整登录信息");
         }
@@ -72,9 +71,9 @@ public class LoginController {
         return RestResponse.failure(msg);
     }
 
+    //登出
     @RequestMapping(value = "quit")
     public String quit() {
-        LOGGER.info("登出");
         Subject subject = SecurityUtils.getSubject();
         subject.getSession().setTimeout(0);
         subject.logout();

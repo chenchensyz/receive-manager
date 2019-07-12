@@ -80,10 +80,9 @@
                     <!--<excludes>-->
                     <!--<exclude>/**</exclude>-->
                     <!--</excludes>-->
-                    <!--<includes>引入-->
-                        <!--<include>cn/**</include>-->
-                        <!--<include>mapper/**</include>-->
-                    <!--</includes>-->
+                    <includes>引入
+                        <include>cn/**</include>
+                    </includes>
                 </configuration>
             </plugin>
 
