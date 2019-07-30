@@ -22,6 +22,11 @@
             <result column="company_name" property="companyName" />
             <result column="owner" property="owner" />
         </collection>
+
+        <collection property="services" ofType="cn.com.cyber.model.AppService">
+            <id column="service_id" property="id"/>
+            <result column="service_name" property="name"/>
+        </collection>
     </resultMap>
     <sql id="Base_Column_List" >
     id, app_key, app_name, url_prefix, introduce, remark, company_id, state, create_user_id,
@@ -224,5 +229,20 @@
           <if test="companyId > 0" >
               and company_id = #{companyId}
           </if>
+    </select>
+
+    <resultMap id="appServiceMap"  type="HashMap">
+        <result property="id" column="id"/>
+        <result property="title" column="app_name" />
+        <collection property="children" ofType="HashMap" javaType="list">
+            <result property="id" column="service_id"/>
+            <result property="title" column="service_name" />
+        </collection>
+    </resultMap>
+
+    <select id="getAppServiceList" resultMap="appServiceMap" parameterType="long">
+        select ai.id,ai.app_name ,ais.id service_id ,ais.name service_name,ais.app_id
+        from app_info ai  join app_service ais on ai.id=ais.app_id
+        where ai.company_id = #{companyId} and ai.state=1
     </select>
 </mapper>

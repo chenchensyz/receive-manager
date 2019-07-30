@@ -1,6 +1,6 @@
-package cn.com.cyber.tools.mybatis.generaor;
+package cn.com.cyber.util.mybatis.generaor;
 
-import cn.com.cyber.tools.mybatis.MyCommentGenerator;
+import cn.com.cyber.util.mybatis.MyCommentGenerator;
 import org.mybatis.generator.api.*;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.Attribute;
@@ -21,7 +21,7 @@ public  class PaginationPlugin  extends PluginAdapter {
 	@Override
 	public boolean clientGenerated(Interface interfaze, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
 		FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType("BaseDao<" + introspectedTable.getBaseRecordType()	+ ">");
-		FullyQualifiedJavaType imp = new FullyQualifiedJavaType("cn.com.cyber.common.BaseDao");
+		FullyQualifiedJavaType imp = new FullyQualifiedJavaType("cn.com.cyber.dao.BaseDao");
 		interfaze.addSuperInterface(fqjt);// 添加 extends BaseDao<User>
 		interfaze.addImportedType(imp);// 添加import common.BaseDao;
 		interfaze.getMethods().clear();

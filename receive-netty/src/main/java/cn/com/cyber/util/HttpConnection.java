@@ -39,6 +39,7 @@ public class HttpConnection {
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
         BufferedReader bufferedReader = null;
+        int code = 201;  //内网返回错误
         try {
             URL url = new URL(null, requestUrl, new Handler());
             conn = (HttpURLConnection) url.openConnection();
@@ -71,6 +72,7 @@ public class HttpConnection {
             }
             int responseCode = conn.getResponseCode();
             if (CodeUtil.HTTP_OK == responseCode) {
+                code = CodeUtil.HTTP_OK;
                 inputStream = conn.getInputStream();
                 if (CodeUtil.RESPONSE_FILE_TYPE.equals(responseType)) { //文件类型
                     String responseData = getBase64FromInputStream(inputStream);
@@ -93,7 +95,7 @@ public class HttpConnection {
                 map.put("error", responseCode + ":" + conn.getResponseMessage());
                 LOGGER.error("响应异常code:{}, requestUrl:{} ,msg:{}", responseCode, requestUrl, conn.getResponseMessage());
             }
-            map.put("code", responseCode);
+
         } catch (Exception e) {
             LOGGER.error("请求异常 requestUrl:{},error:{}", requestUrl, e);
             map.put("error", e.toString());
@@ -119,21 +121,23 @@ public class HttpConnection {
                 e.printStackTrace();
             }
         }
+        map.put("code", code);
         map.put("result", result);
         return map;
     }
 
     public static String newParams(Map<String, Object> paramMap, String params, String method, String contentType, String requestUrl) throws UnsupportedEncodingException {
+        String newParam = "";
         if (CodeUtil.RESPONSE_POST.equals(method)) {
             if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
-                params = JSONObject.toJSON(paramMap).toString();
+                newParam = JSONObject.toJSON(paramMap).toString();
             } else {
                 int i = 1;
                 for (String key : paramMap.keySet()) {
                     String value = paramMap.get(key).toString();
-                    params += key + "=" + URLEncoder.encode(value, "UTF-8");
+                    newParam += key + "=" + URLEncoder.encode(value, "UTF-8");
                     if (i < paramMap.size()) {
-                        params += "&";
+                        newParam += "&";
                     }
                     i++;
                 }
@@ -158,7 +162,7 @@ public class HttpConnection {
                 }
             }
         }
-        return params;
+        return newParam;
     }
 
 

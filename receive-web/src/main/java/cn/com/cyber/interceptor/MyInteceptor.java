@@ -20,8 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 public class MyInteceptor implements WebMvcConfigurer {
 
-    private final static String FILEPATH = "D:\\";
-//    private final static String FILEPATH="/software/";
 
 @Autowired
 private Environment environment;
@@ -35,6 +33,7 @@ private Environment environment;
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //将所有/static/** 访问都映射到classpath:/static/ 目录下
         String fileRootPath = environment.getProperty(CodeUtil.FILE_ROOT_PATH);
+        System.out.println(fileRootPath);
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/file/**").addResourceLocations("file:" + fileRootPath);
     }

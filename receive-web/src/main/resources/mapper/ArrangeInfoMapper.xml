@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.ArrangeInfoMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.cyber.model.ArrangeInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="interface_name" property="interfaceName" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="create_user" property="createUser" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="BIGINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, interface_name, company_id, state, create_user, create_time, update_user, update_time, 
+    remark
+  </sql>
+  <select id="getArrangeInfoById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from arrange_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteArrangeInfo" parameterType="java.lang.Long" >
+    delete from arrange_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertArrangeInfo" parameterType="cn.com.cyber.model.ArrangeInfo"  useGeneratedKeys="true" keyProperty="id">
+    insert into arrange_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        interface_name, company_id, state, create_user, create_time
+      <if test="remark != null" >
+        ,remark
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        #{interfaceName},#{companyId}, 1, #{createUser}, sysdate()
+      <if test="remark != null" >
+        ,#{remark}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateArrangeInfo" parameterType="cn.com.cyber.model.ArrangeInfo" >
+    update arrange_info
+    <set >
+      <if test="interfaceName != null" >
+        interface_name = #{interfaceName},
+      </if>
+      <if test="state != null" >
+        state = #{state},
+      </if>
+        update_user = #{updateUser},
+        update_time = sysdate(),
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <sql id="sql_where" >
+    <where >
+      <if test="id != null" >
+         and id = #{id}
+      </if>
+      <if test="interfaceName != null and interfaceName !=''" >
+        and interface_name like "%"#{interfaceName}"%"
+      </if>
+      <if test="state != null" >
+         and state = #{state,jdbcType=INTEGER}
+      </if>
+      <if test="createUser != null" >
+         and create_user = #{createUser,jdbcType=BIGINT}
+      </if>
+    </where>
+  </sql>
+  <select id="getArrangeInfoList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.ArrangeInfo" >
+     select * from arrange_info
+    <include refid="sql_where" />
+  </select>
+
+  <insert id="insertRelevanceMore" parameterType="cn.com.cyber.model.ArrangeInfo">
+    INSERT INTO arrange_relevance(arrange_id, app_id, service_id)
+    VALUES
+    <foreach collection="relevances" item="item" separator=",">
+      (#{item.arrangeId}, #{item.appId}, #{item.serviceId})
+    </foreach>
+  </insert>
+
+  <delete id="deleteRelevanceByArrangeId" parameterType="long">
+    delete from arrange_relevance where arrange_id=#{arrangeId}
+  </delete>
+
+  <select id="getServiceCheck" parameterType="long" resultType="long">
+     select service_id from arrange_relevance where arrange_id=#{arrangeId}
+  </select>
+
+</mapper>

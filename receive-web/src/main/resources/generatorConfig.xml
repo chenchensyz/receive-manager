@@ -7,8 +7,8 @@
     <classPathEntry
             location="D:\local-maven\mysql\mysql-connector-java\5.1.46\mysql-connector-java-5.1.46.jar" />
     <context id="MySqlTables" targetRuntime="MyBatis3">
-        <plugin type="cn.com.cyber.tools.mybatis.generaor.PaginationPlugin" />
-        <commentGenerator type="cn.com.cyber.tools.mybatis.MyCommentGenerator">
+        <plugin type="cn.com.cyber.util.mybatis.generaor.PaginationPlugin" />
+        <commentGenerator type="cn.com.cyber.util.mybatis.MyCommentGenerator">
             <property name="javaFileEncoding" value="UTF-8"/>
             <property name="suppressAllComments" value="true"/><!-- 是否取消注释 -->
             <property name="suppressDate" value="true" /> <!-- 是否生成注释代时间戳-->
@@ -27,48 +27,29 @@
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
         <!--配置实体bean -->
-        <javaModelGenerator targetPackage="cn.com.cyber.model"
-                            targetProject="receive-model/src/main/java">
+        <javaModelGenerator targetPackage="cn.com.cyber.model"  targetProject="receive-web/src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
         <!--配置实体map接口（dao） -->
-        <sqlMapGenerator targetPackage="cn.com.cyber.mapper"
-                         targetProject="receive-dao/src/main/java">
+        <sqlMapGenerator targetPackage="mapper" targetProject="receive-web/src/main/resources">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
         <!--配置实体bean的sql.xml -->
-        <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="cn.com.cyber.dao" targetProject="receive-dao/src/main/java">
+        <javaClientGenerator  targetPackage="cn.com.cyber.dao" targetProject="receive-web/src/main/java" type="XMLMAPPER">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
-        <!--配置实体bean -->
-        <!-- <javaModelGenerator targetPackage="cn.timepack.model.recharge" targetProject="E:\code">
-            <property name="enableSubPackages" value="true" /> <property name="trimStrings"
-            value="true" /> </javaModelGenerator> -->
-
-        <!--配置实体map接口（dao） -->
-        <!-- <sqlMapGenerator targetPackage="cn.timepack.mapper.recharge" targetProject="E:\code">
-            <property name="enableSubPackages" value="true" /> </sqlMapGenerator> -->
-
-        <!--配置实体bean的sql.xml -->
-        <!-- <javaClientGenerator type="XMLMAPPER" targetPackage="cn.timepack.dao.recharge"
-            targetProject="E:\code"> <property name="enableSubPackages" value="true"
-            /> </javaClientGenerator> -->
-
-
 
         <!--配置实体 -->
-        <table  tableName="code_info" domainObjectName="CodeInfo"
+        <table  tableName="arrange_info" domainObjectName="ArrangeInfo"
                 enableCountByExample="false" enableUpdateByExample="false"
                 enableDeleteByExample="false" enableSelectByExample="false"
                 selectByExampleQueryId="false" >
-            <property name="rootClass" value="cn.com.cyber.BaseEntity" />
+            <property name="rootClass" value="cn.com.cyber.model.BaseEntity" />
             <!--<columnOverride column="ID" javaType="java.lang.Integer"></columnOverride>-->
         </table>
-
     </context>
 </generatorConfiguration>

@@ -1,4 +1,4 @@
-package cn.com.cyber.tools.mybatis;
+package cn.com.cyber.util.mybatis;
 
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.api.ProgressCallback;

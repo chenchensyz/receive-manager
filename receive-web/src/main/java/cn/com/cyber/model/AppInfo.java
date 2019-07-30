@@ -4,6 +4,7 @@ package cn.com.cyber.model;
 import cn.com.cyber.util.DateUtil;
 
 import java.util.Date;
+import java.util.List;
 
 public class AppInfo extends BaseEntity {
     private Long id;
@@ -39,6 +40,8 @@ public class AppInfo extends BaseEntity {
     private Date lastUpdateTime;
 
     private String lastUpdateTimeStr;
+
+    private List<AppService> services;
 
     public Long getId() {
         return id;
@@ -174,5 +177,13 @@ public class AppInfo extends BaseEntity {
 
     public void setCompanyInfo(CompanyInfo companyInfo) {
         this.companyInfo = companyInfo;
+    }
+
+    public List<AppService> getServices() {
+        return services;
+    }
+
+    public void setServices(List<AppService> services) {
+        this.services = services;
     }
 }

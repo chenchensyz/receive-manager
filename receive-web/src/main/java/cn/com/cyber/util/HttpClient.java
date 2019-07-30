@@ -29,7 +29,7 @@ public class HttpClient {
     }
 
     public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr) {
-        LOGGER.info("进入连接:{}",requestUrl);
+        LOGGER.info("进入连接:{}", requestUrl);
         Map<String, Object> map = Maps.newHashMap();
         String result = null;
         HttpURLConnection conn = null;
@@ -59,24 +59,24 @@ public class HttpClient {
                 outputStream.write(outputStr.getBytes("UTF-8"));
             }
             int responseCode = conn.getResponseCode();
+            inputStream = conn.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+            bufferedReader = new BufferedReader(inputStreamReader);
+            String str;
+            StringBuffer buffer = new StringBuffer();
+            while ((str = bufferedReader.readLine()) != null) {
+                buffer.append(str);
+            }
             if (CodeUtil.HTTP_OK == responseCode) {
-                inputStream = conn.getInputStream();
-                inputStreamReader = new InputStreamReader(inputStream, "utf-8");
-                bufferedReader = new BufferedReader(inputStreamReader);
-                String str;
-                StringBuffer buffer = new StringBuffer();
-                while ((str = bufferedReader.readLine()) != null) {
-                    buffer.append(str);
-                }
                 result = buffer.toString();
             } else {
-                map.put("error", responseCode + ":" + conn.getResponseMessage());
+                map.put("error", buffer.toString());
                 LOGGER.error("响应异常code:{}, requestUrl:{} ,msg:{}", responseCode, requestUrl, conn.getResponseMessage());
             }
             map.put("code", responseCode);
         } catch (Exception e) {
             LOGGER.error("请求异常 requestUrl:{},error:{}", requestUrl, e);
-            map.put("error", e.toString());
+            map.put("error", e);
         } finally {
             // 释放资源
             try {

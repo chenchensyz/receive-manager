@@ -8,8 +8,10 @@ import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.controller.manager.filter.CompanyInfoFilter;
 import cn.com.cyber.model.AppModel;
 import cn.com.cyber.model.CompanyInfo;
+import cn.com.cyber.model.ReceiveLog;
 import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.service.CompanyInfoService;
+import cn.com.cyber.service.ReceiveLogService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.HttpClient;
 import cn.com.cyber.util.MessageCodeUtil;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -50,18 +53,28 @@ public class RedirectWHController extends BaseController {
     @Autowired
     private CompanyInfoService companyInfoService;
 
+    @Autowired
+    private ReceiveLogService receiveLogService;
+
+
     //武汉服务
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public void repeat(HttpServletRequest request, HttpServletResponse response, @RequestBody(required = false) String jsonData) {
         LOGGER.info("请求开始:{}", jsonData.length());
+        ReceiveLog receiveLog = new ReceiveLog(); //日志
+        receiveLog.setRequestTime(new Date());
         String appKey = request.getHeader("appKey");
         String serviceKey = request.getHeader("serviceKey");
         String serviceUrl = request.getHeader("serviceUrl");
         int msgCode;
         String result = "";
         try {
+            //appKey,serviceKey
             AppModel appModel = valiedParams(appKey, serviceKey);
+            //appKey,serviceKey写入日志
+            receiveLog.setAppKey(appKey);
+            receiveLog.setServiceKey(serviceKey);
             JSONObject jsonObject = new JSONObject();
             if (StringUtils.isNotBlank(jsonData)) {
                 jsonObject = JSONObject.parseObject(jsonData);
@@ -76,18 +89,24 @@ public class RedirectWHController extends BaseController {
                 url += "/getTest";
             }
             Map<String, Object> resultMap = HttpClient.httpRequest(url, CodeUtil.METHOD_POST, CodeUtil.CONTEXT_JSON, jsonObject.toString());
+            receiveLog.setResponseTime(new Date());
             if (resultMap.get("code") != null && CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
                 result = resultMap.get("result").toString();
+                receiveLog.setResponseCode(1);
             } else {
-                result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED) + resultMap.get("error")));
+                result = resultMap.get("error").toString();
+                receiveLog.setResponseCode(0);
+                receiveLog.setRemark(resultMap.get("error").toString());
             }
-            setResponseText(response, result);
+            receiveLogService.saveReceiveLog(receiveLog); //保存日志
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();
             response.setStatus(500);
-            setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));
+            result = JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)));
         }
+
         LOGGER.info("本次请求结束 result:{}", result);
+        setResponseText(response, result);
     }
 
     @RequestMapping(value = "/test", method = {RequestMethod.POST, RequestMethod.GET})

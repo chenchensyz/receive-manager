@@ -3,6 +3,7 @@ package cn.com.cyber.dao;
 import cn.com.cyber.model.AppInfo;
 import cn.com.cyber.model.AppModel;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AppInfoMapper extends BaseDao<AppInfo> {
@@ -15,4 +16,5 @@ public interface AppInfoMapper extends BaseDao<AppInfo> {
 
     int getCountAppInfoByState(Map<String, Object> map);
 
+    List<Map<String,Object>> getAppServiceList(Long companyId);
 }

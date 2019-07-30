@@ -72,6 +72,13 @@ public class CodeUtil {
     public static final int APPSERVICE_ERR_SAVE = 10110; //保存接口失败
     public static final int APPSERVICE_ERR_OPTION = 10111; //接口操作失败
 
+    //编排接口
+    public static final int ARRANGEINFO_ERR_SELECT = 11101; //未查到编排接口
+    public static final int ARRANGEINFO_ERR_ADD= 11102; //编排接口保存失败
+    public static final int ARRANGERELEVANCE_ERR_ADD= 11103; //编排接口绑定失败
+    public static final int ARRANGEINFO_ERR_DEL= 11104; //编排接口删除失败
+    public static final int ARRANGEINFO_MORE_ADD= 11105; //对不起，选择接口不能超过3个
+
     //用户
     public static final int USERINFO_ERR_SELECT = 20101; //未查到用户
     public static final int USERINFO_ERR_ADD = 20102; //添加或编辑用户失败

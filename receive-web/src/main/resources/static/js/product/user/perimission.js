@@ -52,7 +52,7 @@ perimission.prototype = {
         this.layForm.on('submit(addOrEdit)', function (data) {
             $.post(getRootPath() + '/permission/addOrEditPermission', data.field).then(function (res) {
                 if (res.code == 0) {
-                    location.href = history.back(-1);
+                    location.href = getRootPath() + '/permission/getPermList'
                 }else {
                     layer.alert(res.message, function () {
                         layer.closeAll();

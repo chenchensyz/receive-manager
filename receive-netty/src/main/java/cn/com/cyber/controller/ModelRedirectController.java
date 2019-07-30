@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class ModelRedirectController extends BaseController {
 
     @RequestMapping
     @ResponseBody
-    public String redirect(@RequestBody String jsonData) {
+    public String redirect(HttpServletResponse response, @RequestBody String jsonData) {
         LOGGER.info("接收二类网请求：{}", jsonData);
         JSONObject json = JSONObject.parseObject(jsonData);
 
@@ -51,14 +52,18 @@ public class ModelRedirectController extends BaseController {
                 //请求http接口
                 LOGGER.info("请求内网参数：{}", params);
                 Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, responseType, serviceHeader);
-                if (resultMap.get("code") != null && CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
-                    result = resultMap.get("result").toString();
-                } else {
-                    result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED) + resultMap.get("error")));
+                if (resultMap.get("code") != null) {
+                    if (CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
+                        result = resultMap.get("result").toString();
+                    } else {
+                        result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED) + resultMap.get("error")));
+                        response.setStatus((Integer) resultMap.get("code"));
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            response.setStatus(500);
             result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED)));
             return result;
         }
