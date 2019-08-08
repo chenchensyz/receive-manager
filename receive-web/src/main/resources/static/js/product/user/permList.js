@@ -99,6 +99,7 @@ permList.prototype = {
                             resize: false,
                             shadeClose: true,
                             area: ['600px'],
+                            maxmin: true, //开启最大化最小化按钮
                             content: $('#permChild'),
                             end: function () {
                                 $('#permChild').css("display", "none");

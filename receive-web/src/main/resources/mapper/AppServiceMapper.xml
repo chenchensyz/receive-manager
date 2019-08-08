@@ -126,7 +126,7 @@
          and id = #{id,jdbcType=BIGINT}
       </if>
       <if test="name != null and name !=''" >
-         and name = #{name,jdbcType=VARCHAR}
+          and name like "%"#{name}"%"
       </if>
       <if test="serviceKey != null and serviceKey !=''" >
          and service_key = #{serviceKey,jdbcType=VARCHAR}
@@ -154,9 +154,6 @@
       </if>
       <if test="createTime != null" >
          and create_time = #{createTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="lastUpdateTime != null" >
-         and last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
       </if>
     </where>
   </sql>

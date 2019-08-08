@@ -46,9 +46,9 @@ appInfoList.prototype = {
                 {type: 'numbers'}
                 , {field: 'appName', title: '应用名称'}
                 , {field: 'appKey', title: '应用密钥'}
-                , {field: 'state', title: '应用状态', width: 103, align: 'center', templet: '#stateJob'}
-                , {field: 'createTimeStr', title: '创建时间', width: 172}
-                , {field: 'right', title: '操作', width: 194, align: 'center', toolbar: '#optBar'}
+                , {field: 'state', title: '应用状态', width: 90, align: 'center', templet: '#stateJob'}
+                , {field: 'createTimeStr', title: '创建时间', width: 162}
+                , {field: 'right', title: '操作', width: 170, align: 'center', toolbar: '#optBar'}
             ]]
             , done: function (res, curr, count) {
                 //如果是异步请求数据方式，res即为你接口返回的信息。

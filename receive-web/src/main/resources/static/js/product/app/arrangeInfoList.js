@@ -151,6 +151,7 @@ arrangeInfoList.prototype = {
             resize: false,
             shadeClose: true,
             area: ['600px', '400px'],
+            maxmin: true, //开启最大化最小化按钮
             content: $('#interfaceDialog'),
             end: function () {
                 // $('#interfaceDialog').css("display", "none");

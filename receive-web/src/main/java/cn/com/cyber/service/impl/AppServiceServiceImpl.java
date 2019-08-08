@@ -112,7 +112,7 @@ public class AppServiceServiceImpl implements AppServiceService {
         if (-1 == state) {
             count = appServiceMapper.deleteMoreAppService(ids);
         } else {
-            count = appServiceMapper.updateMoreAppService(ids,state);
+            count = appServiceMapper.updateMoreAppService(ids, state);
         }
         if (count != ids.size()) {
             throw new ValueRuntimeException(CodeUtil.APPSERVICE_ERR_OPTION);

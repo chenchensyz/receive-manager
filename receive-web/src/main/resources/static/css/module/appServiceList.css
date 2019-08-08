@@ -1,28 +1,53 @@
-.layui-layout-admin .layui-body {
-    top: 0px;
-    bottom: 44px;
-}
-
-.layui-layout-admin .layui-footer {
-    border-top: 1px solid #92bae1;
-    position: fixed;
-    left: 0px !important;
-    background-color: #eaf2f9;
-}
-
 .back-btn {
     margin-top: 7px;
 }
 
 .refuse-btn {
-    margin-top: 7px;
+    float: right;
+    margin-right: 10px;
+    margin-top: 0px;
+    display: none;
 }
 
 .lay-head-hr, .layui-table-box, .layui-table-view {
     margin-right: 0px
 }
 
-/*修改密码弹出层*/
-.layer_self_wrap .layui-form-label {
-    width: 114px !important;
+.app-list {
+    width: 20%;
+    float: left;
+    border: 1px solid #e6e6e6;
+    margin-top: 10px;
+    height: 300px;
+    overflow: auto
 }
+
+.app-list .layui-btn + .layui-btn {
+    margin-left: 0px !important;
+}
+
+.layer_self_wrap {
+    width: 580px;
+    display: none;
+}
+
+.layui-form-pane .layui-form-label {
+    width: 133px;
+}
+
+.layer_self_wrap .layui-form-item .layui-input-inline {
+    width: 360px;
+}
+
+.submit-div {
+    margin-left: 189px !important;
+}
+
+/*.input-disabled {*/
+    /*disabled: true !important;*/
+    /*color: #9E9E9E;*/
+/*}*/
+
+/*.input-disabled:hover {*/
+    /*cursor: not-allowed;*/
+/*}*/

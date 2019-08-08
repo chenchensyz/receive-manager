@@ -14,6 +14,9 @@
         <input id="source" type="hidden" th:value="${source}"/>
 
         <div class="layui-form-item">
+            <a class="layui-btn layui-btn-sm add-btn" style="float:left;margin-right:10px">
+                <i class="layui-icon layui-icon-add-1"></i>
+            </a>
             <label class="layui-form-label">应用名称</label>
             <div class="layui-input-inline">
                 <input id="appName" name="appName" autocomplete="off" class="layui-input" type="text"/>
@@ -28,7 +31,6 @@
             <!--</div>-->
             <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
             <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">提交</button>
-            <a class="layui-btn layui-btn-sm add-btn" style="float: right;margin-right: 20px;">添加应用</a>
         </div>
     </form>
 
@@ -41,13 +43,17 @@
         <button type="button" class="layui-btn layui-btn-primary state-btn" data-type="2">待提交(<span class="state-span"></span>)</button>
         <button type="button" class="layui-btn layui-btn-primary state-btn" data-type="-1">未通过(<span class="state-span"></span>)</button>
     </div>
-    <table id="appInfoList" lay-filter="appInfoTable"></table>
 
-    <script type="text/html" id="optBar">
-        <a class="layui-btn layui-btn-xs app-edit" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="interface">接口</a>
-        <a class="layui-btn layui-btn-warm layui-btn-xs app-opt" lay-event="opt"></a>
-    </script>
+    <div style="margin-right: 8px">
+        <table id="appInfoList" lay-filter="appInfoTable"></table>
+
+        <script type="text/html" id="optBar">
+            <a class="layui-btn layui-btn-xs app-edit" lay-event="edit">编辑</a>
+            <!--<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="interface">接口</a>-->
+            <a class="layui-btn layui-btn-warm layui-btn-xs app-opt" lay-event="opt"></a>
+        </script>
+    </div>
+
 </div>
 
 <div th:include="head :: commonjs"></div>

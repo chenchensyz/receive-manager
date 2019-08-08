@@ -33,7 +33,6 @@ public class AppinfoController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppinfoController.class);
 
     @Autowired
-
     private AppInfoService appInfoService;
 
     @Autowired
@@ -166,5 +165,20 @@ public class AppinfoController extends BaseController {
             return RestResponse.failure("操作失败");
         }
         return RestResponse.success();
+    }
+
+    //获取应用列表数据-接口列表展示
+    @RequestMapping("queryAppList")
+    @ResponseBody
+    public RestResponse queryAppList() {
+        AppInfo appInfo = new AppInfo();
+        if (getShiroUser().source == 1) { //开发者查询
+            appInfo.setCompanyId(getShiroUser().companyId);//用户所在公司的id
+            if (appInfo.getState() == 2) {
+                appInfo.setCreateUserId(getShiroUser().id);
+            }
+        }
+        List<AppInfo> appInfos = appInfoService.getList(appInfo);
+        return RestResponse.success().setData(appInfos);
     }
 }

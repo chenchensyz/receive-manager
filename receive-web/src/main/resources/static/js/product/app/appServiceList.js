@@ -15,17 +15,49 @@ function appServiceList() {
 
 appServiceList.prototype = {
     init: function () {
-        this.initData();
-        this.toAdd();
-        this.toBack();
+        this.queryAppList();
         this.changeServiceFile();
         this.alertServiceFile();
         this.refuseMoreAppService();
+        this.appSec();
+        this.toAdd();
+        this.submitAppService();
     },
 
-    initData: function () {
+    queryAppList: function () {
         var that = this;
-        var appId = $('#appId').val();
+        $.ajax({
+            url: getRootPath() + "/appInfo/queryAppList",
+            type: 'get',
+            success: function (res) {
+                if (res.code == 0) {
+                    for (i = 0; i < res.data.length; i++) {
+                        $('.app-list').append(`<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid layui-btn-sm app-sec" data-type="${res.data[i].id}">${res.data[i].appName}</button>`);
+                    }
+                    $('#appId').val(res.data[0].id);
+                    $('#appName').val(res.data[0].appName);
+                    that.initData(res.data[0].id);
+                    $('.app-list').find('.app-sec').each(function (index, element) {
+                        if (index == 0) {
+                            $(this).attr('style', 'background-color: #c3c3c3');
+                        }
+                    });
+                } else {
+                    layer.alert(res.message, function () {
+                        layer.closeAll();
+                    });
+                }
+            },
+            error: function (err) {
+                layer.alert(err.message, function () {
+                    layer.closeAll();
+                });
+            }
+        });
+    },
+
+    initData: function (appId) {
+        var that = this;
         that.tableIns = that.layTable.render({
             id: 'appServiceTable',
             elem: '#appServiceList'
@@ -45,11 +77,10 @@ appServiceList.prototype = {
             }
             , cols: [[
                 {type: 'checkbox'}
-                , {field: 'name', title: '接口名称', width: 265}
-                , {field: 'serviceKey', title: '接口密钥', width: 342}
-                , {field: 'method', title: '请求方式', align: 'center', width: 120}
-                , {field: 'createTimeStr', title: '创建时间', width: 187}
-                , {field: 'right', title: '操作', align: 'center', toolbar: '#optBar'}
+                , {field: 'name', title: '接口名称', width: 278}
+                , {field: 'serviceKey', title: '接口密钥', width: 305}
+                , {field: 'method', title: '请求方式', align: 'center', width: 89}
+                , {field: 'right', title: '操作', align: 'center', toolbar: '#optBar', width: 150}
             ]]
             , done: function (res, curr, count) {
                 //如果是异步请求数据方式，res即为你接口返回的信息。
@@ -76,6 +107,9 @@ appServiceList.prototype = {
         that.layTable.on('checkbox(appServiceTable)', function (obj) {
             var checkStatus = that.layTable.checkStatus('appServiceTable'); //appServiceTable 即为 id 对应的值
             if (checkStatus.data.length > 0) {
+                if ($('.state').val() == 0) {
+                    $('.refuse-btn').text('批量恢复');
+                }
                 $('.refuse-btn').show();
             } else {
                 $('.refuse-btn').hide();
@@ -101,19 +135,20 @@ appServiceList.prototype = {
         });
     },
 
-    toBack: function () {
-        $('.back-btn').off('click').on('click', function () {
-            location.href = getRootPath() + '/appInfo/getAppInfoList';
+    //切换应用
+    appSec: function () {
+        var that = this;
+        $('.app-list').on('click', '.app-sec', function () {
+            $(".rest-btn").click();
+            $('.app-sec').attr('style', 'background-color: #fefefe');
+            var appId = $(this).attr('data-type');
+            $(this).attr('style', 'background-color: #c3c3c3');
+            $('#appId').val(appId);
+            $('#appName').val($(this).text());
+            that.initData(appId)
         });
     },
 
-    toAdd: function () {
-        $('.add-btn').off('click').on('click', function () {
-            // $('.add-btn').attr('href', getRootPath() + '/user/getUserInfo?userId=0');
-            var appId = $('#appId').val();
-            location.href = getRootPath() + '/appService/getAppService?appId=' + appId;
-        });
-    },
     refuseMoreAppService: function () {
         var that = this;
         $('.refuse-btn').off('click').on('click', function () {
@@ -122,23 +157,27 @@ appServiceList.prototype = {
             for (var i = 0; i < checkStatus.data.length; i++) {
                 ids += checkStatus.data[i].id + ',';
             }
-            that.delAppService(that, ids, 0);
+            var state = $('.state').val() ? 1 : 0;
+            that.delAppService(that, ids, state);
+            return false;
         });
     },
+
     delAppService: function (obj, ids, state) {
         var that = this;
         layer.confirm('您确定要执行此操作吗？', {
             btn: ['确认', '返回'] //按钮n
         }, function () {
+            debugger
             $.ajax({
                 url: getRootPath() + "/appService/changeAppService",//提交的url,
                 type: 'POST',
                 data: {'appServiceIds': ids, 'state': state},
-                contentType: 'application/x-www-form-urlencoded', // ⑨告诉jQuery不要去设置Content-Type请求头
                 success: function (res) {
                     if (res.code == 0) {
                         layer.msg(res.message);
                         that.load(obj); //加载load方法
+                        $('.refuse-btn').hide();
                     } else {
                         layer.alert(res.message, function () {
                             layer.closeAll();
@@ -154,8 +193,8 @@ appServiceList.prototype = {
         }, function () {
             layer.closeAll();
         });
-        $('.refuse-btn').hide();
     },
+
     changeServiceFile: function () {
         var that = this;
         // ①设定change事件
@@ -177,7 +216,9 @@ appServiceList.prototype = {
                         location.href = res.data;
                         layer.closeAll();
                     } else {
-                        layer.alert(res.message, function () {layer.closeAll(); });
+                        layer.alert(res.message, function () {
+                            layer.closeAll();
+                        });
                     }
                 });
             }, function () {
@@ -223,6 +264,77 @@ appServiceList.prototype = {
                     layer.closeAll();
                 });
             }
+        });
+    },
+
+    toAdd: function () {
+        var that = this;
+        $('.add-btn').off('click').on('click', function () {
+            // // $('.add-btn').attr('href', getRootPath() + '/user/getUserInfo?userId=0');
+            var appId = $('#appId').val();
+            location.href = getRootPath() + '/appService/getAppService?appId=' + appId;
+            // $('.param-reset-btn').click();
+            // $('.param-appName').val($('#appName').val());
+            // that.getContentType(1, 1);
+            // layer.open({
+            //     type: 1,
+            //     title: "编排接口",
+            //     fixed: false,
+            //     resize: false,
+            //     shadeClose: true,
+            //     area: ['600px', '400px'],
+            //     maxmin: true, //开启最大化最小化按钮
+            //     content: $('#serviceDialog'),
+            //     end: function () {
+            //         // $('#interfaceDialog').css("display", "none");
+            //     }
+            // });
+        });
+    },
+
+    getContentType: function (method, contentType) {
+        var that = this;
+        var option = '<option value="" >请选择...</option>';
+        $.get(getRootPath() + '/appService/getContentType', function (res) {
+            if (res.code == 0) {
+                $.each(res.data.method, function (i, ele) {
+                    if (method == ele.code) {
+                        option += "<option value='" + ele.code + "' selected=\"selected\">" + ele.code + "</option>";
+                    } else {
+                        option += "<option value='" + ele.code + "'>" + ele.code + "</option>";
+                    }
+                });
+                $(".param-method").append(option);
+
+                option = '<option value="" >请选择...</option>';
+                $.each(res.data.contentType, function (i, ele) {
+                    if (contentType == ele.code) {
+                        option += "<option value='" + ele.code + "' selected=\"selected\">" + ele.code + "</option>";
+                    } else {
+                        option += "<option value='" + ele.code + "'>" + ele.code + "</option>";
+                    }
+                });
+                $(".param-contentType").append(option);
+                that.layForm.render('select');
+            }
+        });
+    },
+
+    submitAppService: function () {
+        var that = this;
+        this.layForm.on('submit(addOrEdit)', function (data) {
+            data.field.appId = $('#appId').val();
+            $.post(getRootPath() + '/appService/addOrEdit', data.field).then(function (res) {
+                if (res.code == 0) {
+                    that.initData($('#appId').val());
+                    layer.closeAll();
+                } else {
+                    layer.alert(res.message, function () {
+                        layer.closeAll();
+                    });
+                }
+            });
+            return false;
         });
     }
 };

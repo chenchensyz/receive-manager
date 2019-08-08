@@ -10,6 +10,9 @@
 
     <form id="userSearch" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
         <div class="layui-form-item">
+            <a class="layui-btn layui-btn-sm add-btn" style="float:left;margin-right:10px">
+                <i class="layui-icon layui-icon-add-1"></i>
+            </a>
             <label class="layui-form-label">编排接口名称</label>
             <div class="layui-input-inline">
                 <input id="interfaceName" name="interfaceName" autocomplete="off" class="layui-input" type="text"/>
@@ -24,7 +27,6 @@
             <!--</div>-->
             <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
             <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">提交</button>
-            <a class="layui-btn layui-btn-sm add-btn" style="float: right;margin-right: 20px;">添加编排接口</a>
         </div>
     </form>
 

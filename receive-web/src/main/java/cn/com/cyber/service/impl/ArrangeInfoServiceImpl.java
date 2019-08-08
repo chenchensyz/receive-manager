@@ -113,4 +113,8 @@ public class ArrangeInfoServiceImpl implements ArrangeInfoService {
             throw new ValueRuntimeException(CodeUtil.ARRANGEINFO_ERR_DEL); //编排接口删除失败
         }
     }
+
+    public static void main(String[] args) {
+        System.out.println(System.currentTimeMillis());
+    }
 }

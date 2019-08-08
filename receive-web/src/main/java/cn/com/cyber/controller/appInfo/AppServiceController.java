@@ -4,9 +4,10 @@ import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.CodeInfo;
 import cn.com.cyber.service.AppServiceService;
-import cn.com.cyber.util.*;
-import cn.com.cyber.util.excel.ExcelUtil;
-import cn.com.cyber.util.excel.ServiceKeyExcel;
+import cn.com.cyber.util.CodeInfoUtils;
+import cn.com.cyber.util.CodeUtil;
+import cn.com.cyber.util.MessageCodeUtil;
+import cn.com.cyber.util.RestResponse;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -23,11 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -43,8 +39,7 @@ public class AppServiceController extends BaseController {
     private MessageCodeUtil messageCodeUtil;
 
     @RequestMapping("getAppServiceList")
-    public String getAppInfoList(@RequestParam(value = "appId") Long appId, Model model) {
-        model.addAttribute("appId", appId);
+    public String getAppInfoList() {
         return "appInfo/appServiceList";
     }
 
