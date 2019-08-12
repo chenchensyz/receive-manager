@@ -1,21 +1,29 @@
 package cn.com.cyber.interceptor;
 
+import cn.com.cyber.socket.SpringUtil;
 import cn.com.cyber.util.CodeUtil;
+import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.exception.ValueRuntimeException;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
 @Configuration
 public class MyInteceptor implements WebMvcConfigurer {
@@ -26,7 +34,7 @@ private Environment environment;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new InterfaceAuthCheckInterceptor()).addPathPatterns("/api");
+        registry.addInterceptor(new InterfaceAuthCheckInterceptor()).addPathPatterns("/redirect/wh");
     }
 
     @Override
@@ -57,8 +65,13 @@ class InterfaceAuthCheckInterceptor implements HandlerInterceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MyInteceptor.class);
 
-    @Autowired
-    StringRedisTemplate stringRedisTemplate;
+    private static Map<Integer, String> messageMap = Maps.newHashMap();
+
+    static {
+        messageMap.put(CodeUtil.REQUEST_TOKEN_NULL, "头信息中缺少 token 信息");
+        messageMap.put(CodeUtil.REQUEST_USER_NULL, "头信息中缺少 用户 信息");
+        messageMap.put(CodeUtil.REQUEST_TOKEN_ERR, "token验证失败，请重新获取");
+    }
 
     @Override
     public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)
@@ -74,24 +87,46 @@ class InterfaceAuthCheckInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String sessionId = request.getSession().getAttribute("sessionId") + "";
-        String sessId = request.getSession().getId();
-        LOGGER.info("ValidateSessionInterceptor :{}", sessionId);
-        boolean isLogin = false;
-        if (StringUtils.isBlank(sessionId) || "null".equalsIgnoreCase(sessionId)) {
-            isLogin = true;
-        } else if (!sessionId.equals(sessId)) {
-            isLogin = true;
-        }
-        if (isLogin) {
-//            LOGGER.info("sendRedirect URL:{}", request.getContextPath() + "/login");
-//            response.sendRedirect(request.getContextPath() + "/login/toLogin");
-            response.setHeader("sessionstatus", "timeout");
-            response.sendError(401, "session timeout.");
-            response.setStatus(401);
-            response.sendError(401);
+        String token = request.getHeader("token");
+        String username = request.getHeader("username");
+        if (StringUtils.isBlank(token)) {
+            writeJsonResult(response, 401, CodeUtil.REQUEST_TOKEN_NULL, messageMap.get(CodeUtil.REQUEST_TOKEN_NULL));
             return false;
         }
+        if (StringUtils.isBlank(username)) {
+            writeJsonResult(response, 401, CodeUtil.REQUEST_USER_NULL, messageMap.get(CodeUtil.REQUEST_USER_NULL));
+            return false;
+        }
+
+        JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(CodeUtil.PSTORE_LOGIN_REDIS_INDEX);
+        try {
+            String tokenSec = jedis.get(CodeUtil.PSTORE_LOGIN_REDIS_PREFIX + username);
+            if (StringUtils.isBlank(tokenSec) || !tokenSec.equals(token)) {
+                writeJsonResult(response, 401, CodeUtil.REQUEST_TOKEN_ERR, messageMap.get(CodeUtil.REQUEST_TOKEN_ERR));
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ValueRuntimeException(CodeUtil.USERINFO_ERR_VALIED); //用户登陆失败
+        } finally {
+            jedis.close();
+        }
         return true;
+    }
+
+    private void writeJsonResult(HttpServletResponse response, int httpCode, int code, String msg) {
+        response.setStatus(httpCode);
+        response.setContentType(CodeUtil.CONTEXT_JSON);
+        response.setCharacterEncoding(CodeUtil.cs.toString());
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.print(RestResponse.res(code, msg));
+        out.flush();
     }
 }

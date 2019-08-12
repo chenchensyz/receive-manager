@@ -9,13 +9,9 @@ import cn.com.cyber.controller.manager.filter.CompanyInfoFilter;
 import cn.com.cyber.model.AppModel;
 import cn.com.cyber.model.CompanyInfo;
 import cn.com.cyber.model.ReceiveLog;
-import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.service.CompanyInfoService;
 import cn.com.cyber.service.ReceiveLogService;
-import cn.com.cyber.util.CodeUtil;
-import cn.com.cyber.util.HttpClient;
-import cn.com.cyber.util.MessageCodeUtil;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.*;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -31,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/redirect_wh")
+@RequestMapping("/redirect/wh")
 public class RedirectWHController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedirectWHController.class);
@@ -56,12 +54,14 @@ public class RedirectWHController extends BaseController {
     @Autowired
     private ReceiveLogService receiveLogService;
 
+    @Autowired
+    private JedisPool jedisPool;
+
 
     //武汉服务
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public void repeat(HttpServletRequest request, HttpServletResponse response, @RequestBody(required = false) String jsonData) {
-        LOGGER.info("请求开始:{}", jsonData.length());
         ReceiveLog receiveLog = new ReceiveLog(); //日志
         receiveLog.setRequestTime(new Date());
         String appKey = request.getHeader("appKey");
@@ -101,12 +101,55 @@ public class RedirectWHController extends BaseController {
             receiveLogService.saveReceiveLog(receiveLog); //保存日志
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();
-            response.setStatus(500);
             result = JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)));
         }
 
         LOGGER.info("本次请求结束 result:{}", result);
         setResponseText(response, result);
+    }
+
+    @RequestMapping("/login")
+    @ResponseBody
+    public RestResponse login(String username, String password) {
+        RestResponse rest = new RestResponse();
+        int msgCode = CodeUtil.SELECT_SUCCESS;
+        try {
+            if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+                throw new ValueRuntimeException(CodeUtil.REQUEST_PARAM_NULL);
+            }
+            StringBuffer url = new StringBuffer(messageCodeUtil.getMessage(CodeUtil.PSTORE_LOGIN_URL));
+            url.append("?username=" + username);
+            String passwordParam = EncryptUtils.MD5Encode(username + password + "*!!");
+            url.append("&password=" + passwordParam);
+            Map<String, Object> resultMap = HttpClient.httpRequest(url.toString(), CodeUtil.METHOD_GET, null, null);
+            if (resultMap.get("code") != null && CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
+                JSONObject jsonObject = JSONObject.parseObject(resultMap.get("result").toString());
+                Integer ret = jsonObject.getInteger("ret");
+                if (ret == 0) {
+                    rest.setData(createToken(username));
+                } else {
+                    throw new ValueRuntimeException(CodeUtil.USERINFO_ERR_VALIED);
+                }
+            } else {
+                throw new ValueRuntimeException(CodeUtil.USERINFO_ERR_CONNECT);
+            }
+        } catch (ValueRuntimeException e) {
+            msgCode = (Integer) e.getValue();
+        }
+        rest.setCode(msgCode).setMessage(messageCodeUtil.getMessage(msgCode));
+        return rest;
+    }
+
+    private String createToken(String username) {
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(CodeUtil.PSTORE_LOGIN_REDIS_INDEX);
+        String token = jedis.get(CodeUtil.PSTORE_LOGIN_REDIS_PREFIX + username);
+        if (StringUtils.isNotBlank(token)) {
+            return token;
+        }
+        token = HttpClient.getUUID();
+        jedis.setex(CodeUtil.PSTORE_LOGIN_REDIS_PREFIX + username, 60 * 60 * 2, token);
+        return token;
     }
 
     @RequestMapping(value = "/test", method = {RequestMethod.POST, RequestMethod.GET})

@@ -45,6 +45,12 @@ public class CodeUtil {
     public static final String SOCKET_OPEN = "socket_open";
     public static final String FILE_ROOT_PATH = "file_root_path";
 
+    //pstore用户校验
+    public static final String PSTORE_LOGIN_URL = "pstore_login_url";
+    public static final int PSTORE_LOGIN_REDIS_INDEX = 1; //redis保存1号库
+    public static final String PSTORE_LOGIN_REDIS_PREFIX = "u:";
+
+
     //响应状态码
     public static final int SELECT_SUCCESS = 0; //请求成功
     public static final int REQUEST_TIMEOUT = 99101; //服务接口请求超时
@@ -56,6 +62,9 @@ public class CodeUtil {
     public static final int REQUEST_SERVICEURL_NULL = 99107;//请求的参数中serviceurl元素为空
     public static final int REQUEST_KEY_FILED = 99108;//请检查appKey或serviceKey是否正确
     public static final int CONNECT_ERR_MOBLIE = 99109;//无法连接移动信息网
+    public static final int REQUEST_TOKEN_NULL = 99110;//头信息中缺少 token 信息
+    public static final int REQUEST_USER_NULL = 99110;//头信息中缺少 用户 信息
+    public static final int REQUEST_TOKEN_ERR = 99111;//token验证失败，请重新获取
 
 
     //管理平台状态码
@@ -74,15 +83,17 @@ public class CodeUtil {
 
     //编排接口
     public static final int ARRANGEINFO_ERR_SELECT = 11101; //未查到编排接口
-    public static final int ARRANGEINFO_ERR_ADD= 11102; //编排接口保存失败
-    public static final int ARRANGERELEVANCE_ERR_ADD= 11103; //编排接口绑定失败
-    public static final int ARRANGEINFO_ERR_DEL= 11104; //编排接口删除失败
-    public static final int ARRANGEINFO_MORE_ADD= 11105; //对不起，选择接口不能超过3个
+    public static final int ARRANGEINFO_ERR_ADD = 11102; //编排接口保存失败
+    public static final int ARRANGERELEVANCE_ERR_ADD = 11103; //编排接口绑定失败
+    public static final int ARRANGEINFO_ERR_DEL = 11104; //编排接口删除失败
+    public static final int ARRANGEINFO_MORE_ADD = 11105; //对不起，选择接口不能超过3个
 
     //用户
     public static final int USERINFO_ERR_SELECT = 20101; //未查到用户
     public static final int USERINFO_ERR_ADD = 20102; //添加或编辑用户失败
     public static final int USERINFO_ERR_DEL = 20103; //删除用户失败
+    public static final int USERINFO_ERR_CONNECT = 20104; //连接用户查询服务器失败
+    public static final int USERINFO_ERR_VALIED = 20105; //用户校验失败，请确认用户信息是否正确
     //公司
     public static final int COMPANYINFO_ERR_SELECT = 30101; //未查到公司
     public static final int COMPANYINFO_ERR_OPERATION = 30102; //添加或修改公司失败

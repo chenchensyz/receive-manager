@@ -17,7 +17,6 @@ function arrangeInfoList() {
 arrangeInfoList.prototype = {
     init: function () {
         this.initData();
-        this.getAppServiceList();
         this.toAdd();
         this.submitArrangeInfo();
     },
@@ -87,15 +86,17 @@ arrangeInfoList.prototype = {
     toAdd: function (e) {
         var that = this;
         $('.add-btn').on('click', function () {
+            that.getAppServiceList();
             $('.arrangeInfoId').val(null);
             $('.param-name').val('');
-            that.layTree.setChecked('demoId1', []); //批量勾选
+            that.layTree.setChecked('demoId1', 0); //批量勾选
             that.getInterfaceDialog();
         });
     },
 
     toEdit: function (arrangeInfoId) {
         var that = this;
+        that.getAppServiceList();
         $('.arrangeInfoId').val(arrangeInfoId);
         $.ajax({
             "type": 'get',

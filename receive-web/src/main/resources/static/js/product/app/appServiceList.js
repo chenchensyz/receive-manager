@@ -157,7 +157,7 @@ appServiceList.prototype = {
             for (var i = 0; i < checkStatus.data.length; i++) {
                 ids += checkStatus.data[i].id + ',';
             }
-            var state = $('.state').val() ? 1 : 0;
+            var state = $('.state').val() == 0 ? 1 : 0;
             that.delAppService(that, ids, state);
             return false;
         });
