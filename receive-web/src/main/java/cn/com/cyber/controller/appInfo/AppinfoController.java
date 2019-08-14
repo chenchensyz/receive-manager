@@ -174,9 +174,7 @@ public class AppinfoController extends BaseController {
         AppInfo appInfo = new AppInfo();
         if (getShiroUser().source == 1) { //开发者查询
             appInfo.setCompanyId(getShiroUser().companyId);//用户所在公司的id
-            if (appInfo.getState() == 2) {
-                appInfo.setCreateUserId(getShiroUser().id);
-            }
+            appInfo.setState(1);
         }
         List<AppInfo> appInfos = appInfoService.getList(appInfo);
         return RestResponse.success().setData(appInfos);

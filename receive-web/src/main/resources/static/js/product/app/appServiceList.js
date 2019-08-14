@@ -184,8 +184,8 @@ appServiceList.prototype = {
                         });
                     }
                 },
-                error: function (err) {
-                    layer.alert(err.message, function () {
+                error: function (XMLHttpRequest) {
+                    layer.alert(XMLHttpRequest.status, function () {
                         layer.closeAll();
                     });
                 }
