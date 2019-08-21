@@ -26,6 +26,7 @@ public class CodeUtil {
     //接口响应时间设置
     public static final String REQUEST_MAXTIME = "request_maxtime";  //最大超时时间
     public static final String REQUEST_SLEEPTIME = "request_sleeptime";  //扫描响应结果间隔时间
+    public static final String PLATFORM_REQUSET_URL = "platform_requset_url";
 
     public static final String PROJECT_ENVIRONMENT = "project_environment";
     public static final String SOCKET_URL = "socket_url";
@@ -46,6 +47,7 @@ public class CodeUtil {
     public static final int REQUEST_SERVICEKEY_NULL = 99106;//请求的参数中servicekey元素为空
     public static final int REQUEST_SERVICEURL_NULL = 99107;//请求的参数中serviceurl元素为空
     public static final int REQUEST_KEY_FILED = 99108;//请检查appKey或serviceKey是否正确
+    public static final int REQUEST_SERVICE_FILED = 99109;//服务器内部异常
 
     /**
      * app状态 审核通过

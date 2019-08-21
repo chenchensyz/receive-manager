@@ -39,7 +39,7 @@ public class HttpConnection {
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
         BufferedReader bufferedReader = null;
-        int code = 201;  //内网返回错误
+        int code = 402;  //内网返回错误
         try {
             URL url = new URL(null, requestUrl, new Handler());
             conn = (HttpURLConnection) url.openConnection();
@@ -71,34 +71,32 @@ public class HttpConnection {
                 responseType = CodeUtil.RESPONSE_TEXT_TYPE; //指定返回值类型，默认为text
             }
             int responseCode = conn.getResponseCode();
-            if (CodeUtil.HTTP_OK == responseCode) {
-                code = CodeUtil.HTTP_OK;
-                inputStream = conn.getInputStream();
-                if (CodeUtil.RESPONSE_FILE_TYPE.equals(responseType)) { //文件类型
-                    String responseData = getBase64FromInputStream(inputStream);
-                    JSONObject json = new JSONObject();
-                    json.put("responseContent", conn.getContentType());
-                    json.put("responseLength", conn.getContentLength());
-                    json.put("responseData", responseData);
-                    result = json.toString();
-                } else {
-                    inputStreamReader = new InputStreamReader(inputStream, "utf-8");
-                    bufferedReader = new BufferedReader(inputStreamReader);
-                    String str;
-                    StringBuffer buffer = new StringBuffer();
-                    while ((str = bufferedReader.readLine()) != null) {
-                        buffer.append(str);
-                    }
-                    result = buffer.toString();
-                }
+            if (CodeUtil.HTTP_OK == responseCode && CodeUtil.RESPONSE_FILE_TYPE.equals(responseType)) { //文件类型
+                String responseData = getBase64FromInputStream(conn.getInputStream());
+                JSONObject json = new JSONObject();
+                json.put("responseContent", conn.getContentType());
+                json.put("responseLength", conn.getContentLength());
+                json.put("responseData", responseData);
+                result = json.toString();
             } else {
-                map.put("error", responseCode + ":" + conn.getResponseMessage());
-                LOGGER.error("响应异常code:{}, requestUrl:{} ,msg:{}", responseCode, requestUrl, conn.getResponseMessage());
+                if (CodeUtil.HTTP_OK == responseCode) {
+                    inputStream = conn.getInputStream();
+                } else {
+                    inputStream = conn.getErrorStream();
+                }
+                inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+                bufferedReader = new BufferedReader(inputStreamReader);
+                String str;
+                StringBuffer buffer = new StringBuffer();
+                while ((str = bufferedReader.readLine()) != null) {
+                    buffer.append(str);
+                }
+                result = buffer.toString();
             }
-
+            code = responseCode;
         } catch (Exception e) {
             LOGGER.error("请求异常 requestUrl:{},error:{}", requestUrl, e);
-            map.put("error", e.toString());
+            result = e.toString();
         } finally {
             // 释放资源
             try {

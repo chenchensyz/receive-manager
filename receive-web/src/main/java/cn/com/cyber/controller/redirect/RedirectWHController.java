@@ -61,7 +61,7 @@ public class RedirectWHController extends BaseController {
     //武汉服务
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public void repeat(HttpServletRequest request, HttpServletResponse response, @RequestBody(required = false) String jsonData) {
+    public void redirect(HttpServletRequest request, HttpServletResponse response, @RequestBody(required = false) String jsonData) {
         ReceiveLog receiveLog = new ReceiveLog(); //日志
         receiveLog.setRequestTime(new Date());
         String appKey = request.getHeader("appKey");

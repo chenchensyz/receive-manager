@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.ReceiveLogMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.cyber.model.ReceiveLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="app_key" property="appKey" jdbcType="VARCHAR" />
+    <result column="service_key" property="serviceKey" jdbcType="VARCHAR" />
+    <result column="request_time" property="requestTime" jdbcType="TIMESTAMP" />
+    <result column="response_time" property="responseTime" jdbcType="TIMESTAMP" />
+    <result column="response_code" property="responseCode" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, app_key, service_key, request_time, response_time, response_code, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from se_receive_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from se_receive_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertReceiveLog" parameterType="cn.com.cyber.model.ReceiveLog" >
+    <selectKey keyProperty="id" order="BEFORE" resultType="long">
+      SELECT SEQ_SE_RECEIVE_LOG.NEXTVAL AS VALUE FROM DUAL
+    </selectKey>
+    insert into se_receive_log(id, app_key, service_key, request_time, response_time, response_code
+      <if test="remark != null">
+        ,remark
+      </if>
+      )
+      values( #{id},#{appKey},#{serviceKey},#{requestTime},#{responseTime},#{responseCode}
+        <if test="remark != null">
+          ,#{remark}
+        </if>
+        )
+  </insert>
+  <update id="updateReceiveLog" parameterType="cn.com.cyber.model.ReceiveLog" >
+    update se_receive_log
+    <set >
+      <if test="appKey != null" >
+        app_key = #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceKey != null" >
+        service_key = #{serviceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTime != null" >
+        request_time = #{requestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="responseTime != null" >
+        response_time = #{responseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="responseCode != null" >
+        response_code = #{responseCode,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <sql id="sql_where" >
+      <if test="id != null" >
+         and rl.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="appKey != null and appKey !=''" >
+         and rl.app_key = #{appKey,jdbcType=VARCHAR}
+      </if>
+      <if test="serviceKey != null and serviceKey !=''" >
+         and rl.service_key = #{serviceKey,jdbcType=VARCHAR}
+      </if>
+      <if test="requestTime != null" >
+         and rl.request_time = #{requestTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="responseTime != null" >
+         and rl.response_time = #{responseTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="responseCode != null" >
+         and rl.response_code = #{responseCode,jdbcType=INTEGER}
+      </if>
+  </sql>
+  <select id="getReceiveLogList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.ReceiveLog" >
+    SELECT  rl.*, ais.url_suffix url
+    FROM se_receive_log rl
+    LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
+    LEFT JOIN td_company tc on tc.id = ai.company_id
+    LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
+    where ai.company_id= #{companyId}
+    <include refid="sql_where" />
+    order by rl.response_time desc
+  </select>
+</mapper>

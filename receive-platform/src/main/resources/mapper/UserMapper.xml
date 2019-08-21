@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.cyber.model.User" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="username" property="userId" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="name" property="nickName" jdbcType="VARCHAR" />
+    <result column="status" property="state" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime"/>
+
+    <collection property="userRoles" ofType="cn.com.cyber.model.UserRole">
+      <result column="user_id_r" property="userId" />
+      <result column="role_id" property="roleId" />
+    </collection>
+
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, name , username, password, status
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select  <include refid="Base_Column_List" /> from td_company where id = #{id}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from td_company where id = #{id}
+  </delete>
+
+  <insert id="insertSelective" parameterType="cn.com.cyber.model.User"  useGeneratedKeys="true" keyProperty="id">
+    insert into td_company
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.cyber.model.User" >
+    update td_company
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <sql id="sql_where" >
+    <where >
+      <if test="id != null" >
+        and id = #{id}
+      </if>
+      <if test="userId != null and userId !=''" >
+        and  username= #{userId}
+      </if>
+      <if test="nickName != null and nickName !=''" >
+        and  name like "%"#{nickName}"%"
+      </if>
+      <if test="state != null" >
+        and status = #{state}
+      </if>
+    </where>
+  </sql>
+
+  <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.User" >
+     select * from td_company  <include refid="sql_where" />
+  </select>
+
+  <update id="deleteUserState" parameterType="map" >
+    update td_company set state= #{state}  where  user_id=#{userId}
+  </update>
+
+  <select id="getUserAndRoles" resultMap="BaseResultMap" parameterType="long">
+     SELECT u.* , ur.user_id user_id_r, ur.role_id
+     FROM td_company u left JOIN se_user_role ur on u.id=ur.user_id WHERE u.id=#{id}
+  </select>
+
+  <select id="getByUserId" resultMap="BaseResultMap" parameterType="string" >
+    select * from td_company where username=#{userId}
+  </select>
+
+  <select id="getValiedUser" resultMap="BaseResultMap" parameterType="string">
+     select tc.id,tc.username , sur.user_id user_id_r, sur.role_id from  td_company tc
+     left join se_user_role sur on tc.id=sur.user_id where tc.username=#{userName}
+  </select>
+
+</mapper>

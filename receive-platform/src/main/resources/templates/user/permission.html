@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('权限详情')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/perimission.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="strong">
+        <i class="layui-icon layui-icon-edit"></i>
+        <span class="header-title"><b>更新权限</b></span>
+     </div>
+  </div>
+
+  <div class="layui-body">
+    <form id="updateForm" class="layui-form layui-form-pane" action="=" method="post">
+                <input id="permId" type="hidden" name="id" th:value="${permId}"/>
+                <input id="parentId" type="hidden" name="parentId" th:value="${parentId}"/>
+                <div class="layui-form-item layui-hide">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">上级权限名称	：</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input parentId" type="text" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权限名称	：</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input name" type="text" name="name" lay-verify="required"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权限编号：</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input code" type="text" name="code"
+                                   lay-verify="required"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权限地址	：</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input url"  name="url" lay-verify="required"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-hide">
+                    <label class="layui-form-label">权限状态：</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  class="layui-input state"/>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-hide">
+                    <label class="layui-form-label">创建时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input createTime"/>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-hide" >
+                    <label class="layui-form-label">修改时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input updateTime"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item ">
+                    <div class="layui-input-block update-operation">
+                        <button class="layui-btn" lay-submit="" lay-filter="addOrEdit">立即提交</button>
+                        <button type="button" class="layui-btn layui-btn-primary reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+  </div>
+
+  <div class="layui-footer">
+    <button class="layui-btn layui-btn-sm back-btn" onclick="javascript:history.back(-1);">返回</button>
+  </div>
+</div>
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/js/product/user/perimission.js}"></script>
+ <script type="text/javascript">
+         function resetForm() {
+             return confirm("您确定要重置表单内容么?");
+         }
+    </script>
+</body>
+</html>

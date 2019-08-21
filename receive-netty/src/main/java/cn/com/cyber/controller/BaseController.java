@@ -73,4 +73,30 @@ public class BaseController {
 
         return value.toString();
     }
+
+    /**
+     * 以text格式输出
+     *
+     * @param response
+     */
+    public void setResponseText(HttpServletResponse response, String responseObject) {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain; charset=utf-8");
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+            out.append(responseObject);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+    }
+
+    protected String errorMsg(String message, String errorCode, String errorMsg) {
+        String result = message + errorCode + ":" + errorMsg;
+        return result;
+    }
 }

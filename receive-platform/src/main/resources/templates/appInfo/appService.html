@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('更新详情')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/appInfo.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="strong">
+            <i class="layui-icon layui-icon-edit"></i>
+            <span class="header-title"><b>更新接口</b></span>
+        </div>
+    </div>
+    <div class="layui-body">
+        <form id="updateForm" class="layui-form layui-form-pane" action="" method="post" lay-filter="updateForm">
+            <input id="appServiceId" type="hidden" name="id" th:value="${appServiceId}"/>
+            <input id="appId" type="hidden" name="appId" th:value="${appId}"/>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">接口名称：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input serviceName" type="text" name="serviceName" lay-verify="required"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-hide">
+                <div class="layui-inline">
+                    <label class="layui-form-label">接口服务密钥：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input serviceKey" type="text"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">请求地址后缀：</label>
+                <div class="layui-input-inline">
+                    <input  name="urlSuffix" type="text" class="layui-input urlSuffix" lay-verify="required"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">请求方式：</label>
+                <div class="layui-input-inline">
+                    <select name="method" lay-filter="method" class="method" lay-verify="required">
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">接口权限：</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="serviceType" value="1" title="私有" checked="">
+                    <input type="radio" name="serviceType" value="0" title="公共">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">请求编码格式：</label>
+                <div class="layui-input-inline">
+                     <select name="contentType" lay-filter="contentType" class="contentType">
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-hide">
+                <label class="layui-form-label">创建人：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input createUser"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-hide">
+                <label class="layui-form-label">创建时间：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input createTime"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-hide">
+                <label class="layui-form-label">修改人：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input lastUpdateUser"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-hide">
+                <label class="layui-form-label">修改时间：</label>
+                <div class="layui-input-inline">
+                    <input type="text"  class="layui-input lastUpdateTime"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item ">
+                <div class="layui-input-block update-operation">
+                    <button class="layui-btn" lay-submit="" lay-filter="create">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary ">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="layui-footer">
+        <button class="layui-btn layui-btn-sm back-btn" onclick="javascript:history.back(-1);">返回</button>
+    </div>
+</div>
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/js/product/app/appService.js}"></script>
+</body>
+</html>

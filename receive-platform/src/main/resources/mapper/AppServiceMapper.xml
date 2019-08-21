@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.AppServiceMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.cyber.model.AppService" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="service_name" property="serviceName" jdbcType="VARCHAR" />
+    <result column="service_key" property="serviceKey" jdbcType="VARCHAR" />
+    <result column="app_id" property="appId" jdbcType="BIGINT" />
+    <result column="url_suffix" property="urlSuffix" jdbcType="VARCHAR" />
+    <result column="method" property="method" jdbcType="VARCHAR" />
+    <result column="content_type" property="contentType" jdbcType="VARCHAR" />
+    <result column="service_type" property="serviceType"/>
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="creator" property="creator" jdbcType="BIGINT" />
+    <result column="reviser" property="reviser" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+
+    <result column="cname" property="createUser" />
+    <result column="uname" property="updateUser" />
+    <result column="app_state" property="appState" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, service_name, service_key, app_id, url_suffix, method, content_type, state, creator,
+    reviser, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from se_service_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from se_service_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="cn.com.cyber.model.AppService" >
+    <selectKey keyProperty="id" order="BEFORE" resultType="long">
+      SELECT SEQ_SE_SERVICE_INFO.NEXTVAL AS VALUE FROM DUAL
+    </selectKey>
+    insert into se_service_info
+        (id,  service_name, service_key, app_id, url_suffix, method,
+        <if test="contentType != null" >
+          content_type,
+        </if>
+         service_type, state, creator, create_time)
+    VALUES(#{id},#{serviceName},#{serviceKey},#{appId},#{urlSuffix},#{method},
+        <if test="contentType != null" >
+          #{contentType},
+        </if>
+        #{serviceType},1,#{creator},sysdate)
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.cyber.model.AppService" >
+    update se_service_info
+    <set >
+      <if test="serviceName != null" >
+        service_name = #{serviceName},
+      </if>
+      <if test="urlSuffix != null" >
+        url_suffix = #{urlSuffix},
+      </if>
+      <if test="method != null" >
+        method = #{method},
+      </if>
+      <if test="contentType != null" >
+        content_type = #{contentType},
+      </if>
+      <if test="serviceType != null" >
+        service_type = #{serviceType},
+      </if>
+      <if test="state != null" >
+        state = #{state},
+      </if>
+      <if test="reviser != null" >
+        reviser = #{reviser},
+      </if>
+        update_time = sysdate
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <sql id="sql_where" >
+    <where >
+      <if test="id != null" >
+         and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="serviceName != null and serviceName !=''" >
+          and service_name like "%"#{serviceName}"%"
+      </if>
+      <if test="serviceKey != null and serviceKey !=''" >
+         and service_key = #{serviceKey,jdbcType=VARCHAR}
+      </if>
+      <if test="appId != null" >
+         and app_id = #{appId,jdbcType=BIGINT}
+      </if>
+      <if test="urlSuffix != null and urlSuffix !=''" >
+         and url_suffix = #{urlSuffix,jdbcType=VARCHAR}
+      </if>
+      <if test="method != null and method !=''" >
+         and method = #{method,jdbcType=VARCHAR}
+      </if>
+      <if test="contentType != null and contentType !=''" >
+         and content_type = #{contentType,jdbcType=VARCHAR}
+      </if>
+      <if test="state != null" >
+         and state = #{state,jdbcType=INTEGER}
+      </if>
+      <if test="creator != null" >
+         and creator = #{creator,jdbcType=BIGINT}
+      </if>
+      <if test="reviser != null" >
+         and reviser = #{reviser,jdbcType=BIGINT}
+      </if>
+      <if test="createTime != null" >
+         and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppService" >
+     select * from se_service_info
+    <include refid="sql_where" />
+  </select>
+
+  <select id="getCountServiceKey" resultType="int" parameterType="string">
+      SELECT count(id) FROM  se_service_info  WHERE service_key=#{serviceKey}
+    </select>
+
+  <select id="getEditByServiceId" resultMap="BaseResultMap" parameterType="long">
+      SELECT ais.*, cu.name cname, cuu.name uname FROM se_service_info ais
+        LEFT JOIN td_company cu ON ais.creator = cu.id
+        LEFT JOIN td_company cuu ON ais.reviser = cuu.id
+        WHERE ais.id = #{serviceId}
+   </select>
+
+    <update id="updateMoreAppService" parameterType="map">
+      update se_service_info set state = #{state} WHERE id in
+      <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </update>
+
+    <delete id="deleteMoreAppService">
+      delete FROM  se_service_info  WHERE id in
+      <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </delete>
+
+  <select id="getByAppKeyAndServiceKey" resultMap="BaseResultMap" parameterType="map">
+     select ssi.*,ta.name,ta.status app_state from se_service_info ssi
+     left join  td_app ta  on ta.id = ssi.app_id
+     where ta.app_uuid = #{appKey} and ssi.service_key = #{serviceKey}
+   </select>
+
+
+</mapper>

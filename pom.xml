@@ -11,6 +11,7 @@
     <modules>
         <module>receive-web</module>
         <module>receive-netty</module>
+        <module>receive-platform</module>
     </modules>
 
 

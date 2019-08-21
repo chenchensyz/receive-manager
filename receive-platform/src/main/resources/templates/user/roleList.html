@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('角色列表')"></head>
+
+<body>
+<div class="layui-body" style="margin: 1%">
+
+    <div class="add-btn">
+         &nbsp;&nbsp;<button class="layui-btn" >添加角色</button>
+     </div>
+    <!--<hr class="layui-bg-blue"/>-->
+    <hr class="layui-bg-gray"/>
+    <!--<div style="display:none;" id="currentUser"><shiro:principal property="id"></shiro:principal></div>-->
+    <table id="roleList" lay-filter="roleTable"></table>
+
+    <script type="text/html" id="optBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="opt" data-type="1">删除</a>
+    </script>
+</div>
+<div th:include="head :: commonjs"></div>
+<script  th:src="@{/js/product/user/roleList.js}"></script>
+</body>
+</html>

@@ -40,7 +40,7 @@ public class RedirectDLController extends BaseController {
     //大连服务
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public String repeat(HttpServletResponse response, @RequestBody String jsonData) {
+    public String redirect(HttpServletResponse response, @RequestBody String jsonData) {
         LOGGER.error("请求开始:{}", jsonData);
         String result = "";
         int msgCode = CodeUtil.SELECT_SUCCESS;

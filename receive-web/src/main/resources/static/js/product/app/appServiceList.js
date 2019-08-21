@@ -34,14 +34,16 @@ appServiceList.prototype = {
                     for (i = 0; i < res.data.length; i++) {
                         $('.app-list').append(`<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid layui-btn-sm app-sec" data-type="${res.data[i].id}">${res.data[i].appName}</button>`);
                     }
-                    $('#appId').val(res.data[0].id);
-                    $('#appName').val(res.data[0].appName);
-                    that.initData(res.data[0].id);
-                    $('.app-list').find('.app-sec').each(function (index, element) {
-                        if (index == 0) {
-                            $(this).attr('style', 'background-color: #c3c3c3');
-                        }
-                    });
+                    if (res.data.length > 0) {
+                        $('#appId').val(res.data[0].id);
+                        $('#appName').val(res.data[0].appName);
+                        that.initData(res.data[0].id);
+                        $('.app-list').find('.app-sec').each(function (index, element) {
+                            if (index == 0) {
+                                $(this).attr('style', 'background-color: #c3c3c3');
+                            }
+                        });
+                    }
                 } else {
                     layer.alert(res.message, function () {
                         layer.closeAll();

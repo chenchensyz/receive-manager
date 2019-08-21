@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.PermissionMapper" >
+  <!--<cache eviction="FIFO"-->
+          <!--flushInterval="10800000"  size="512"-->
+          <!--readOnly="true"-->
+  <!--/>-->
+  <resultMap id="BaseResultMap" type="cn.com.cyber.model.Permission" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+
+    <collection property="parentPerm" ofType="cn.com.cyber.model.Permission" column="parent_id">
+      <result column="pid" property="id" jdbcType="VARCHAR" />
+      <result column="parent_name" property="name" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, code, parent_id, url, state, type, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from se_permission
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from se_permission
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="cn.com.cyber.model.Permission" >
+    insert into se_permission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.cyber.model.Permission" >
+    update se_permission
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <sql id="sql_where" >
+    <where >
+      <if test="id != null" >
+         and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="name != null and name !=''" >
+         and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="code != null and code !=''" >
+         and code = #{code,jdbcType=VARCHAR}
+      </if>
+      <if test="parentId != null" >
+         and parent_id = #{parentId,jdbcType=BIGINT}
+      </if>
+      <if test="url != null and url !=''" >
+         and url = #{url,jdbcType=VARCHAR}
+      </if>
+      <if test="state != null" >
+         and state = #{state,jdbcType=INTEGER}
+      </if>
+      <if test="type != null" >
+         and type = #{type,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+         and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null" >
+         and update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.Permission" >
+     select * from se_permission
+    <include refid="sql_where" />
+  </select>
+
+  <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from se_permission
+    where parent_id = #{parentId}
+  </select>
+
+  <select id="selectBySelf" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    SELECT t.*,tp.id pid,tp.name parent_name
+    FROM se_permission t left JOIN se_permission tp
+    on tp.id=t.parent_id where t.id=#{id}
+  </select>
+
+  <select id="getMaxChildId" resultType="long" parameterType="long" >
+    SELECT IFNULL((SELECT max(id) FROM se_permission WHERE parent_id = #{parentId}),0) id
+  </select>
+
+  <delete id="delPermission"  parameterType="map">
+      DELETE FROM se_permission WHERE id = #{id}
+      <if test="parentId != null and parentId == '0'.toString()">
+        or parent_id = #{id}
+      </if>
+  </delete>
+
+  <select id="getPermByUserId" resultType="string" parameterType="string">
+      SELECT
+          wm_concat(sr.permissions) permissions
+      FROM
+          td_company su,
+          se_user_role sur,
+          se_role sr
+      WHERE
+          su.id=sur.user_id and sur.role_id=sr.id  and su.username=#{userId} GROUP BY su.username
+  </select>
+
+  <select id="getPermByCode" resultMap="BaseResultMap">
+      SELECT *  FROM se_permission sp
+      WHERE sp.code in
+    <foreach collection="codes" item="code" index="index" open="(" close=")" separator=",">
+      #{code}
+    </foreach>
+  </select>
+</mapper>
