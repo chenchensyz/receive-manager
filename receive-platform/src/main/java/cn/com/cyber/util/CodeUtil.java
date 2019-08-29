@@ -53,6 +53,8 @@ public class CodeUtil {
     public static final String FILE_SAVE_PATH = "file_save_path";
     public static final String SOCKET_OPEN = "socket_open";
     public static final String FILE_ROOT_PATH = "file_root_path";
+    public static final String DEFAULT_DEPARTMENT = "default_department";  //默认密码
+
 
     //pstore用户校验
     public static final String PSTORE_LOGIN_URL = "pstore_login_url";
@@ -61,7 +63,8 @@ public class CodeUtil {
 
 
     //响应状态码
-    public static final int SELECT_SUCCESS = 0; //请求成功
+    public static final int BASE_SUCCESS = 0; //请求成功
+    public static final int BASE_VALED = 401; //登陆信息失效，请重新登陆
     public static final int REQUEST_TIMEOUT = 99101; //服务接口请求超时
     public static final int REQUEST_CONN_FILED = 99102; //服务接口连接失败
     public static final int REQUEST_USE_FILED = 99103; //访问内网异常
@@ -129,6 +132,6 @@ public class CodeUtil {
 
 
     public static final long ROLE_COMPMANAGER = 2l;  //公司管理员角色id
-    public static final long ROLE_COMPDEVELOPER = 3l;  //公司开发者角色id
+    public static final Integer ROLE_COMPDEVELOPER = 3;  //公司开发者角色id
 
 }

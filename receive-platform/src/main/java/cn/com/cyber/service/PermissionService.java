@@ -24,7 +24,7 @@ public interface PermissionService {
 
     long delPermission(long id, long parentId);
 
-    String getPermByUserId(String userId);
+    String getPermByRoleId(Integer roleId);
 
     List<Permission> getPermByCode(Set<String> codes);
 }

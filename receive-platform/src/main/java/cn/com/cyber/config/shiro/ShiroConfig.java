@@ -90,6 +90,8 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/js/**", "anon");//js
 		filterChainDefinitionMap.put("/layui/**", "anon");//layui
 		filterChainDefinitionMap.put("/table/**", "anon");//table
+		filterChainDefinitionMap.put("/echarts/**", "anon");//echarts
+		filterChainDefinitionMap.put("/dtree/**", "anon");//dtree
 		filterChainDefinitionMap.put("/**", "authc");
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		return shiroFilterFactoryBean;

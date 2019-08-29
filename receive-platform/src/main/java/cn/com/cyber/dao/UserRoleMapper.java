@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserRoleMapper extends BaseDao<UserRole> {
 
-    List<UserRole> getByUserId(long userId);
+    UserRole getByUserId(long userId);
 
     int deleteUserRole(@Param("userId") long userId, @Param("roleId") long roleId);
 

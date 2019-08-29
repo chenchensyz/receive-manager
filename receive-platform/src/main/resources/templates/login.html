@@ -17,6 +17,13 @@
         <form id="loginForm" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
             <span class="errorMsg"></span>
             <div class="layui-form-item">
+                <label class="layui-form-label">角色</label>
+                <div class="layui-input-inline">
+                    <select name="source" lay-filter="aihao">
+                        <option value="1" selected="">开发者</option>
+                        <option value="0">管理员</option>
+                    </select>
+                </div>
                 <label class="layui-form-label">用户名</label>
                 <div class="layui-input-inline">
                     <input  name="userId" lay-verify="userId" class="layui-input" type="text"/>

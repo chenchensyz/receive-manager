@@ -56,7 +56,7 @@ public class RedirectController extends BaseController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public String redirect(HttpServletRequest request, HttpServletResponse response, @RequestBody String jsonData) {
+    public String redirect( HttpServletResponse response, @RequestBody String jsonData) {
         ReceiveLog receiveLog = new ReceiveLog(); //日志
         receiveLog.setRequestTime(new Date());
         JSONObject jsonObject = JSONObject.parseObject(jsonData);

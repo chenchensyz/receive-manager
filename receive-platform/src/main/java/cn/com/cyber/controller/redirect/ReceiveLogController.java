@@ -30,26 +30,14 @@ public class ReceiveLogController extends BaseController {
     @ResponseBody
     public RestResponse queryReceiveLogListData(ReceiveLog receiveLog) {
         PageHelper.startPage(receiveLog.getPageNum(), receiveLog.getPageSize());
-        receiveLog.setCompanyId(getShiroUser().id.intValue());
+        if (getShiroUser().source == 1) {
+            receiveLog.setCompanyId(getShiroUser().id.intValue());
+        }
         List<ReceiveLog> receiveLogList = receiveLogService.getReceiveLogList(receiveLog);
         PageInfo<ReceiveLog> receiveLogPage = new PageInfo<ReceiveLog>(receiveLogList);
         return RestResponse.success().setData(receiveLogList).setTotal(receiveLogPage.getTotal()).
                 setPage(receiveLogPage.getLastPage());
     }
 
-    //日志统计列表
-    @RequestMapping(value = "count_list")
-    public String receiveLogCountList() {
-        return "receiveLog/receiveLogCountList";
-    }
 
-    @RequestMapping("/listCountData")
-    @ResponseBody
-    public RestResponse listCountData(ReceiveLog receiveLog) {
-        PageHelper.startPage(receiveLog.getPageNum(), receiveLog.getPageSize());
-        List<ReceiveLog> receiveLogList = receiveLogService.getReceiveLogList(receiveLog);
-        PageInfo<ReceiveLog> receiveLogPage = new PageInfo<ReceiveLog>(receiveLogList);
-        return RestResponse.success().setData(receiveLogList).setTotal(receiveLogPage.getTotal()).
-                setPage(receiveLogPage.getLastPage());
-    }
 }

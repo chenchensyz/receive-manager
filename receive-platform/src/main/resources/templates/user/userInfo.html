@@ -14,7 +14,7 @@
 </div>
 
   <div class="layui-body">
-    <form id="updateForm" class="layui-form layui-form-pane" action="=" method="post">
+    <form id="updateForm" class="layui-form layui-form-pane" action="=" method="post" lay-filter="updateForm">
                 <input id="userInfoId" type="hidden" name="id" th:value="${userId}"/>
                 <div class="layui-form-item">
                     <div class="layui-inline">
@@ -86,6 +86,8 @@
                     <label class="layui-form-label">角色</label>
                     <div class="layui-input-inline" id="roleDiv">
                     </div>
+                     <!--<select name="contentType" lay-filter="contentType" class="contentType">-->
+                     <!--</select>-->
                 </div>
 
                 <div class="layui-form-item">

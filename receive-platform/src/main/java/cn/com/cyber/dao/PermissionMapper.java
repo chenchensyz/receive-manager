@@ -16,7 +16,7 @@ public interface PermissionMapper extends BaseDao<Permission> {
 
     long delPermission(@Param("id") long id, @Param("parentId") long parentId);
 
-    String getPermByUserId(String userId);
+    String getPermByRoleId(Integer roleId);
 
     List<Permission> getPermByCode(@Param("codes") Set<String> codes);
 }

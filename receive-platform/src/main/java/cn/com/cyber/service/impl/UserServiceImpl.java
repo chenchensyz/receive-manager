@@ -16,22 +16,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long id) {
-        return userMapper.selectByPrimaryKey(id);
+        return userMapper.selectUserById(id);
     }
 
     @Override
     public List<User> getList(User sysUser) {
-        return userMapper.getList(sysUser);
+        return userMapper.getUserList(sysUser);
     }
 
     @Override
     public int insert(User sysUser) {
-        return userMapper.insertSelective(sysUser);
+        return userMapper.insertUser(sysUser);
     }
 
     @Override
     public int update(User sysUser) {
-        return userMapper.updateByPrimaryKeySelective(sysUser);
+        return userMapper.updateUser(sysUser);
     }
 
     @Override

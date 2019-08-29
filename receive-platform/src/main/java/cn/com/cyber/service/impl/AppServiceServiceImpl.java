@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AppServiceServiceImpl implements AppServiceService {
@@ -41,7 +42,7 @@ public class AppServiceServiceImpl implements AppServiceService {
 
     @Override
     public int getCountServiceKey(String serviceKey) {
-        return appServiceMapper.getCountServiceKey(serviceKey);
+        return appServiceMapper.getCountServiceKey(serviceKey, null);
     }
 
     @Override
@@ -61,7 +62,7 @@ public class AppServiceServiceImpl implements AppServiceService {
             long serviceKey;
             do {
                 uuid = CodeUtil.getUUID();
-                serviceKey = appServiceMapper.getCountServiceKey(uuid);
+                serviceKey = appServiceMapper.getCountServiceKey(uuid,null);
             } while (serviceKey > 0);
             appService.setServiceKey(CodeUtil.getUUID());
             appService.setCreator(userId);
@@ -100,7 +101,7 @@ public class AppServiceServiceImpl implements AppServiceService {
             long serviceKey;
             do {
                 uuid = CodeUtil.getUUID();
-                serviceKey = appServiceMapper.getCountServiceKey(uuid);
+                serviceKey = appServiceMapper.getCountServiceKey(uuid,null);
             } while (serviceKey > 0);
             service.setServiceKey(CodeUtil.getUUID());
             int count = appServiceMapper.insertSelective(service);

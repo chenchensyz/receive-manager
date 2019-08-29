@@ -4,7 +4,7 @@ public class UserRole {
 
     private Long userId;
 
-    private Long roleId;
+    private Integer roleId;
 
     public Long getUserId() {
         return userId;
@@ -14,11 +14,11 @@ public class UserRole {
         this.userId = userId;
     }
 
-    public Long getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Long roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.PoliceMapper" >
+    <resultMap id="userTreeMap"  type="cn.com.cyber.model.TreeModel">
+        <result property="id" column="ccode"/>
+        <result property="title" column="cname" />
+        <result property="parentId" column="parent_id" />
+        <result property="basicData" column="basicData" />
+    </resultMap>
+
+    <select id="getUserTree" resultMap="userTreeMap" parameterType="string">
+        select tdd.code ccode,tdd.name cname,'d' basicData ,tdd.parent_id from TD_DEPARTMENT td
+        inner join TD_DEPARTMENT tdd on td.code = tdd.parent_id
+        where tdd.parent_id = #{nodeId}
+         union all
+        select tu.username ccode,tu.realname cname,'u' basicData ,tu.dept_id parent_id from TD_DEPARTMENT td
+        left join td_user tu on td.code=tu.dept_id
+        where td.code = #{nodeId}
+    </select>
+
+    <select id="getUserChecked" resultType="string" parameterType="string">
+        select wm_concat(ssi.id) from SE_APP_USER_SERVICE saus
+        left join td_app ta on saus.app_key=ta.app_uuid
+        left join se_service_info ssi on saus.service_key = ssi.service_key
+        where saus.user_name= #{userName}
+    </select>
+
+    <insert id="saveUserService">
+        INSERT INTO se_app_user_service(app_key, service_key, creator, create_time, user_name)
+        <foreach collection="list" item="item" open="(" separator="union" close=")">
+            SELECT #{item.appKey},#{item.serviceKey},#{item.creator},sysdate,#{item.userName} FROM DUAL
+        </foreach>
+    </insert>
+
+    <delete id="deleteUserServiceByUserName" parameterType="string">
+        delete from se_app_user_service where user_name = #{userName}
+    </delete>
+</mapper>

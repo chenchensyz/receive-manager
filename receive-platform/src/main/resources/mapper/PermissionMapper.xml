@@ -159,6 +159,7 @@
   <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.Permission" >
      select * from se_permission
     <include refid="sql_where" />
+    order by id
   </select>
 
   <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -175,7 +176,7 @@
   </select>
 
   <select id="getMaxChildId" resultType="long" parameterType="long" >
-    SELECT IFNULL((SELECT max(id) FROM se_permission WHERE parent_id = #{parentId}),0) id
+    SELECT nvl((SELECT max(id) FROM se_permission WHERE parent_id = #{parentId}),0) id from dual
   </select>
 
   <delete id="delPermission"  parameterType="map">
@@ -185,15 +186,10 @@
       </if>
   </delete>
 
-  <select id="getPermByUserId" resultType="string" parameterType="string">
-      SELECT
-          wm_concat(sr.permissions) permissions
-      FROM
-          td_company su,
-          se_user_role sur,
-          se_role sr
-      WHERE
-          su.id=sur.user_id and sur.role_id=sr.id  and su.username=#{userId} GROUP BY su.username
+  <select id="getPermByRoleId" resultType="string" parameterType="int">
+      SELECT sr.permissions
+      FROM  se_role sr
+      WHERE  sr.id = #{roleId}
   </select>
 
   <select id="getPermByCode" resultMap="BaseResultMap">
@@ -202,5 +198,6 @@
     <foreach collection="codes" item="code" index="index" open="(" close=")" separator=",">
       #{code}
     </foreach>
+    order by sp.id
   </select>
 </mapper>

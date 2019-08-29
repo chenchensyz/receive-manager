@@ -29,8 +29,8 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/appInfo")
-public class AppinfoController extends BaseController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppinfoController.class);
+public class AppInfoController extends BaseController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppInfoController.class);
 
     @Autowired
     private AppInfoService appInfoService;

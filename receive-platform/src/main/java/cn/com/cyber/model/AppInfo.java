@@ -23,6 +23,8 @@ public class AppInfo extends BaseEntity {
 
     private List<AppService> services;
 
+    private Integer receiveNum;  //访问量
+
     public Long getId() {
         return id;
     }
@@ -86,5 +88,13 @@ public class AppInfo extends BaseEntity {
 
     public void setCreator(Long creator) {
         this.creator = creator;
+    }
+
+    public Integer getReceiveNum() {
+        return receiveNum;
+    }
+
+    public void setReceiveNum(Integer receiveNum) {
+        this.receiveNum = receiveNum;
     }
 }

@@ -58,11 +58,6 @@ public class AppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public int deleteByAppId(long appId) {
-        return appInfoMapper.deleteByPrimaryKey(appId);
-    }
-
-    @Override
     public int getCountAppInfoByState(long companyId, int state) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("companyId", companyId);

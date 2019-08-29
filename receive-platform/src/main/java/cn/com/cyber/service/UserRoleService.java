@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserRoleService {
 
-    List<UserRole> getByUserId(long userId);
+    UserRole getByUserId(long userId);
 
     int insert(UserRole userRole);
 

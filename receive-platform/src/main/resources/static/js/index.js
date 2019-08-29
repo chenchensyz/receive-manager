@@ -22,7 +22,7 @@ $(function () {
     initMenu();
 
     //默认打开首页
-    $("#homeIframe").attr("src", getRootPath() + "/appInfo/getAppInfoList");
+    $("#homeIframe").attr("src", getRootPath() + "/index/home");
 
     getPermMenu();
     clickPermMenu();
@@ -59,6 +59,7 @@ function getPermMenu() {
             }, function () {
                 top.location.href = getRootPath() + "/login/toLogin";
             });
+            return false;
         }
     });
 }

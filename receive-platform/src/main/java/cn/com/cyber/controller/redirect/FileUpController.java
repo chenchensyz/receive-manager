@@ -72,10 +72,6 @@ public class FileUpController {
             msgCode = CodeUtil.REQUEST_KEY_FILED;
             return RestResponse.failure(messageCodeUtil.getMessage(msgCode));
         }
-        if (CodeUtil.APP_STATE_ENABLE != appModel.getAppState()) {
-            msgCode = CodeUtil.APPINFO_ERR_UNENABLE;
-            return RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode));
-        }
 
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
 
@@ -102,7 +98,7 @@ public class FileUpController {
                 map.put("filePath", filePath);
                 map.put("fileSize", fileSize + "");
                 map.put("introduction", introduction);
-                map.put("upUrl", appModel.getUrlPrefix() + appModel.getUrlSuffix());
+//                map.put("upUrl", appModel.getUrlPrefix() + appModel.getUrlSuffix());
 //                map.put("upUrl", "http://localhost:8083/netty/file/upload");
                 map.put("state", "0");
                 map.put("times", "0"); //发送次数

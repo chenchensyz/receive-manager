@@ -68,6 +68,9 @@ public class BaseController {
 
     public ShiroDbRealm.ShiroUser getShiroUser() {
         ShiroDbRealm.ShiroUser shiroUser = (ShiroDbRealm.ShiroUser) SecurityUtils.getSubject().getPrincipal();
+        if (shiroUser == null) {
+            throw new ValueRuntimeException(CodeUtil.BASE_VALED);
+        }
         return shiroUser;
     }
 

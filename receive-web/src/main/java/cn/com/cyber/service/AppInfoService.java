@@ -21,8 +21,5 @@ public interface AppInfoService {
 
     AppInfo getEditById(Long id);
 
-    int deleteByAppId(long appId);
-
     int getCountAppInfoByState(long companyId, int state);
-
 }

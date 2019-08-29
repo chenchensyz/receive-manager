@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('主页列表')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>主页</legend>
+</fieldset>
+
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md8">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <span>快捷入口</span>
+                    <a href="" style="float: right">刷新</a>
+                </div>
+                <div class="layui-card-body inlet-body"></div>
+            </div>
+        </div>
+        <div class="layui-col-md4" style="float: right">
+            <div class="layui-card">
+                <div class="layui-card-header">访问排行(Top10)</div>
+                <div class="layui-card-body">
+                    <table id="appRanking" lay-filter="appRankingTable"></table>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md8">
+            <div class="layui-card">
+                <div class="layui-card-header">服务请求统计(近7日)</div>
+                <div layui-card-body id="main" style="height:400px"></div>
+            </div>
+        </div>
+        <div class="layui-col-md4" style="float: right">
+            <div class="layui-card">
+                <div class="layui-card-header"><span style="color: red">异常预警</span></div>
+                <div class="layui-card-body">
+                    <span>无</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/echarts/echarts-all.js}"></script>
+<script th:src="@{/js/home.js}"></script>
+</body>

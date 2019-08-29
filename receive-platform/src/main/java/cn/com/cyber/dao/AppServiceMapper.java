@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AppServiceMapper extends BaseDao<AppService> {
 
-    int getCountServiceKey(String serviceKey);
+    int getCountServiceKey(@Param("serviceKey") String serviceKey, @Param("state") Integer state);
 
     AppService getEditByServiceId(long serviceId);
 

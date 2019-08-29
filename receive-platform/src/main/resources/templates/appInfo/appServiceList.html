@@ -43,9 +43,9 @@
                 <script type="text/html" id="optBar">
                     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                     {{#  if(d.state ==1){ }}
-                    <a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="0">禁用</a>
+                    <a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="0">下线</a>
                     {{#  } else { }}
-                    <a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="1">启用</a>
+                    <a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="1">上线</a>
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
                     {{#  } }}
                 </script>

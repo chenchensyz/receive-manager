@@ -31,12 +31,12 @@ appServiceList.prototype = {
             success: function (res) {
                 if (res.code == 0) {
                     for (i = 0; i < res.data.length; i++) {
-                        $('.app-list').append(`<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid layui-btn-sm app-sec" data-type="${res.data[i].id}">${res.data[i].appName}</button>`);
+                        $('.app-list').append(`<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid layui-btn-sm app-sec" data-type="${res.data[i].id}">${res.data[i].title}</button>`);
                     }
                     if (res.data.length > 0) {
                         var i=$('#appId').val();
                         $('#appId').val(res.data[0].id);
-                        $('#appName').val(res.data[0].appName);
+                        $('#appName').val(res.data[0].title);
                         that.initData(res.data[0].id);
                         $('.app-list').find('.app-sec').each(function (index, element) {
                             if (index == 0) {

@@ -307,8 +307,12 @@ public class DateUtil {
 		// String[] s = dd.split(",");
 		// System.out.println(s.length);\
 		// getDate(new Date());
-		
-		parse("2017-12-05", YMD_DASH);
-		System.out.println(parse("2017-12-05", YMD_DASH));
+		for (int i = 0; i < 7; i++){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(getMonday(new Date()));
+			cal.add(Calendar.DAY_OF_WEEK, i);
+			String format = DateUtil.format(cal.getTime(), DateUtil.YMD_DASH);
+			System.out.println(format);
+		}
 	}
 }

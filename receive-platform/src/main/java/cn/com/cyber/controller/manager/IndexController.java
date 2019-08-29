@@ -3,9 +3,11 @@ package cn.com.cyber.controller.manager;
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.Permission;
 import cn.com.cyber.model.User;
+import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.service.PermissionService;
 import cn.com.cyber.service.UserService;
 import cn.com.cyber.util.EncryptUtils;
+import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.RestResponse;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -46,7 +48,7 @@ public class IndexController extends BaseController {
         List<Permission> permissons = Lists.newArrayList();
         try {
             if (getShiroUser().getPermissions() == null) {
-                String permStr = permissionService.getPermByUserId(getShiroUser().userId);
+                String permStr = permissionService.getPermByRoleId(getShiroUser().roleId);
                 if (StringUtils.isNotBlank(permStr)) {
                     String[] permissionArr = permStr.split(",");
                     Set<String> set = new HashSet(Arrays.asList(permissionArr));
@@ -104,4 +106,10 @@ public class IndexController extends BaseController {
 //        }
 //        return RestResponse.success().setData(fileCode.getName() + codeInfo.getName());
 //    }
+
+    //首页
+    @RequestMapping("/home")
+    public String getHome() {
+        return "home";
+    }
 }

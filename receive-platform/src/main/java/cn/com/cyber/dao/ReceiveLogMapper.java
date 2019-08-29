@@ -1,13 +1,20 @@
 package cn.com.cyber.dao;
 
 import cn.com.cyber.model.ReceiveLog;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface ReceiveLogMapper{
+public interface ReceiveLogMapper {
 
-   int insertReceiveLog(ReceiveLog receiveLog);
+    int insertReceiveLog(ReceiveLog receiveLog);
 
-   List<ReceiveLog> getReceiveLogList(ReceiveLog receiveLog);
+    List<ReceiveLog> getReceiveLogList(ReceiveLog receiveLog);
+
+    int getReceiveLogCount();
+
+    List<Integer> getReceiveLogRanking(@Param("startTime") String startTime,
+                                       @Param("endTime") String endTime,
+                                       @Param("code") Integer code);
 }
 

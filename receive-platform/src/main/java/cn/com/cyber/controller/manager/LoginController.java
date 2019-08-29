@@ -1,5 +1,6 @@
 package cn.com.cyber.controller.manager;
 
+import cn.com.cyber.model.Developer;
 import cn.com.cyber.model.User;
 import cn.com.cyber.model.UserRole;
 import cn.com.cyber.service.UserRoleService;
@@ -33,8 +34,6 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserRoleService userRoleService;
 
     //跳转登录页
     @RequestMapping("toLogin")
@@ -47,12 +46,15 @@ public class LoginController {
     @ResponseBody
     public RestResponse login(@RequestParam("userId") String userId,
                               @RequestParam("password") String password,
+                              @RequestParam("source") String source,
                               HttpServletRequest request) {
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(password)) {
             return RestResponse.failure("请填写完整登录信息");
         }
-//        UsernamePasswordToken token = new UsernamePasswordToken(userId, EncryptUtils.MD5Encode(password));
-        UsernamePasswordToken token = new UsernamePasswordToken(userId, password);
+        if ("0".equals(source)) {
+            password = EncryptUtils.MD5Encode(password);
+        }
+        UsernamePasswordToken token = new UsernamePasswordToken(userId, password, source);
 //        token.setRememberMe(true);
         Subject subject = SecurityUtils.getSubject();
         String msg = "登录失败";
@@ -61,7 +63,7 @@ public class LoginController {
             if (subject.isAuthenticated()) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("userId", userId);
-                isValiedUser(userId);
+//                isValiedUser(userId);
                 return RestResponse.success().setData(map);
             } else {
                 request.getSession().removeAttribute("sessionId");
@@ -83,16 +85,6 @@ public class LoginController {
             msg = "您没有得到相应的授权！" + e.getMessage();
         }
         return RestResponse.failure(msg);
-    }
-
-    private void isValiedUser(String userId) {
-        User valiedUser = userService.getValiedUser(userId);
-        if (valiedUser.getUserRoles() == null || valiedUser.getUserRoles().isEmpty()) {
-            UserRole userRole = new UserRole();
-            userRole.setRoleId(CodeUtil.ROLE_COMPDEVELOPER);
-            userRole.setUserId(valiedUser.getId());
-            userRoleService.insert(userRole);
-        }
     }
 
     //登出

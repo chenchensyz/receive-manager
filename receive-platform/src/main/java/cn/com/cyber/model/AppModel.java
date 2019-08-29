@@ -1,64 +1,66 @@
 package cn.com.cyber.model;
 
+import java.util.Date;
+
 public class AppModel {
 
-    private String urlPrefix;
+    private String appKey;
 
-    private String urlSuffix;
+    private String serviceKey;
 
-    private String method;
+    private String creator;
 
-    private String contentType;
+    private Date createTime;
 
-    private Integer appState;
+    private Integer appId;
 
-    private Integer serviceState;
+    private String userName;
 
-    public String getUrlPrefix() {
-        return urlPrefix;
+    public String getAppKey() {
+        return appKey;
     }
 
-    public void setUrlPrefix(String urlPrefix) {
-        this.urlPrefix = urlPrefix;
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
     }
 
-    public String getUrlSuffix() {
-        return urlSuffix;
+    public String getServiceKey() {
+        return serviceKey;
     }
 
-    public void setUrlSuffix(String urlSuffix) {
-        this.urlSuffix = urlSuffix;
+    public void setServiceKey(String serviceKey) {
+        this.serviceKey = serviceKey;
     }
 
-    public String getMethod() {
-        return method;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
-    public String getContentType() {
-        return contentType;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Integer getAppState() {
-        return appState;
+    public Integer getAppId() {
+        return appId;
     }
 
-    public void setAppState(Integer appState) {
-        this.appState = appState;
+    public void setAppId(Integer appId) {
+        this.appId = appId;
     }
 
-    public Integer getServiceState() {
-        return serviceState;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setServiceState(Integer serviceState) {
-        this.serviceState = serviceState;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

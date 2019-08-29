@@ -56,8 +56,8 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public String getPermByUserId(String userId) {
-        return permissionMapper.getPermByUserId(userId);
+    public String getPermByRoleId(Integer roleId){
+        return permissionMapper.getPermByRoleId(roleId);
     }
 
     @Override

@@ -1,9 +1,15 @@
 package cn.com.cyber.config.shiro;
 
+import cn.com.cyber.model.Developer;
 import cn.com.cyber.model.Permission;
 import cn.com.cyber.model.User;
+import cn.com.cyber.model.UserRole;
+import cn.com.cyber.service.DeveloperService;
 import cn.com.cyber.service.PermissionService;
+import cn.com.cyber.service.UserRoleService;
 import cn.com.cyber.service.UserService;
+import cn.com.cyber.util.CodeUtil;
+import cn.com.cyber.util.EncryptUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -34,7 +40,10 @@ public class ShiroDbRealm extends AuthorizingRealm {
     private UserService userService;
 
     @Autowired
-    private PermissionService permissionService;
+    private DeveloperService developerService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     /**
      * 认证回调函数,登录时调用.
@@ -43,18 +52,46 @@ public class ShiroDbRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
         LOGGER.debug("doGetAuthenticationInfo:" + authcToken);
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-        User user = userService.getByUserId(token.getUsername());
-        if (user == null) {
-            return null;
-        }
-        if (user.getState() == 0) {
-            throw new DisabledAccountException();
+        User user = new User();
+        int source = 0;
+        if ("0".equals(token.getHost())) { //后台用户
+            user = userService.getByUserId(token.getUsername());
+            if (user == null) {
+                throw new UnknownAccountException();
+            }
+            if (user.getState() == 0) {
+                throw new DisabledAccountException();
+            }
+        } else if ("1".equals(token.getHost())) {  //开发者
+            Developer developer = developerService.getDeveloperByUserName(token.getUsername());
+            if (developer == null) {
+                throw new UnknownAccountException();
+            }
+            if (developer.getStatus() == 0) {
+                throw new DisabledAccountException();
+            }
+            user.setId(developer.getId());
+            user.setUserId(developer.getUserName());
+            user.setNickName(developer.getName());
+            user.setPassword(developer.getPassword());
+            if (developer.getRoleId() == null) {
+                developer.setRoleId(CodeUtil.ROLE_COMPDEVELOPER);
+                setUserRole(developer);   //邦定角色
+            }
+            user.setRoleId(developer.getRoleId());
+            source = 1;
         }
         return new SimpleAuthenticationInfo(
-                new ShiroUser(user.getId(), user.getUserId(), user.getNickName(), null), user.getPassword(), getName());
+                new ShiroUser(user.getId(), user.getUserId(), user.getNickName(), user.getRoleId(), source, null), user.getPassword(), getName());
     }
 
 
+    private void setUserRole(Developer developer) {
+            UserRole userRole = new UserRole();
+            userRole.setRoleId(developer.getRoleId());
+            userRole.setUserId(developer.getId());
+            userRoleService.insert(userRole);
+    }
 
     /**
      * 授权查询回调函数, 进行鉴权但缓存中无用户的授权信息时调用.
@@ -77,12 +114,16 @@ public class ShiroDbRealm extends AuthorizingRealm {
         public Long id;
         public String userId;
         public String nickName;
+        public Integer roleId;
+        public int source;  //用户来源 0：后台用户 1：开发者用户
         public List<Permission> permissions;
 
-        public ShiroUser(Long id, String userId, String nickName, List<Permission> permissions) {
+        public ShiroUser(Long id, String userId, String nickName, Integer roleId, int source, List<Permission> permissions) {
             this.id = id;
             this.userId = userId;
             this.nickName = nickName;
+            this.roleId = roleId;
+            this.source = source;
             this.permissions = permissions;
         }
 

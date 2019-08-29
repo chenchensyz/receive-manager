@@ -48,7 +48,7 @@ public class AppServiceController extends BaseController {
         PageHelper.startPage(appService.getPageNum(), appService.getPageSize());
         List<AppService> appServices = appServiceService.getList(appService);
         PageInfo<AppService> appServicePage = new PageInfo<AppService>(appServices);
-        int code = CodeUtil.SELECT_SUCCESS;
+        int code = CodeUtil.BASE_SUCCESS;
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(appServices)
                 .setTotal(appServicePage.getTotal()).setPage(appServicePage.getLastPage());
     }
@@ -65,7 +65,7 @@ public class AppServiceController extends BaseController {
     @RequestMapping("getAppServiceData")
     @ResponseBody
     public RestResponse getAppInfoData(@RequestParam("appServiceId") Long appServiceId) {
-        int code = CodeUtil.SELECT_SUCCESS;
+        int code = CodeUtil.BASE_SUCCESS;
         AppService appService = appServiceService.getEditByServiceId(appServiceId);
         if (appService == null) {
             code = CodeUtil.APPINFO_ERR_SELECT;
@@ -77,7 +77,7 @@ public class AppServiceController extends BaseController {
     @PostMapping(value = "addOrEdit")
     @ResponseBody
     public RestResponse addOrEdit(@Valid AppService appService) {
-        int code = CodeUtil.SELECT_SUCCESS;
+        int code = CodeUtil.BASE_SUCCESS;
         try {
             appServiceService.addOrEditAppService(getShiroUser().id, appService);
         } catch (ValueRuntimeException e) {
@@ -102,7 +102,7 @@ public class AppServiceController extends BaseController {
     public RestResponse changeAppService(@RequestParam("appServiceIds") String appServiceIds,
                                          @RequestParam("state") int state) {
         LOGGER.info("删除接口appServiceId:{},state:{}", appServiceIds, state);
-        int code = CodeUtil.SELECT_SUCCESS;
+        int code = CodeUtil.BASE_SUCCESS;
         try {
             appServiceService.changeAppService(appServiceIds, state, getShiroUser().id);
         } catch (ValueRuntimeException e) {
@@ -116,7 +116,7 @@ public class AppServiceController extends BaseController {
     @RequestMapping("uploadServiceFile")
     @ResponseBody
     public RestResponse uploadServiceFile(MultipartFile file, Long appId) {
-        int code = CodeUtil.SELECT_SUCCESS;
+        int code = CodeUtil.BASE_SUCCESS;
         try {
             appServiceService.uploadServiceFile(file, appId);
         } catch (ValueRuntimeException e) {

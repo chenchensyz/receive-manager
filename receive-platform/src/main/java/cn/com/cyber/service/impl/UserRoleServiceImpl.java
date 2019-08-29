@@ -17,7 +17,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     private UserRoleMapper userRoleMapper;
 
     @Override
-    public List<UserRole> getByUserId(long userId) {
+    public UserRole getByUserId(long userId) {
         return userRoleMapper.getByUserId(userId);
     }
 

@@ -3,7 +3,10 @@ package cn.com.cyber.service.impl;
 import cn.com.cyber.dao.AppInfoMapper;
 import cn.com.cyber.model.AppInfo;
 import cn.com.cyber.model.AppModel;
+import cn.com.cyber.model.TreeModel;
 import cn.com.cyber.service.AppInfoService;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,25 +51,42 @@ public class AppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public int getCountAppKey(String appKey) {
-        return appInfoMapper.getCountAppKey(appKey);
-    }
-
-    @Override
-    public AppInfo getEditById(Long id) {
-        return appInfoMapper.getEditById(id);
-    }
-
-    @Override
-    public int deleteByAppId(long appId) {
-        return appInfoMapper.deleteByPrimaryKey(appId);
-    }
-
-    @Override
     public int getCountAppInfoByState(long companyId, int state) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("companyId", companyId);
-        map.put("state", state);
-        return appInfoMapper.getCountAppInfoByState(map);
+        return appInfoMapper.getCountAppInfoByState(companyId, state);
+    }
+
+    @Override
+    public List<TreeModel> getAppServiceTree() {
+        List<TreeModel> appServiceList = appInfoMapper.getAppServiceTree();
+        return appServiceList;
+    }
+
+    @Override
+    public String getCheckedService(Integer appId) {
+        return appInfoMapper.getCheckedService(appId);
+    }
+
+    @Override
+    public List<TreeModel> getAppListTree(Long companyId, int state) {
+        return appInfoMapper.getAppListTree(companyId, state);
+    }
+
+    @Override
+    @Transactional
+    public void saveAppService(Integer appId, List<TreeModel> params, String creator) {
+        List<AppModel> appModelList = Lists.newArrayList();
+        for (TreeModel model : params) {
+            if (StringUtils.isBlank(model.getParentId()) || "null".equals(model.getParentId())) {
+                continue;
+            }
+            AppModel appModel = new AppModel();
+            appModel.setAppKey(model.getBasicData().replaceAll("\\\"", ""));
+            appModel.setServiceKey(model.getParentId());
+            appModel.setCreator(creator);
+            appModel.setAppId(appId);
+            appModelList.add(appModel);
+        }
+        appInfoMapper.deleteAppServiceByAppId(appId);
+        appInfoMapper.saveAppServiceMore(appModelList);
     }
 }

@@ -25,7 +25,7 @@ public class User extends BaseEntity implements Serializable {
 
     private String remark;
 
-    private Integer source;
+    private Integer roleId;
 
     private Integer state;
 
@@ -36,10 +36,6 @@ public class User extends BaseEntity implements Serializable {
     private Date updateTime;
 
     private String updateTimeStr;
-
-    private List<UserRole> userRoles;
-
-    private String userSelf;
 
     public Long getId() {
         return id;
@@ -129,14 +125,6 @@ public class User extends BaseEntity implements Serializable {
         this.updateTimeStr = updateTimeStr;
     }
 
-    public List<UserRole> getUserRoles() {
-        return userRoles;
-    }
-
-    public void setUserRoles(List<UserRole> userRoles) {
-        this.userRoles = userRoles;
-    }
-
     public Long getCompanyId() {
         return companyId;
     }
@@ -153,19 +141,19 @@ public class User extends BaseEntity implements Serializable {
         this.remark = remark;
     }
 
-    public Integer getSource() {
-        return source;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setSource(Integer source) {
-        this.source = source;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
-    public String getUserSelf() {
-        return userSelf;
-    }
-
-    public void setUserSelf(String userSelf) {
-        this.userSelf = userSelf;
-    }
+//    public String getUserSelf() {
+//        return userSelf;
+//    }
+//
+//    public void setUserSelf(String userSelf) {
+//        this.userSelf = userSelf;
+//    }
 }

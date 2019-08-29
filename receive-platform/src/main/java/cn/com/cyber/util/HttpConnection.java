@@ -13,6 +13,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -96,7 +98,7 @@ public class HttpConnection {
             code = responseCode;
         } catch (Exception e) {
             LOGGER.error("请求异常 requestUrl:{},error:{}", requestUrl, e);
-            result=e.toString();
+            result = e.toString();
         } finally {
             // 释放资源
             try {
@@ -192,11 +194,30 @@ public class HttpConnection {
         return encode;
     }
 
+    // 获得本周一0点时间
+    public static Date getTimesWeekmorning() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONDAY), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        return cal.getTime();
+    }
+
+    // 获得本周日24点时间
+    public static Date getTimesWeeknight() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(getTimesWeekmorning());
+        cal.add(Calendar.DAY_OF_WEEK, 7);
+        return cal.getTime();
+    }
+
     public static void main(String[] args) {
-        String path = "http://localhost:8082/pmmanage/api/pmuser/photo/xieg";
-//        String path = "http://localhost:8082/pmmanage/pmuser/initdomains?pmUserId=xieg";
-        Map<String, Object> map = httpRequest(path, "GET",
-                null, null, CodeUtil.RESPONSE_FILE_TYPE, null);
-        System.out.println(map);
+        Date s = getTimesWeekmorning();
+        for (int i = 0; i < 7; i++){
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(getTimesWeekmorning());
+            cal.add(Calendar.DAY_OF_WEEK, i);
+            String format = DateUtil.format(cal.getTime(), DateUtil.YMD_DASH);
+            System.out.println(format);
+        }
     }
 }
