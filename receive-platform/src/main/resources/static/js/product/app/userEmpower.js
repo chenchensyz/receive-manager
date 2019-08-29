@@ -59,13 +59,8 @@ userEmpower.prototype = {
         });
         // 点击节点名称获取选中节点值
         that.layDtree.on("node('interfaceSelect')", function (obj) {
-            layer.msg(JSON.stringify(obj.param));
+            // layer.msg(JSON.stringify(obj.param));
         });
-        $(".add-btn").click(function () {
-            var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
-            console.log($('.userName').val());
-            console.log(JSON.stringify(params));
-        })
     },
 
     getUserChecked: function (userName) {
@@ -97,7 +92,12 @@ userEmpower.prototype = {
                 });
                 return false;
             }
-            console.log(JSON.stringify(params));
+            if (params.length==0) {
+                layer.alert('请选择接口后重试', function () {
+                    layer.closeAll();
+                });
+                return false;
+            }
             var data = {'userName': userName, "params": params};
             $.ajax({
                 url: getRootPath() + "/userEmpower/saveUserService",

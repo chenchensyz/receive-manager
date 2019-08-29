@@ -23,7 +23,6 @@ function queryDateBetween(start, end) {
         startTime.setDate(startTime.getDate() + 1);
         i += 1;
     }
-    console.log(date_all);
     return date_all;
 }
 
@@ -38,7 +37,6 @@ function timeFormat(date) {
         m = '0' + m;
     }
     var d = date.getDate(); //日
-
     return y + "-" + m + "-" + d;
 }
 
