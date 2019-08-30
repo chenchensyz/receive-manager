@@ -1,7 +1,6 @@
 package cn.com.cyber.controller;
 
 import cn.com.cyber.config.shiro.ShiroDbRealm;
-import cn.com.cyber.model.AppModel;
 import cn.com.cyber.model.AppService;
 import cn.com.cyber.service.AppServiceService;
 import cn.com.cyber.util.CodeUtil;
@@ -158,10 +157,15 @@ public class BaseController {
         int msgCode;
         //根据appKey和serviceKey查询appinfo信息
         AppService appService = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
+        if (appService == null) {  //应用接口需授权
+            appService = appServiceService.getValidAppAndService(appKey, serviceKey);
+        }
+
         if (appService == null) {
-            msgCode = CodeUtil.REQUEST_KEY_FILED;
+            msgCode = CodeUtil.APPSERVICE_ERR_VALID;
             throw new ValueRuntimeException(msgCode);
         }
+
         if (CodeUtil.APP_STATE_ENABLE != appService.getAppState()) {
             msgCode = CodeUtil.APPINFO_ERR_UNENABLE;
             throw new ValueRuntimeException(msgCode);

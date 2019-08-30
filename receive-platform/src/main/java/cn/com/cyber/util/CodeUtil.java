@@ -94,6 +94,8 @@ public class CodeUtil {
     public static final int APPINFO_NULL_SERVICEFILE = 10109; //接口文件不能为空
     public static final int APPSERVICE_ERR_SAVE = 10110; //保存接口失败
     public static final int APPSERVICE_ERR_OPTION = 10111; //接口操作失败
+    public static final int APPSERVICE_ERR_VALID = 10112; //接口未授权
+
 
     //编排接口
     public static final int ARRANGEINFO_ERR_SELECT = 11101; //未查到编排接口

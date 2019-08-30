@@ -1,11 +1,9 @@
 package cn.com.cyber.service;
 
 import cn.com.cyber.model.AppService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 public interface AppServiceService {
 
@@ -28,4 +26,5 @@ public interface AppServiceService {
 
     AppService getByAppKeyAndServiceKey(String appKey, String serviceKey);
 
+    AppService getValidAppAndService(String appKey, String serviceKey);
 }

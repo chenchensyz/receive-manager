@@ -45,7 +45,7 @@ layui.define(['jquery','layer','form'], function(exports) {
 		LI_DIV_MENUBAR_REFRESH = "dtree-icon-refresh",				//menubar的刷新图标 
 		LI_DIV_MENUBAR_CHECKALL = "dtree-icon-roundcheckfill", 		//menubar的全选图标
 		LI_DIV_MENUBAR_UNCHECKALL = "dtree-icon-roundclosefill", 	//menubar的全不选图标
-		LI_DIV_MENUBAR_INVERTALL = "dtre119e-icon-roundcheck", 		//menubar的反选图标
+		LI_DIV_MENUBAR_INVERTALL = "dtree-icon-roundcheck", 		//menubar的反选图标
 		LI_DIV_MENUBAR_DELETE = "dtree-icon-delete1", 				//menubar的删除图标
 		LI_DIV_MENUBAR_SEARCH = "dtree-icon-search_list_light",		//menubar的搜索图标
 		LI_DIV_TOOLBAR_PULLDOWN = "dtree-icon-pulldown", 			//toolbar的展开图标
@@ -1191,7 +1191,7 @@ layui.define(['jquery','layer','form'], function(exports) {
 	DTree.prototype.autoHeight = function(){
 		var _this = this;
 		var height = _this.height;
-			// console.log(height);
+			console.log(height);
 		if(height != "") {
 			if(_this.elem == _this.toolbarScroll){
 				_this.obj.parent().css("height", height + "px");

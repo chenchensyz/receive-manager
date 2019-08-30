@@ -224,15 +224,6 @@ function logout() {
         btn: ['确认', '返回'] //按钮
     }, function () {
         location.href = getRootPath() + "/login/quit";
-        // $.get(getRootPath() + "/login/quit", function (data) {
-        //     if (data.code == 0) {
-        //         location.href = getRootPath() + "/login/toLogin";
-        //     } else {
-        //         layer.alert(data, function () {
-        //             layer.closeAll();
-        //         });
-        //     }
-        // });
     }, function () {
         layer.closeAll();
     });

@@ -7,6 +7,7 @@ import cn.com.cyber.util.RestResponse;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,9 +58,10 @@ public class NettyRedirectController extends BaseController {
             if (serviceUrl != null && "getTest".equals(serviceUrl)) {
                 url += "/getTest";
             }
-            jsonObject.put("appKey", appKey);
-            jsonObject.put("serviceKey", serviceKey);
-            Map<String, Object> resultMap = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonObject.toString(), null, null);
+            Map<String, String> serviceHeader= Maps.newHashMap();
+            serviceHeader.put("appKey", appKey);
+            serviceHeader.put("serviceKey", serviceKey);
+            Map<String, Object> resultMap = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonObject.toString(), null, serviceHeader);
             if (resultMap.get("code") != null) {
                 result = resultMap.get("result").toString();
                 if (CodeUtil.HTTP_OK != (Integer) resultMap.get("code")) { //组装错误返回

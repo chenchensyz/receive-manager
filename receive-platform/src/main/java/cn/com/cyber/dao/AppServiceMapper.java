@@ -17,4 +17,6 @@ public interface AppServiceMapper extends BaseDao<AppService> {
 
     AppService getByAppKeyAndServiceKey(@Param("appKey") String appKey, @Param("serviceKey") String serviceKey);
 
+    AppService getValidAppAndService(@Param("appKey") String appKey, @Param("serviceKey") String serviceKey);
+
 }

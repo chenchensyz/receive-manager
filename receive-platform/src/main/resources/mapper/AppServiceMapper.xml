@@ -9,7 +9,6 @@
         <result column="url_suffix" property="urlSuffix" jdbcType="VARCHAR"/>
         <result column="method" property="method" jdbcType="VARCHAR"/>
         <result column="content_type" property="contentType" jdbcType="VARCHAR"/>
-        <result column="service_type" property="serviceType"/>
         <result column="state" property="state" jdbcType="INTEGER"/>
         <result column="creator" property="creator" jdbcType="BIGINT"/>
         <result column="reviser" property="reviser" jdbcType="BIGINT"/>
@@ -43,12 +42,12 @@
         <if test="contentType != null">
             content_type,
         </if>
-        service_type, state, creator, create_time)
+        state, creator, create_time)
         VALUES(#{id},#{serviceName},#{serviceKey},#{appId},#{urlSuffix},#{method},
         <if test="contentType != null">
             #{contentType},
         </if>
-        #{serviceType},1,#{creator},sysdate)
+        1,#{creator},sysdate)
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="cn.com.cyber.model.AppService">
         update se_service_info
@@ -64,9 +63,6 @@
             </if>
             <if test="contentType != null">
                 content_type = #{contentType},
-            </if>
-            <if test="serviceType != null">
-                service_type = #{serviceType},
             </if>
             <if test="state != null">
                 state = #{state},
@@ -154,10 +150,15 @@
     </delete>
 
     <select id="getByAppKeyAndServiceKey" resultMap="BaseResultMap" parameterType="map">
-     select ssi.*,ta.name,ta.status app_state from se_service_info ssi
+     select ssi.*, ta.status app_state from se_service_info ssi
      left join  td_app ta  on ta.id = ssi.app_id
      where ta.app_uuid = #{appKey} and ssi.service_key = #{serviceKey}
    </select>
 
-
+    <!--授权的接口-->
+    <select id="getValidAppAndService" resultMap="BaseResultMap" parameterType="map">
+        select ssi.* from se_app_service sas left join TD_APP ta on  ta.id=sas.app_id
+        left join se_service_info ssi  on sas.service_key = ssi.service_key
+        where ta.app_uuid = #{appKey} and sas.service_key = #{serviceKey}
+   </select>
 </mapper>

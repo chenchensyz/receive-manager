@@ -31,7 +31,7 @@ public class HttpConnection {
         return uuidStr;
     }
 
-    public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType, String serviceHeader) {
+    public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType, Map<String, String> serviceHeader) {
         Map<String, Object> map = Maps.newHashMap();
         String result = null;
         HttpURLConnection conn = null;
@@ -56,9 +56,8 @@ public class HttpConnection {
             if (StringUtils.isNotBlank(contentType)) {
                 conn.setRequestProperty("Content-type", contentType);
             }
-            if (StringUtils.isNotBlank(serviceHeader)) {  //传输头消息
-                Map<String, String> headMap = JSONObject.parseObject(serviceHeader, Map.class);
-                for (Map.Entry<String, String> entry : headMap.entrySet()) {
+            if (serviceHeader != null && !serviceHeader.isEmpty()) {  //传输头消息
+                for (Map.Entry<String, String> entry : serviceHeader.entrySet()) {
                     conn.setRequestProperty(entry.getKey(), entry.getValue());
                 }
             }
@@ -124,7 +123,7 @@ public class HttpConnection {
         return map;
     }
 
-    public static String newParams(Map<String, Object> paramMap, String params, String method, String contentType, String requestUrl) throws UnsupportedEncodingException {
+    public static String newParams(Map<String, Object> paramMap,String method, String contentType, String requestUrl) throws UnsupportedEncodingException {
         String newParam = "";
         if (CodeUtil.RESPONSE_POST.equals(method)) {
             if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
@@ -190,13 +189,5 @@ public class HttpConnection {
 
         String encode = new String(Base64.encodeBase64(data), CodeUtil.cs);
         return encode;
-    }
-
-    public static void main(String[] args) {
-        String path = "http://localhost:8082/pmmanage/api/pmuser/photo/xieg";
-//        String path = "http://localhost:8082/pmmanage/pmuser/initdomains?pmUserId=xieg";
-        Map<String, Object> map = httpRequest(path, "GET",
-                null, null, CodeUtil.RESPONSE_FILE_TYPE, null);
-        System.out.println(map);
     }
 }

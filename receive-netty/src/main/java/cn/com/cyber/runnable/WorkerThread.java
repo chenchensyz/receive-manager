@@ -54,7 +54,7 @@ public class WorkerThread implements Runnable {
             String method = json.getString("method");
             String contentType = json.getString("contentType");
             String responseType = json.getString("responseType");
-            String serviceHeader = json.getString("serviceHeader");
+//            String serviceHeader = json.getString("serviceHeader");
 //            LOGGER.info("接收请求json.length:{}", json.toString().length());
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("messageId", messageId);
@@ -64,7 +64,7 @@ public class WorkerThread implements Runnable {
                     String paramsString = params;
                     params = "";
                     Map<String, Object> paramMap = (Map<String, Object>) JSONObject.parseObject(paramsString);
-                    params = HttpConnection.newParams(paramMap, params, method, contentType, requestUrl);
+                    params = HttpConnection.newParams(paramMap, method, contentType, requestUrl);
                 }
 
 //                LOGGER.info("requestUrl:{} , method:{} , contentType:{}", requestUrl, method, contentType);
@@ -79,7 +79,7 @@ public class WorkerThread implements Runnable {
                 //--------------------------
 
                 //请求http接口
-                Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, responseType, serviceHeader);
+                Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, responseType, null);
 
                 //-----------------------
                 if (messageId.startsWith("testTime:")) {

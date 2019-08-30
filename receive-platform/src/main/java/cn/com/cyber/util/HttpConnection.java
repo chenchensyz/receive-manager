@@ -33,7 +33,7 @@ public class HttpConnection {
         return uuidStr;
     }
 
-    public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType, String serviceHeader) {
+    public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType, Map<String, String> serviceHeader) {
         Map<String, Object> map = Maps.newHashMap();
         String result = null;
         HttpURLConnection conn = null;
@@ -49,18 +49,15 @@ public class HttpConnection {
             conn.setDoInput(true);
             conn.setUseCaches(false);
             //设置超时
-            MessageCodeUtil messageCodeUtil = SpringUtil.getBean(MessageCodeUtil.class);
-            int maxTime = Integer.valueOf(messageCodeUtil.getMessage(CodeUtil.REQUEST_MAXTIME));
-            conn.setConnectTimeout(maxTime);
-            conn.setReadTimeout(maxTime);
+            conn.setConnectTimeout(50000);
+            conn.setReadTimeout(50000);
             // 设置请求方式（GET/POST）
             conn.setRequestMethod(method);
             if (StringUtils.isNotBlank(contentType)) {
                 conn.setRequestProperty("Content-type", contentType);
             }
-            if (StringUtils.isNotBlank(serviceHeader)) {  //传输头消息
-                Map<String, String> headMap = JSONObject.parseObject(serviceHeader, Map.class);
-                for (Map.Entry<String, String> entry : headMap.entrySet()) {
+            if (serviceHeader != null && !serviceHeader.isEmpty()) {  //传输头消息
+                for (Map.Entry<String, String> entry : serviceHeader.entrySet()) {
                     conn.setRequestProperty(entry.getKey(), entry.getValue());
                 }
             }
@@ -126,7 +123,53 @@ public class HttpConnection {
         return map;
     }
 
-    public static String newParams(Map<String, Object> paramMap, String params, String method, String contentType, String requestUrl) throws UnsupportedEncodingException {
+    public static Map<String, Object> requestNewParams(String params, String method, String contentType, String requestUrl, Map<String, String> serviceHeader) throws UnsupportedEncodingException {
+        String newParam = "";
+        if (StringUtils.isNotBlank(params)) {
+            Map<String, Object> paramMap = (Map<String, Object>) JSONObject.parseObject(params);
+            if (CodeUtil.METHOD_POST.equals(method)) {
+                if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
+                    newParam = JSONObject.toJSON(paramMap).toString();
+                } else {
+                    int i = 1;
+                    for (String key : paramMap.keySet()) {
+                        String value = paramMap.get(key).toString();
+                        newParam += key + "=" + URLEncoder.encode(value, "UTF-8");
+                        if (i < paramMap.size()) {
+                            newParam += "&";
+                        }
+                        i++;
+                    }
+                }
+            } else if (CodeUtil.METHOD_GET.equals(method)) {
+                if (requestUrl.contains("{")) { //拼在地址栏
+                    for (String key : paramMap.keySet()) {
+                        String value = paramMap.get(key).toString();
+                        String replace = requestUrl.replace("{" + key + "}", value);
+                        requestUrl = replace;
+                    }
+                } else {
+                    requestUrl = requestUrl + "?";
+                    int i = 1;
+                    for (String key : paramMap.keySet()) {
+                        String value = paramMap.get(key).toString();
+                        requestUrl += key + "=" + URLEncoder.encode(value, "UTF-8");
+                        if (i < paramMap.size()) {
+                            requestUrl += "&";
+                        }
+                        i++;
+                    }
+                }
+            }
+        }
+        LOGGER.info("newParam:{}",newParam);
+        LOGGER.info("method:{},ContentType:{},url:{}", method, contentType, requestUrl);
+        Map<String, Object> resultMap = httpRequest(requestUrl, method, contentType, newParam, null, null);
+        return resultMap;
+    }
+
+    public static String newParams(Map<String, Object> paramMap, String method, String contentType, String
+            requestUrl) throws UnsupportedEncodingException {
         String newParam = "";
         if (CodeUtil.METHOD_POST.equals(method)) {
             if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
@@ -212,7 +255,7 @@ public class HttpConnection {
 
     public static void main(String[] args) {
         Date s = getTimesWeekmorning();
-        for (int i = 0; i < 7; i++){
+        for (int i = 0; i < 7; i++) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(getTimesWeekmorning());
             cal.add(Calendar.DAY_OF_WEEK, i);

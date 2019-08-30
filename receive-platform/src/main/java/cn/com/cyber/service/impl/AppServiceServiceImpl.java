@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AppServiceServiceImpl implements AppServiceService {
@@ -134,5 +133,10 @@ public class AppServiceServiceImpl implements AppServiceService {
     @Override
     public AppService getByAppKeyAndServiceKey(String appKey, String serviceKey) {
         return appServiceMapper.getByAppKeyAndServiceKey(appKey, serviceKey);
+    }
+
+    @Override
+    public AppService getValidAppAndService(String appKey, String serviceKey) {
+        return appServiceMapper.getValidAppAndService(appKey, serviceKey);
     }
 }
