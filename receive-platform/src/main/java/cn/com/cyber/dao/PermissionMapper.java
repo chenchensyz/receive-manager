@@ -1,5 +1,6 @@
 package cn.com.cyber.dao;
 
+import cn.com.cyber.model.PermModel;
 import cn.com.cyber.model.Permission;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,4 +20,7 @@ public interface PermissionMapper extends BaseDao<Permission> {
     String getPermByRoleId(Integer roleId);
 
     List<Permission> getPermByCode(@Param("codes") Set<String> codes);
+
+    List<PermModel> getPermValidByCode(@Param("codes") Set<String> codes);
+
 }

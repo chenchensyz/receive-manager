@@ -36,7 +36,7 @@ public class AppServiceController extends BaseController {
     @Autowired
     private MessageCodeUtil messageCodeUtil;
 
-    @RequestMapping("getAppServiceList")
+    @RequestMapping("list")
     public String getAppInfoList() {
         return "appInfo/appServiceList";
     }

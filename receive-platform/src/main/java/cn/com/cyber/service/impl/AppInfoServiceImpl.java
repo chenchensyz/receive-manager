@@ -86,6 +86,9 @@ public class AppInfoServiceImpl implements AppInfoService {
             appModel.setAppId(appId);
             appModelList.add(appModel);
         }
+        if(appModelList.isEmpty()){
+           return;
+        }
         appInfoMapper.deleteAppServiceByAppId(appId);
         appInfoMapper.saveAppServiceMore(appModelList);
     }

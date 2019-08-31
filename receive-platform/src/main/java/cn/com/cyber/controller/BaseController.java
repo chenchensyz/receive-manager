@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
@@ -68,6 +69,9 @@ public class BaseController {
     public ShiroDbRealm.ShiroUser getShiroUser() {
         ShiroDbRealm.ShiroUser shiroUser = (ShiroDbRealm.ShiroUser) SecurityUtils.getSubject().getPrincipal();
         if (shiroUser == null) {
+            Subject subject = SecurityUtils.getSubject();
+            subject.getSession().setTimeout(0);
+            subject.logout();
             throw new ValueRuntimeException(CodeUtil.BASE_VALED);
         }
         return shiroUser;

@@ -38,8 +38,9 @@ login.prototype = {
         this.layForm.on('submit(login-btn)', function (data) {
             $.post(getRootPath() + '/login/login', data.field).then(function (res) {
                 if (res.code == 0) {
+                    sessionStorage.setItem("userId", data.field.userId)
                     top.location = getRootPath() + '/index';
-                }else {
+                } else {
                     layer.alert(res.message);
                 }
             });
@@ -48,7 +49,7 @@ login.prototype = {
     },
 
     toRegiest: function () {
-        $('.regiest a').off('click').on('click',function () {
+        $('.regiest a').off('click').on('click', function () {
             location.href = getRootPath() + "/regiest/toRegiest";
         });
     }

@@ -1,6 +1,7 @@
 package cn.com.cyber.service.impl;
 
 import cn.com.cyber.dao.PermissionMapper;
+import cn.com.cyber.model.PermModel;
 import cn.com.cyber.model.Permission;
 import cn.com.cyber.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +57,17 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public String getPermByRoleId(Integer roleId){
+    public String getPermByRoleId(Integer roleId) {
         return permissionMapper.getPermByRoleId(roleId);
     }
 
     @Override
     public List<Permission> getPermByCode(Set<String> codes) {
         return permissionMapper.getPermByCode(codes);
+    }
+
+    @Override
+    public List<PermModel> getPermValidByCode(Set<String> codes) {
+        return permissionMapper.getPermValidByCode(codes);
     }
 }

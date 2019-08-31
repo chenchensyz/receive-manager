@@ -33,7 +33,7 @@ public class AppInfoController extends BaseController {
     @Autowired
     private MessageCodeUtil messageCodeUtil;
 
-    @RequestMapping("getAppInfoList")
+    @RequestMapping("list")
     public String getAppInfoList(Model model, @RequestParam(value = "state", defaultValue = "1") int state) {
         model.addAttribute("state", state);
         return "appInfo/appInfoList";

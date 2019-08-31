@@ -1,9 +1,6 @@
 package cn.com.cyber.config.shiro;
 
-import cn.com.cyber.model.Developer;
-import cn.com.cyber.model.Permission;
-import cn.com.cyber.model.User;
-import cn.com.cyber.model.UserRole;
+import cn.com.cyber.model.*;
 import cn.com.cyber.service.DeveloperService;
 import cn.com.cyber.service.PermissionService;
 import cn.com.cyber.service.UserRoleService;
@@ -116,9 +113,9 @@ public class ShiroDbRealm extends AuthorizingRealm {
         public String nickName;
         public Integer roleId;
         public int source;  //用户来源 0：后台用户 1：开发者用户
-        public List<Permission> permissions;
+        public List<PermModel> permissions;
 
-        public ShiroUser(Long id, String userId, String nickName, Integer roleId, int source, List<Permission> permissions) {
+        public ShiroUser(Long id, String userId, String nickName, Integer roleId, int source, List<PermModel> permissions) {
             this.id = id;
             this.userId = userId;
             this.nickName = nickName;
@@ -131,11 +128,11 @@ public class ShiroDbRealm extends AuthorizingRealm {
             return userId;
         }
 
-        public List<Permission> getPermissions() {
+        public List<PermModel> getPermissions() {
             return permissions;
         }
 
-        public void setPermissions(List<Permission> permissions) {
+        public void setPermissions(List<PermModel> permissions) {
             this.permissions = permissions;
         }
 

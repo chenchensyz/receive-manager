@@ -1,6 +1,8 @@
 package cn.com.cyber.service;
 
+import cn.com.cyber.model.PermModel;
 import cn.com.cyber.model.Permission;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Set;
@@ -27,4 +29,7 @@ public interface PermissionService {
     String getPermByRoleId(Integer roleId);
 
     List<Permission> getPermByCode(Set<String> codes);
+
+    List<PermModel> getPermValidByCode(Set<String> codes);
+
 }

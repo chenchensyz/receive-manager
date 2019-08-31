@@ -26,36 +26,42 @@ home.prototype = {
                 var inletDivList = [];
                 var inletNum = res.data.countAppInfo;
                 var inletTitle = '应用数量(个)';
-                var icon = 'layui-icon-app';
-                inletDivList.push(that.addInlet(inletNum, inletTitle, icon));
+                var bg = 'layui-bg-blue';
+                inletDivList.push(that.addInlet(inletNum, inletTitle, bg));
 
                 inletNum = res.data.countService;
                 inletTitle = '接口数量(个)';
-                icon = 'layui-icon-form';
-                inletDivList.push(that.addInlet(inletNum, inletTitle, icon));
+                bg = 'layui-bg-cyan';
+                inletDivList.push(that.addInlet(inletNum, inletTitle, bg));
 
                 inletNum = res.data.receiveLogCount;
                 inletTitle = '访问量(次)';
-                icon = 'layui-icon-template';
-                inletDivList.push(that.addInlet(inletNum, inletTitle, icon));
+                bg = 'layui-bg-orange';
+                inletDivList.push(that.addInlet(inletNum, inletTitle, bg));
                 $('.inlet-body').html(inletDivList);
             }
 
         });
     },
 
-    addInlet: function (inletNum, inletTitle, icon, url) {
-        let inletDiv = `<div class="inlet-div">
-                        <div class="inlet-div-icon">
-                            <i class="layui-icon ${icon}"></i>
-                            <a href="${url}" class="inlet-num">${inletNum}</a>
-                        </div>
-                        <div class="inlet-div-title">
-                            <a href="" class="inlet-title">${inletTitle}</a>
-                        </div>
-                    </div>`
+    addInlet: function (inletNum, inletTitle, bg) {
+        let inletDiv = `<div class="layui-col-xs4">
+                            <div class="panel layui-bg-number">
+                                <div class="panel-body">
+                                    <div class="panel-title">
+                                        <span class="label pull-right ${bg}">实时</span>
+                                        <h5>${inletTitle}</h5>
+                                    </div>
+                                    <div class="panel-content">
+                                        <h1 class="no-margins">${inletNum}</h1>
+                                        <small>当前分类总记录数</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
         return inletDiv;
     },
+
     initData: function () {
         var that = this;
         that.tableIns = that.layTable.render({
@@ -95,7 +101,7 @@ home.prototype = {
                 if (res.code == 0) {
                     sucCount = res.data.sucCount;
                     errCount = res.data.errCount;
-                    var myChart = echarts.init($('#main')[0]);
+                    var echartsRecords = echarts.init($('#main')[0]);
                     var option = {
                         tooltip: {
                             trigger: 'axis'
@@ -144,7 +150,12 @@ home.prototype = {
                     };
 
                     // 为echarts对象加载数据
-                    myChart.setOption(option);
+                    echartsRecords.setOption(option);
+
+                    // echarts 窗口缩放自适应
+                    window.onresize = function(){
+                        echartsRecords.resize();
+                    }
                 } else {
                     layer.alert(res.message, function () {
                         layer.closeAll();

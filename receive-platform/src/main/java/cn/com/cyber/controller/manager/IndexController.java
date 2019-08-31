@@ -1,15 +1,19 @@
 package cn.com.cyber.controller.manager;
 
 import cn.com.cyber.controller.BaseController;
+import cn.com.cyber.model.PermModel;
 import cn.com.cyber.model.Permission;
 import cn.com.cyber.model.User;
 import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.service.PermissionService;
 import cn.com.cyber.service.UserService;
+import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.EncryptUtils;
 import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -35,6 +39,9 @@ public class IndexController extends BaseController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MessageCodeUtil messageCodeUtil;
+
     //首页
     @RequestMapping()
     public String getIndex() {
@@ -45,28 +52,26 @@ public class IndexController extends BaseController {
     @RequestMapping("/getPermMenu")
     @ResponseBody
     public RestResponse getPermMenu() {
-        List<Permission> permissons = Lists.newArrayList();
+        int code = CodeUtil.BASE_SUCCESS;
+        Map<String, Object> resultMap = Maps.newHashMap();
+        List<PermModel> permissons = Lists.newArrayList();
         try {
             if (getShiroUser().getPermissions() == null) {
                 String permStr = permissionService.getPermByRoleId(getShiroUser().roleId);
                 if (StringUtils.isNotBlank(permStr)) {
                     String[] permissionArr = permStr.split(",");
                     Set<String> set = new HashSet(Arrays.asList(permissionArr));
-                    permissons = permissionService.getPermByCode(set);
+                    permissons = permissionService.getPermValidByCode(set);
                     getShiroUser().setPermissions(permissons);
                 }
             } else {
                 permissons = getShiroUser().getPermissions();
             }
-        } catch (NullPointerException e) {
-            return RestResponse.failure("请联系管理员分配权限");
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+        } catch (ValueRuntimeException e) {
+            code = (Integer) e.getValue();
         }
-        if (permissons.size() == 0) {
-            return RestResponse.failure("请联系管理员分配权限");
-        }
-        return RestResponse.success().setData(permissons);
+        resultMap.put("permissons", permissons);
+        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(resultMap).setAny("logoInfo", "贵阳统一资源服务管理平台");
     }
 
     //修改密码
