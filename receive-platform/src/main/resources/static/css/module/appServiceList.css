@@ -2,24 +2,13 @@
     margin-top: 7px;
 }
 
-.refuse-btn {
-    float: right;
-    margin-right: 10px;
-    margin-top: 0px;
+.layui-btn-group .refuse-btn {
+    margin-left: 10px!important;
     display: none;
 }
 
 .lay-head-hr, .layui-table-box, .layui-table-view {
     margin-right: 0px
-}
-
-.app-list {
-    width: 20%;
-    float: left;
-    border: 1px solid #e6e6e6;
-    margin-top: 10px;
-    height: 300px;
-    overflow: auto
 }
 
 .app-list .layui-btn + .layui-btn {
