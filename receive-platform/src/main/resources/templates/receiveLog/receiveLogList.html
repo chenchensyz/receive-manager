@@ -3,34 +3,41 @@
 <head th:include="head::commonHeader('日志列表')"></head>
 
 <body>
-<div class="layui-body" style="margin: 1%">
-    <form id="userSearch" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
-        <div class="layui-form-item">
-            <label class="layui-form-label">appKey</label>
-            <div class="layui-input-inline">
-                <input id="appKey" name="appKey" autocomplete="off" class="layui-input" type="text"/>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">appKey</label>
+                            <div class="layui-input-inline">
+                                <input id="appKey" name="appKey" autocomplete="off" class="layui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">serviceKey</label>
+                            <div class="layui-input-inline">
+                                <input id="serviceKey" name="serviceKey" autocomplete="off" class="layui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+                            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">提交</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <label class="layui-form-label">serviceKey</label>
-            <div class="layui-input-inline">
-                <input id="serviceKey" name="serviceKey" autocomplete="off" class="layui-input" type="text"/>
-            </div>
-            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
-            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">提交</button>
+        </fieldset>
+
+        <div style="margin-right: 8px">
+            <table id="receiveLogList" lay-filter="receiveLogTable"></table>
         </div>
-    </form>
-
-    <!--<hr class="layui-bg-blue"/>-->
-    <hr class="layui-bg-gray"/>
-    <div style="margin-right: 8px">
-        <table id="receiveLogList" lay-filter="receiveLogTable"></table>
     </div>
-    <!--<script type="text/html" id="optBar">-->
-    <!--<a class="layui-btn layui-btn-xs" lay-event="edit">详情</a>-->
-    <!--</script>-->
-
 </div>
 
 <div th:include="head :: commonjs"></div>
-<script th:src="@{/js/product/receiveLog/receiveLogList.js}"></script>
+<script th:src="@{/js/receiveLog/receiveLogList.js}"></script>
 </body>
 </html>

@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('登陆页')"></head>
 <head>
-    <title>登陆页</title>
-    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
-    <link rel="stylesheet" th:href="@{/css/product/index.css}">
     <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 
 <body>
 <div class="login_box">
-    <div class="login_l_img"><img th:src="@{/img/login-img.png}"/></div>
+    <div class="login_l_img"><img th:src="@{/images/login-img.png}"/></div>
     <div class="login">
         <div class="login_name">
             <p>贵阳统一资源服务管理平台</p>
