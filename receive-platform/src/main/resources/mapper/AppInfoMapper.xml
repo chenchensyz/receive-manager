@@ -180,7 +180,7 @@
 
     <select id="getCountAppInfoByState" resultType="int" parameterType="map">
           select count(id) from td_app where status = #{state}
-          <if test="companyId > 0" >
+          <if test="companyId != null" >
               and company_id = #{companyId}
           </if>
     </select>
@@ -208,11 +208,22 @@
         </collection>
     </resultMap>
 
-    <select id="getAppServiceTree" resultMap="appTreeMap">
+    <select id="getAppServiceTree" resultMap="appTreeMap" parameterType="map">
         select ai.id,ai.name app_name ,ssi.id service_id ,ssi.service_name ,ssi.app_id ,ssi.service_key
         ,app_uuid basicData
         from td_app ai  join se_service_info ssi on ai.id = ssi.app_id
         where ai.status = 1 and ssi.state = 1
+        <if test="companyId != null" >
+            and ai.company_id != #{companyId}
+        </if>
+    </select>
+
+    <select id="getOnlyServiceTree" resultMap="appTreeMap" parameterType="map">
+        select ssi.id ,ssi.service_name app_name,ssi.service_key app_uuid
+        from se_service_info ssi where  ssi.service_type=1 and ssi.state=1
+        <if test="companyId != null" >
+            and ssi.creator != #{companyId}
+        </if>
     </select>
 
 
@@ -231,10 +242,17 @@
         where sas.app_id = #{appId}
     </select>
 
-    <insert id="saveAppServiceMore">
-        INSERT INTO se_app_service(app_key, service_key, creator, create_time, app_id)
+    <insert id="applyAppServiceMore">
+        INSERT INTO se_app_service_apply(app_key, service_key, app_id, record_id)
         <foreach collection="list" item="item" open="(" separator="union" close=")">
-            SELECT #{item.appKey},#{item.serviceKey},#{item.creator},sysdate,#{item.appId} FROM DUAL
+            SELECT #{item.appKey},#{item.serviceKey},#{item.appId},#{item.recordId} FROM DUAL
+        </foreach>
+    </insert>
+
+    <insert id="approveAppServiceMore">
+        INSERT INTO se_app_service(app_key, service_key, app_id, record_id)
+        <foreach collection="list" item="item" open="(" separator="union" close=")">
+            SELECT #{item.appKey},#{item.serviceKey},#{item.appId}, #{item.recordId} FROM DUAL
         </foreach>
     </insert>
 

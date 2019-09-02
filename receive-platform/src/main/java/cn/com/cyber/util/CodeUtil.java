@@ -95,6 +95,10 @@ public class CodeUtil {
     public static final int APPSERVICE_ERR_SAVE = 10110; //保存接口失败
     public static final int APPSERVICE_ERR_OPTION = 10111; //接口操作失败
     public static final int APPSERVICE_ERR_VALID = 10112; //接口未授权
+    public static final int SERVICE_RECORD_ERR_SAVE= 10113; //接口申请记录保存失败
+    public static final int SERVICE_APPLY_ERR_DEL= 10114; //修改旧接口记录失败
+    public static final int SERVICE_APPLY_ERR_SAVE= 10115; //接口申请失败
+    public static final int SERVICE_APPROVE_ERR_SAVE= 10116; //接口审核失败
 
 
     //编排接口

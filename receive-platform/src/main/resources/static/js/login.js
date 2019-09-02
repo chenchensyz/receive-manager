@@ -1,9 +1,9 @@
 function login() {
     var that = this;
-    layui.use(['form'], function () {
+    layui.use(['table', 'form'], function () {
+        that.layTable = layui.table;
         that.layForm = layui.form;
         that.init();
-        that.layForm.render();
     });
 }
 
@@ -39,6 +39,7 @@ login.prototype = {
             $.post(getRootPath() + '/login/login', data.field).then(function (res) {
                 if (res.code == 0) {
                     sessionStorage.setItem("userId", data.field.userId)
+                    sessionStorage.setItem("source", data.field.source)
                     top.location = getRootPath() + '/index';
                 } else {
                     layer.alert(res.message);

@@ -62,6 +62,7 @@ appEmpower.prototype = {
             elem: "#interfaceSelect",
             url: getRootPath() + '/appInfo/appServiceTree',
             initLevel: 1,  // 指定初始展开节点级别
+            type:"all",
             checkbarData: "change",
             checkbar: true,
             checkbarType: "no-all",

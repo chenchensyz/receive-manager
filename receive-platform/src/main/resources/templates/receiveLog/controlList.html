@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('服务监控')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/appServiceList.css}">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>服务监控</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">接口名称</label>
+                            <div class="layui-input-inline">
+                                <input name="serviceName" autocomplete="off" class="layui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm rest-btn">重置</button>
+                            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">查询</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table id="appServiceList" lay-filter="appServiceTable" lay-data="{id: 'appServiceTable'}"
+                           lay-size="sm"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="serviceDialog" class="layer_self_wrap" style="margin-top: 20px;">
+    <form id="serviceInfoFrom" class="layui-form layui-form-pane"  action="" style="margin-top: 20px;margin-left: 44px;">
+        <input type="hidden" class="param-id"/>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">所属应用：</label>
+                <div class="layui-input-inline ">
+                    <input class="layui-input param-appName" type="text" disabled="disabled"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">接口名称：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input param-serviceName" type="text" disabled="disabled"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求地址：</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input param-urlSuffix" disabled="disabled"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求方式：</label>
+            <div class="layui-input-inline">
+                <input class="layui-input param-method" type="text" disabled="disabled"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求编码格式：</label>
+            <div class="layui-input-inline">
+                <input class="layui-input param-contentType" type="text" disabled="disabled"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">异常信息：</label>
+            <div class="layui-input-inline">
+                <textarea class="layui-textarea param-errRemark" disabled="disabled"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/js/receiveLog/controlList.js}"></script>
+</body>
+</html>

@@ -96,6 +96,7 @@
             layer.confirm('您确定要退出吗？', {
                 btn: ['确认', '返回'] //按钮
             }, function () {
+                sessionStorage.clear();
                 location.href = getRootPath() + "/login/quit";
             }, function () {
                 layer.closeAll();

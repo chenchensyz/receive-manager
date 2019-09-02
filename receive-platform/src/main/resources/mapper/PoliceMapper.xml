@@ -28,7 +28,7 @@
     <insert id="saveUserService">
         INSERT INTO se_app_user_service(app_key, service_key, creator, create_time, user_name)
         <foreach collection="list" item="item" open="(" separator="union" close=")">
-            SELECT #{item.appKey},#{item.serviceKey},#{item.creator},sysdate,#{item.userName} FROM DUAL
+            SELECT #{item.appKey},#{item.serviceKey},#{item.apply},sysdate,#{item.userName} FROM DUAL
         </foreach>
     </insert>
 

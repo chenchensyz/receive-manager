@@ -53,7 +53,10 @@ public class AppServiceServiceImpl implements AppServiceService {
     @Transactional
     public void addOrEditAppService(Long userId, AppService appService) {
         int count;
-        if (appService.getId() > 0) { //编辑
+        if (appService.getAppId() == null) {  //独立接口
+            appService.setServiceType(1);
+        }
+        if (appService.getId() != null) { //编辑
             appService.setReviser(userId);
             count = appServiceMapper.updateByPrimaryKeySelective(appService);
         } else {
@@ -61,7 +64,7 @@ public class AppServiceServiceImpl implements AppServiceService {
             long serviceKey;
             do {
                 uuid = CodeUtil.getUUID();
-                serviceKey = appServiceMapper.getCountServiceKey(uuid,null);
+                serviceKey = appServiceMapper.getCountServiceKey(uuid, null);
             } while (serviceKey > 0);
             appService.setServiceKey(CodeUtil.getUUID());
             appService.setCreator(userId);
@@ -90,6 +93,9 @@ public class AppServiceServiceImpl implements AppServiceService {
             service.setId(0l);
             service.setServiceName(serviceExcel.getServiceName());
             service.setUrlSuffix(serviceExcel.getUrlSuffix());
+            if (appId == null) {
+                service.setServiceType(1);
+            }
             service.setAppId(appId);
             service.setMethod(serviceExcel.getMethod().toUpperCase());
             service.setContentType(serviceExcel.getContentType());
@@ -100,7 +106,7 @@ public class AppServiceServiceImpl implements AppServiceService {
             long serviceKey;
             do {
                 uuid = CodeUtil.getUUID();
-                serviceKey = appServiceMapper.getCountServiceKey(uuid,null);
+                serviceKey = appServiceMapper.getCountServiceKey(uuid, null);
             } while (serviceKey > 0);
             service.setServiceKey(CodeUtil.getUUID());
             int count = appServiceMapper.insertSelective(service);

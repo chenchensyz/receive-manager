@@ -36,7 +36,7 @@ public class RankingServiceImpl implements RankingService {
 
     @Override
     public Map<String, Object> inletCount() {
-        int countAppInfo = appInfoMapper.getCountAppInfoByState(0, 1);
+        int countAppInfo = appInfoMapper.getCountAppInfoByState(null, 1);
         int countService = appServiceMapper.getCountServiceKey(null, 1);
         int receiveLogCount = receiveLogMapper.getReceiveLogCount();
         Map<String, Object> map = Maps.newHashMap();

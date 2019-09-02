@@ -1,6 +1,7 @@
 package cn.com.cyber.controller.redirect;
 
 import cn.com.cyber.controller.BaseController;
+import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.ReceiveLog;
 import cn.com.cyber.service.ReceiveLogService;
 import cn.com.cyber.util.RestResponse;
@@ -39,5 +40,20 @@ public class ReceiveLogController extends BaseController {
                 setPage(receiveLogPage.getLastPage());
     }
 
+    //服务监控列表
+    @RequestMapping(value = "/controlList")
+    public String controlList() {
+        return "receiveLog/controlList";
+    }
+
+    @RequestMapping("/controlListData")
+    @ResponseBody
+    public RestResponse controlListData(AppService appService) {
+        PageHelper.startPage(appService.getPageNum(), appService.getPageSize());
+        List<AppService> controlListData = receiveLogService.getControlListData(appService);
+        PageInfo<AppService> controlListPage = new PageInfo<AppService>(controlListData);
+        return RestResponse.success().setData(controlListData).setTotal(controlListPage.getTotal()).
+                setPage(controlListPage.getLastPage());
+    }
 
 }

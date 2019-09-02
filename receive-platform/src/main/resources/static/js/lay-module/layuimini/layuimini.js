@@ -60,6 +60,7 @@ layui.define(["element", "jquery"], function (exports) {
                         }
                     } else {
                         layuimini.msg_error(res.message);
+                        location.href = getRootPath() + '/login/toLogin';
                     }
                 },
                 error: function (err) {

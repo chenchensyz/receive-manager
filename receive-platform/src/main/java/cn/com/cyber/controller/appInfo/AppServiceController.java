@@ -55,7 +55,7 @@ public class AppServiceController extends BaseController {
 
     //跳转接口编辑页面
     @RequestMapping("getAppService")
-    public String getAppService(Long appId, @RequestParam(defaultValue = "0") Long appServiceId, Model model) {
+    public String getAppService(Long appId, Long appServiceId, Model model) {
         model.addAttribute("appId", appId);
         model.addAttribute("appServiceId", appServiceId);
         return "appInfo/appService";
@@ -123,5 +123,18 @@ public class AppServiceController extends BaseController {
             code = (Integer) e.getValue();
         }
         return RestResponse.res(code, messageCodeUtil.getMessage(code));
+    }
+
+
+    //独立接口
+    @RequestMapping("/onlyList")
+    public String onlyList() {
+        return "appInfo/serviceOnlyList";
+    }
+
+    //待审批接口
+    @RequestMapping("/waitList")
+    public String waitList() {
+        return "appInfo/serviceWaitList";
     }
 }

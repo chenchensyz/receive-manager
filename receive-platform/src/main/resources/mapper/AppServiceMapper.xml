@@ -9,6 +9,7 @@
         <result column="url_suffix" property="urlSuffix" jdbcType="VARCHAR"/>
         <result column="method" property="method" jdbcType="VARCHAR"/>
         <result column="content_type" property="contentType" jdbcType="VARCHAR"/>
+        <result column="service_type" property="serviceType"/>
         <result column="state" property="state" jdbcType="INTEGER"/>
         <result column="creator" property="creator" jdbcType="BIGINT"/>
         <result column="reviser" property="reviser" jdbcType="BIGINT"/>
@@ -18,10 +19,15 @@
         <result column="cname" property="createUser"/>
         <result column="uname" property="updateUser"/>
         <result column="app_state" property="appState"/>
+        <result column="app_name" property="appName"/>
+
+        <result column="control_state" property="controlState"/>
+        <result column="err_remark" property="errRemark"/>
+        <result column="control_time" property="controlTime"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, service_name, service_key, app_id, url_suffix, method, content_type, state, creator,
-    reviser, create_time, update_time
+    reviser, create_time, update_time, service_ype
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
         select
@@ -38,16 +44,28 @@
             SELECT SEQ_SE_SERVICE_INFO.NEXTVAL AS VALUE FROM DUAL
         </selectKey>
         insert into se_service_info
-        (id, service_name, service_key, app_id, url_suffix, method,
+        (id, service_name, service_key, url_suffix, method,
+        <if test="appId != null">
+            app_id,
+        </if>
         <if test="contentType != null">
             content_type,
         </if>
+        <if test="serviceType != null">
+            service_type,
+        </if>
         state, creator, create_time)
-        VALUES(#{id},#{serviceName},#{serviceKey},#{appId},#{urlSuffix},#{method},
+        VALUES(#{id},#{serviceName},#{serviceKey},#{urlSuffix},#{method},
+        <if test="appId != null">
+            #{appId},
+        </if>
         <if test="contentType != null">
             #{contentType},
         </if>
-        1,#{creator},sysdate)
+        <if test="serviceType != null">
+            #{serviceType},
+        </if>
+        0,#{creator},sysdate)
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="cn.com.cyber.model.AppService">
         update se_service_info
@@ -74,47 +92,59 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+
     <sql id="sql_where">
         <where>
             <if test="id != null">
-                and id = #{id,jdbcType=BIGINT}
+                and ssi.id = #{id,jdbcType=BIGINT}
             </if>
             <if test="serviceName != null and serviceName !=''">
-                and service_name like "%"#{serviceName}"%"
+                and ssi.service_name like "%"#{serviceName}"%"
             </if>
             <if test="serviceKey != null and serviceKey !=''">
-                and service_key = #{serviceKey,jdbcType=VARCHAR}
+                and ssi.service_key = #{serviceKey,jdbcType=VARCHAR}
             </if>
             <if test="appId != null">
-                and app_id = #{appId,jdbcType=BIGINT}
-            </if>
-            <if test="urlSuffix != null and urlSuffix !=''">
-                and url_suffix = #{urlSuffix,jdbcType=VARCHAR}
-            </if>
-            <if test="method != null and method !=''">
-                and method = #{method,jdbcType=VARCHAR}
-            </if>
-            <if test="contentType != null and contentType !=''">
-                and content_type = #{contentType,jdbcType=VARCHAR}
+                and ssi.app_id = #{appId,jdbcType=BIGINT}
             </if>
             <if test="state != null">
-                and state = #{state,jdbcType=INTEGER}
+                and ssi.state = #{state,jdbcType=INTEGER}
             </if>
             <if test="creator != null">
-                and creator = #{creator,jdbcType=BIGINT}
+                and ssi.creator = #{creator,jdbcType=BIGINT}
             </if>
             <if test="reviser != null">
-                and reviser = #{reviser,jdbcType=BIGINT}
+                and ssi.reviser = #{reviser,jdbcType=BIGINT}
             </if>
             <if test="createTime != null">
-                and create_time = #{createTime,jdbcType=TIMESTAMP}
+                and ssi.create_time = #{createTime}
+            </if>
+            <if test="serviceType != null">
+                and ssi.service_type = #{serviceType}
             </if>
         </where>
     </sql>
+
     <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppService">
-        select * from se_service_info
+        select ssi.*,ta.name app_name from se_service_info ssi
+        left join td_app ta on ssi.app_id=ta.id
         <include refid="sql_where"/>
+        order by ta.id
     </select>
+
+    <update id="updateControl" parameterType="cn.com.cyber.model.AppService">
+        update se_service_info
+        <set>
+            <if test="controlState != null">
+                control_state = #{controlState},
+            </if>
+            <if test="errRemark != null">
+                err_remark = #{errRemark},
+            </if>
+            control_time = sysdate,
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
 
     <select id="getCountServiceKey" resultType="int" parameterType="map">
         SELECT count(id) FROM se_service_info
@@ -161,4 +191,11 @@
         left join se_service_info ssi  on sas.service_key = ssi.service_key
         where ta.app_uuid = #{appKey} and sas.service_key = #{serviceKey}
    </select>
+
+    <select id="getAppServiceByRecordId" resultMap="BaseResultMap" parameterType="int">
+      select ssi.*,ta.name app_name from SE_APP_SERVICE_APPLY sasa
+      left join td_app ta on sasa.app_key=ta.app_uuid
+      left join se_service_info ssi on sasa.service_key=ssi.service_key
+       where sasa.record_id =#{recordId}
+    </select>
 </mapper>

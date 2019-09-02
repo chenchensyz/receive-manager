@@ -89,8 +89,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/images/**", "anon");//img
 		filterChainDefinitionMap.put("/css/**", "anon");//css
 		filterChainDefinitionMap.put("/js/**", "anon");//js
-		filterChainDefinitionMap.put("/layui/**", "anon");//layui
-		filterChainDefinitionMap.put("/table/**", "anon");//table
+		filterChainDefinitionMap.put("/lib/**", "anon");//layui
 		filterChainDefinitionMap.put("/echarts/**", "anon");//echarts
 		filterChainDefinitionMap.put("/dtree/**", "anon");//dtree
 		filterChainDefinitionMap.put("/**", "authc");

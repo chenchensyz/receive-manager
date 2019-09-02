@@ -25,7 +25,9 @@
         </div>
         <div class="layui-col-md6">
             <div class="layui-card">
-                <div class="layui-card-header">选择接口</div>
+                <div class="layui-card-header">选择接口(<span style="color: green">选中部份为已授权接口</span>)
+                    <button type="button" class="layui-btn layui-btn-xs add-btn" style="float:right;margin-top: 10px">提交申请</button>
+                </div>
                 <div class="layui-card-body">
                     <input type="hidden" class="appId"/>
                     <div style="overflow: auto;">
@@ -37,6 +39,6 @@
     </div>
 </div>
 <div th:include="head :: commonjs"></div>
-<script th:src="@{/js/appInfo/appRequestList.js}"></script>
+<script th:src="@{/js/appInfo/appApplyList.js}"></script>
 </body>
 </html>

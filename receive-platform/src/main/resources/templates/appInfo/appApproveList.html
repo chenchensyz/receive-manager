@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('待审核接口访问')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/appServiceList.css}">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>待审核接口访问</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">接口名称</label>
+                            <div class="layui-input-inline">
+                                <input name="serviceName" autocomplete="off" class="layui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm rest-btn">重置</button>
+                            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">查询</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table id="appServiceList" lay-filter="appServiceTable" lay-data="{id: 'appServiceTable'}"
+                           lay-size="sm"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="serviceDialog" class="layer_self_wrap" style="margin-top: 20px;">
+    <input class="dio-appId" type="hidden">
+    <input class="dio-id" type="hidden">
+    <div style="margin-left: 13px;margin-bottom: 10px">
+        <table id="serviceApproveList" lay-filter="serviceApproveTable" lay-data="{id: 'serviceApproveTable'}"
+               lay-size="sm"></table>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block submit-div">
+            <button class="layui-btn dio-operate" type="button" data-type="1">审核通过</button>
+            <button class="layui-btn layui-btn-danger dio-operate" type="button" data-type="2">拒绝</button>
+        </div>
+    </div>
+</div>
+
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/js/appInfo/appApproveList.js}"></script>
+</body>
+</html>

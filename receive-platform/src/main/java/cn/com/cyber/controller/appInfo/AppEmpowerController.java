@@ -64,19 +64,5 @@ public class AppEmpowerController extends BaseController {
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(checkedService);
     }
 
-    //获取选中接口
-    @RequestMapping("saveAppService")
-    @ResponseBody
-    public RestResponse saveAppService(@RequestBody String param) {
-        int code = CodeUtil.BASE_SUCCESS;
-        JSONObject jsonObject = JSONObject.parseObject(param);
-        Integer appId = jsonObject.getInteger("appId");
-        List<TreeModel> params = JSONArray.parseArray(jsonObject.getString("params"), TreeModel.class);
-        try {
-            appInfoService.saveAppService(appId, params, getShiroUser().userId);
-        }catch (ValueRuntimeException e){
-            code=(Integer) e.getValue();
-        }
-        return RestResponse.res(code, messageCodeUtil.getMessage(code));
-    }
+
 }

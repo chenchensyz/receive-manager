@@ -110,7 +110,11 @@ public class AppInfoController extends BaseController {
     public RestResponse getAppServiceTree() {
         int code = CodeUtil.BASE_SUCCESS;
         RestResponse rest = new RestResponse();
-        rest.setData(appInfoService.getAppServiceTree());
+        Long companyId = null;
+        if (getShiroUser().source == 1) {
+            companyId = getShiroUser().id;
+        }
+        rest.setData(appInfoService.getAppServiceTree(companyId));
         rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));
         return rest;
     }

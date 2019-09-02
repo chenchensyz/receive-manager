@@ -1,18 +1,16 @@
 package cn.com.cyber.model;
 
-import java.util.Date;
-
 public class AppModel {
 
     private String appKey;
 
     private String serviceKey;
 
-    private String creator;
-
-    private Date createTime;
-
     private Integer appId;
+
+    private String apply;
+
+    private Integer recordId;
 
     private String userName;
 
@@ -32,22 +30,6 @@ public class AppModel {
         this.serviceKey = serviceKey;
     }
 
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getAppId() {
         return appId;
     }
@@ -56,11 +38,27 @@ public class AppModel {
         this.appId = appId;
     }
 
+    public String getApply() {
+        return apply;
+    }
+
+    public void setApply(String apply) {
+        this.apply = apply;
+    }
+
     public String getUserName() {
         return userName;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Integer getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
     }
 }

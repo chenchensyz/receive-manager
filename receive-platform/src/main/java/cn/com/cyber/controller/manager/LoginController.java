@@ -1,5 +1,6 @@
 package cn.com.cyber.controller.manager;
 
+import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.Developer;
 import cn.com.cyber.model.User;
 import cn.com.cyber.model.UserRole;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/login")
-public class LoginController {
+public class LoginController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
@@ -63,6 +64,7 @@ public class LoginController {
             if (subject.isAuthenticated()) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("userId", userId);
+                map.put("source", getShiroUser().source);
 //                isValiedUser(userId);
                 return RestResponse.success().setData(map);
             } else {

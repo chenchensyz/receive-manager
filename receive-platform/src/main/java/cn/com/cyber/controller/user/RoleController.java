@@ -42,10 +42,10 @@ public class RoleController {
         return "user/roleList";
     }
 
+    //角色列表数据
     @RequestMapping("/queryRoleListData")
     @ResponseBody
     public RestResponse queryRoleListData(Role role) {
-        LOGGER.info("角色列表数据:{}");
         PageHelper.startPage(role.getPageNum(), role.getPageSize());
         List<Role> roles = roleService.getList(role);
         PageInfo<Role> rolesPage = new PageInfo<Role>(roles);
@@ -53,17 +53,17 @@ public class RoleController {
                 .setTotal(rolesPage.getTotal()).setPage(rolesPage.getLastPage());
     }
 
+    //跳转角色新增/编辑页面
     @RequestMapping("getRoleInfo")
     public String getRoleInfo(@RequestParam(value = "roleId", defaultValue = "0") Long roleId, Model model) {
-        LOGGER.info("跳转角色新增/编辑页面:{}", roleId);
         model.addAttribute("roleId", roleId);
         return "user/roleInfo";
     }
 
+    //获取角色编辑数据
     @RequestMapping("getRoleInfoData")
     @ResponseBody
     public RestResponse getRoleInfoData(@RequestParam("roleId") Long roleId) {
-        LOGGER.info("获取角色编辑数据:{}", roleId);
         Role role = roleService.getById(roleId);
         if (role == null) {
             int code = CodeUtil.USERINFO_ERR_SELECT;
@@ -76,11 +76,10 @@ public class RoleController {
         return RestResponse.success().setData(map);
     }
 
-
+    //新增或编辑角色
     @RequestMapping("addOrEditRole")
     @ResponseBody
     public RestResponse addOrEditRole(Role sysRole) {
-        LOGGER.info("新增或编辑角色:{}", sysRole.getId());
         int count = 0;
         if (sysRole.getPermissions().endsWith(",")) {
             sysRole.setPermissions(sysRole.getPermissions().substring(0, sysRole.getPermissions().lastIndexOf(",")));
@@ -96,10 +95,10 @@ public class RoleController {
         return RestResponse.success();
     }
 
+    //删除角色
     @RequestMapping("deleteRole")
     @ResponseBody
     public RestResponse deleteRole(long roleId) {
-        LOGGER.info("删除角色:{}");
         if (roleService.deleteRoleById(roleId) == 0) {
             return RestResponse.success();
         }

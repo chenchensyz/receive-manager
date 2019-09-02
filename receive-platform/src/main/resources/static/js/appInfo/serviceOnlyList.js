@@ -15,50 +15,14 @@ function appServiceList() {
 
 appServiceList.prototype = {
     init: function () {
-        this.queryAppList();
+        this.initData();
         this.changeServiceFile();
         this.alertServiceFile();
         this.refuseMoreAppService();
-        this.appSec();
         this.toAdd();
     },
 
-    queryAppList: function () {
-        var that = this;
-        $.ajax({
-            url: getRootPath() + "/appInfo/queryAppList",
-            type: 'get',
-            success: function (res) {
-                if (res.code == 0) {
-                    for (i = 0; i < res.data.length; i++) {
-                        $('.app-list').append(`<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid layui-btn-sm app-sec" data-type="${res.data[i].id}">${res.data[i].title}</button>`);
-                    }
-                    debugger
-                    if (res.data.length > 0) {
-                        $('#appId').val(res.data[0].id);
-                        $('#appName').val(res.data[0].title);
-                        that.initData(res.data[0].id);
-                        $('.app-list').find('.app-sec').each(function (index, element) {
-                            if (index == 0) {
-                                $(this).attr('style', 'background-color: #c3c3c3');
-                            }
-                        });
-                    }
-                } else {
-                    layer.alert(res.message, function () {
-                        layer.closeAll();
-                    });
-                }
-            },
-            error: function (err) {
-                layer.alert(err.message, function () {
-                    layer.closeAll();
-                });
-            }
-        });
-    },
-
-    initData: function (appId) {
+    initData: function () {
         var that = this;
         var source = sessionStorage.getItem("source")
         that.tableIns = that.layTable.render({
@@ -67,7 +31,7 @@ appServiceList.prototype = {
             , url: getRootPath() + '/appService/queryAppServiceListData'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
-            , where: {appId: appId, state: 1}
+            , where: {serviceType: 1, state: 1}
             , page: true,
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
@@ -83,7 +47,7 @@ appServiceList.prototype = {
                 , {field: 'serviceName', title: '接口名称', width: 270}
                 , {field: 'serviceKey', title: '接口密钥', width: 305}
                 , {field: 'method', title: '请求方式', align: 'center', width: 89}
-                // , {field: 'right', title: '操作', align: 'center', toolbar: '#optBar'}
+                , {field: 'createTimeStr', title: '创建时间', align: 'center'}
                 , {
                     field: 'right', align: 'center', templet: function (d) {
                         var span = ' <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
@@ -91,8 +55,6 @@ appServiceList.prototype = {
                             span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="2">下线</a>';
                         } else if (source == 0 && d.state == 2) {
                             span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="1">上线</a>';
-                        }else if (source == 1 && d.state == 2) {
-                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="0">提交</a>';
                         }
                         if (d.state != 1) {
                             span += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
@@ -116,7 +78,6 @@ appServiceList.prototype = {
                 location.href = getRootPath() + '/appService/getAppService?appId=' + appId + '&appServiceId=' + data.id;
             } else if (obj.event === 'opt') {
                 var state = $('.opt-btn').attr('data-type');
-                console.log(state)
                 that.delAppService(obj, obj.data.id, state);
             } else if (obj.event === 'del') {
                 that.delAppService(obj, obj.data.id, -1);
@@ -124,14 +85,17 @@ appServiceList.prototype = {
         });
 
         that.layTable.on('checkbox(appServiceTable)', function (obj) {
-            var checkStatus = that.layTable.checkStatus('appServiceTable'); //appServiceTable 即为 id 对应的值
-            if (checkStatus.data.length > 0) {
-                if ($('.state').val() == 2) {
-                    $('.refuse-btn').text('批量恢复');
+            var source = sessionStorage.getItem("source")
+            if (source == 0) {
+                var checkStatus = that.layTable.checkStatus('appServiceTable'); //appServiceTable 即为 id 对应的值
+                if (checkStatus.data.length > 0) {
+                    if ($('.state').val() == 0) {
+                        $('.refuse-btn').text('批量恢复');
+                    }
+                    $('.refuse-btn').show();
+                } else {
+                    $('.refuse-btn').hide();
                 }
-                $('.refuse-btn').show();
-            } else {
-                $('.refuse-btn').hide();
             }
         });
 
@@ -151,20 +115,6 @@ appServiceList.prototype = {
             , page: {
                 curr: that.pageCurr //从当前页码开始
             }
-        });
-    },
-
-    //切换应用
-    appSec: function () {
-        var that = this;
-        $('.app-list').on('click', '.app-sec', function () {
-            $(".rest-btn").click();
-            $('.app-sec').attr('style', 'background-color: #fefefe');
-            var appId = $(this).attr('data-type');
-            $(this).attr('style', 'background-color: #c3c3c3');
-            $('#appId').val(appId);
-            $('#appName').val($(this).text());
-            that.initData(appId)
         });
     },
 

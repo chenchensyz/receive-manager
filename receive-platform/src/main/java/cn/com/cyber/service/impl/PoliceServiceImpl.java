@@ -56,7 +56,7 @@ public class PoliceServiceImpl implements PoliceService {
             AppModel appModel = new AppModel();
             appModel.setAppKey(model.getBasicData().replaceAll("\\\"", ""));
             appModel.setServiceKey(model.getParentId());
-            appModel.setCreator(creator);
+            appModel.setApply(creator);
             appModel.setUserName(userName);
             appModelList.add(appModel);
         }

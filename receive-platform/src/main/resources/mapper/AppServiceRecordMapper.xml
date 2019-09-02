@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.AppServiceRecordMapper">
+    <resultMap id="BaseResultMap" type="cn.com.cyber.model.AppServiceRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="app_id" property="appId"/>
+        <result column="state" property="state"/>
+        <result column="remark" property="remark" />
+        <result column="apply" property="apply"/>
+        <result column="approver" property="approver"/>
+        <result column="apply_time" property="applyTime"/>
+        <result column="approve_time" property="approveTime"/>
+        <result column="app_name" property="appName"/>
+        <result column="service_name" property="serviceName"/>
+        <result column="user_name" property="userName"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, app_id, state, remark, apply, approver, applyTime,  approveTime
+  </sql>
+
+    <select id="selectRecordId" resultType="int">
+       SELECT SEQ_SE_APP_SERVICE_RECORD.NEXTVAL AS VALUE FROM DUAL
+    </select>
+
+    <insert id="insertAppServiceRecord" parameterType="cn.com.cyber.model.AppServiceRecord">
+        insert into se_app_service_record (id, app_id, state, apply, apply_time)
+        VALUES(#{id},#{appId},0,#{apply},sysdate)
+    </insert>
+
+    <update id="updateAppServiceRecord" parameterType="cn.com.cyber.model.AppServiceRecord">
+        update se_app_service_record
+        set state = #{state}, approver = #{approver}, approve_time = sysdate
+        where id = #{id}
+    </update>
+
+    <select id="getAppServiceRecordList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppServiceRecord">
+       select sasr.*,ta.name app_name,tc.name user_name from se_app_service_record sasr
+       left join td_app ta on sasr.app_id=ta.id
+       left join td_company tc on sasr.apply= tc.username
+       where sasr.state=#{state}
+       order by sasr.apply_time desc
+    </select>
+
+
+    <resultMap id="AppModelMap" type="cn.com.cyber.model.AppModel">
+        <result column="app_key" property="appKey"/>
+        <result column="service_key" property="serviceKey"/>
+        <result column="app_id" property="appId" />
+        <result column="record_id" property="recordId"/>
+        <result column="user_name" property="userName"/>
+    </resultMap>
+
+    <select id="getAppServiceApplyList" resultMap="AppModelMap" parameterType="int">
+       select * from se_app_service_apply sasa where sasa.record_id=#{recordId}
+    </select>
+</mapper>

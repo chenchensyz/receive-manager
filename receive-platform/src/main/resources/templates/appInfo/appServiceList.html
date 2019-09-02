@@ -8,7 +8,7 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
         <fieldset class="layui-elem-field layuimini-search">
-            <legend>搜索信息</legend>
+            <legend>接口列表</legend>
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" action="">
                     <input id="appId" name="appId" type="hidden"/>
@@ -23,8 +23,9 @@
                             <label class="layui-form-label">接口状态</label>
                             <div class="layui-input-inline">
                                 <select name="state" class="state">
-                                    <option value="1" selected>可用</option>
-                                    <option value="0">不可用</option>
+                                    <option value="1" selected>已通过</option>
+                                    <option value="0">待审核</option>
+                                    <option value="2">未通过</option>
                                 </select>
                             </div>
                         </div>
@@ -56,16 +57,6 @@
                     </div>
                     <div class="layui-card-body">
                         <table id="appServiceList" lay-filter="appServiceTable" lay-data="{id: 'appServiceTable'}" lay-size="sm"></table>
-
-                        <script type="text/html" id="optBar">
-                            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                            {{#  if(d.state ==1){ }}
-                            <a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="0">下线</a>
-                            {{#  } else { }}
-                            <a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="1">上线</a>
-                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-                            {{#  } }}
-                        </script>
                     </div>
                 </div>
             </div>

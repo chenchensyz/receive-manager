@@ -64,8 +64,6 @@ permList.prototype = {
                 that.getChildPerm(data.id);
             }
         });
-
-
     },
 
     toAdd: function (e) {

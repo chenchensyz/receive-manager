@@ -42,6 +42,16 @@ public class AppService extends BaseEntity {
 
     private Integer appState;
 
+    private String appName;
+
+    private Integer controlState;
+
+    private String errRemark;
+
+    private Date controlTime;
+
+    private String controlTimeStr;
+
     public Long getId() {
         return id;
     }
@@ -184,5 +194,46 @@ public class AppService extends BaseEntity {
 
     public void setAppState(Integer appState) {
         this.appState = appState;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+
+    public Integer getControlState() {
+        return controlState;
+    }
+
+    public void setControlState(Integer controlState) {
+        this.controlState = controlState;
+    }
+
+    public String getErrRemark() {
+        return errRemark;
+    }
+
+    public void setErrRemark(String errRemark) {
+        this.errRemark = errRemark;
+    }
+
+    public Date getControlTime() {
+        return controlTime;
+    }
+
+    public void setControlTime(Date controlTime) {
+        this.controlTime = controlTime;
+    }
+
+    public String getControlTimeStr() {
+        return controlTime == null ? "" : DateUtil.format(controlTime, DateUtil.YMD_DASH_WITH_TIME);
+    }
+
+    public void setControlTimeStr(String controlTimeStr) {
+        this.controlTimeStr = controlTimeStr;
     }
 }

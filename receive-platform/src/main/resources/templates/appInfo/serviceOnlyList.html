@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('业务接口列表')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/appServiceList.css}">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>业务接口</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <input id="appId" name="appId" type="hidden"/>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">接口名称</label>
+                            <div class="layui-input-inline">
+                                <input name="name" autocomplete="off" class="layui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">接口状态</label>
+                            <div class="layui-input-inline">
+                                <select name="state" class="state">
+                                    <option value="1" selected>已通过</option>
+                                    <option value="0">待审核</option>
+                                    <option value="2">未通过</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm rest-btn">重置</button>
+                            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">查询</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <div class="layui-btn-group">
+                        <button class="layui-btn add-btn">添加</button>
+                        <button class="layui-btn alertServiceFile" style="margin-left: 10px!important;">批量增加</button>
+                        <button class="layui-btn layui-btn-danger refuse-btn">批量禁用</button>
+                        <input type="file" style="display: none" class="addServiceFile"/>
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <table id="appServiceList" lay-filter="appServiceTable" lay-data="{id: 'appServiceTable'}"
+                           lay-size="sm"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="serviceDialog" class="layer_self_wrap" style="margin-top: 20px;">
+    <form id="serviceInfoFrom" class="layui-form layui-form-pane" method="post" action=""
+          style="margin-top: 20px;margin-left: 44px;">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">所属应用：</label>
+                <div class="layui-input-inline ">
+                    <span>sdddd</span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">接口名称：</label>
+                <div class="layui-input-inline">
+                    <span>sdddd</span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <div class="layui-inline">
+                <label class="layui-form-label">接口服务密钥：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input param-serviceKey" type="text"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求地址后缀：</label>
+            <div class="layui-input-inline">
+                <input name="urlSuffix" type="text" class="layui-input param-urlSuffix" lay-verify=""/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求方式：</label>
+            <div class="layui-input-inline">
+                <select name="method" lay-filter="method" class="param-method" lay-verify="">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求编码格式：</label>
+            <div class="layui-input-inline">
+                <select name="contentType" lay-filter="contentType" class="param-contentType">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block submit-div">
+                <button class="layui-btn addOrEdit" lay-submit="" lay-filter="addOrEdit">提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary param-reset-btn">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/js/appInfo/serviceOnlyList.js}"></script>
+</body>
+</html>

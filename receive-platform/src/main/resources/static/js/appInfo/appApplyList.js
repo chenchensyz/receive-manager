@@ -1,7 +1,7 @@
 /**
  * 应用管理
  */
-function appRequestList() {
+function appApplyList() {
     var that = this;
     var pageCurr;
     var interfaceTree;
@@ -17,7 +17,7 @@ function appRequestList() {
     });
 }
 
-appRequestList.prototype = {
+appApplyList.prototype = {
     init: function () {
         this.initData();
         this.getAppServiceList();
@@ -44,11 +44,11 @@ appRequestList.prototype = {
         that.interfaceTree.menubarMethod().unCheckAll();  //清空节点
         $.get(getRootPath() + "/appEmpower/getCheckedService", {'appId': appId}, function (res) {
             if (res.code == 0) {
-                // that.interfaceTree.menubarMethod().closeAllNode(); //收缩节点
+                that.interfaceTree.menubarMethod().closeAllNode(); //收缩节点
                 if (res.data) {
-                    // that.layDtree.chooseDataInit("interfaceSelect", res.data);
-                    // that.interfaceTree.initNoAllCheck();  //半选
-                    that.interfaceTree.setDisabledNodes(res.data);  //disable
+                    that.layDtree.chooseDataInit("interfaceSelect", res.data);
+                    that.interfaceTree.initNoAllCheck();  //半选
+                    // that.interfaceTree.setDisabledNodes(res.data);  //disable
                 }
             } else {
                 layer.alert(res.message, function () {
@@ -64,15 +64,11 @@ appRequestList.prototype = {
             elem: "#interfaceSelect",
             url: getRootPath() + '/appInfo/appServiceTree',
             initLevel: 1,  // 指定初始展开节点级别
+            type:"all",
+            checkbarData: "change",
+            checkbar: true,
+            checkbarType: "no-all",
             dataStyle: "layuiStyle",  //使用layui风格的数据格式
-            toolbar: true,
-            toolbarWay: "follow", // "contextmenu"：右键菜单（默认），"fixed"："固定在节点后","follow"："跟随节点动态呈现"
-            toolbarShow:[], // 默认按钮制空
-            toolbarExt: [{
-                toolbarId: "request", icon: "dtree-icon-pullup", title: "接口申请", handler: function (node) {
-                    layer.msg(JSON.stringify(node));
-                }
-            }],
             response: {statusName: "code", statusCode: 0, rootName: "data", treeId: "id"} // 这里指定了返回的数据格式，组件会根据这些值来替换返回JSON中的指定格式，从而读取信息
         });
         // 点击节点名称获取选中节点值
@@ -87,39 +83,40 @@ appRequestList.prototype = {
             var appId = $('.appId').val();
             var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
             if (!appId) {
-                layer.alert('请选择应用后重试', function () {
-                    layer.closeAll();
-                });
+                layer.alert('请选择应用后重试', function () {layer.closeAll();});
                 return false;
             }
             if (params.length == 0) {
-                layer.alert('请选择接口后重试', function () {
-                    layer.closeAll();
-                });
+                layer.alert('请选择接口后重试', function () {layer.closeAll();});
                 return false;
             }
-            var data = {'appId': appId, "params": params};
-            $.ajax({
-                url: getRootPath() + "/appEmpower/saveAppService",
-                type: 'post',
-                "data": JSON.stringify(data),
-                contentType: 'application/json',
-                success: function (res) {
-                    if (res.code == 0) {
-                        layer.msg(res.message);
-                    } else {
-                        layer.alert(res.message, function () {
+
+            layer.confirm('是否确定提交接口申请？', {
+                btn: ['确认', '返回'] //按钮
+            }, function () {
+                var data = {'appId': appId, "params": params};
+                $.ajax({
+                    url: getRootPath() + "/appValid/apply",
+                    type: 'post',
+                    "data": JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (res) {
+                        if (res.code == 0) {
+                            layer.msg(res.message);
+                        } else {
+                            layer.alert(res.message, function () {
+                                layer.closeAll();
+                            });
+                        }
+                    },
+                    error: function (err) {
+                        layer.alert(err.message, function () {
                             layer.closeAll();
                         });
                     }
-                },
-                error: function (err) {
-                    layer.alert(err.message, function () {
-                        layer.closeAll();
-                    });
-                }
+                });
             });
         })
     }
 };
-new appRequestList();
+new appApplyList();

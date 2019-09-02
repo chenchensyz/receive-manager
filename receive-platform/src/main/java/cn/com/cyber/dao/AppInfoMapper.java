@@ -16,9 +16,11 @@ public interface AppInfoMapper extends BaseDao<AppInfo> {
 
     AppInfo getEditById(Long id);
 
-    int getCountAppInfoByState(@Param("companyId") long companyId, @Param("state") int state);
+    int getCountAppInfoByState(@Param("companyId") Long companyId, @Param("state") int state);
 
-    List<TreeModel> getAppServiceTree();
+    List<TreeModel> getAppServiceTree(@Param("companyId") Long companyId);
+
+    List<TreeModel> getOnlyServiceTree(@Param("companyId") Long companyId);
 
     List<TreeModel> getAppListTree(@Param("companyId") Long companyId, @Param("state") int state);
 
@@ -26,7 +28,11 @@ public interface AppInfoMapper extends BaseDao<AppInfo> {
 
     List<AppInfo> getReceiveAppRanking();
 
-    int saveAppServiceMore(List<AppModel> appModelList);
+    int applyAppServiceMore(List<AppModel> appModelList);
 
     int deleteAppServiceByAppId(Integer appId);
+
+    int approveAppServiceMore(List<AppModel> appModelList);
+
+    int deleteServiceRequestByAppId(Integer appId);
 }
