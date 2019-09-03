@@ -10,6 +10,7 @@ import cn.com.cyber.util.MessageCodeUtil;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +25,12 @@ public class PoliceServiceImpl implements PoliceService {
     private PoliceMapper policeMapper;
 
     @Autowired
-    private MessageCodeUtil messageCodeUtil;
+    private Environment environment;
 
     @Override
     public List<TreeModel> getUserTree(String nodeId) {
         if (StringUtils.isBlank(nodeId)) {
-            nodeId = messageCodeUtil.getMessage(CodeUtil.DEFAULT_DEPARTMENT);  //顶层部门
+            nodeId = environment.getProperty(CodeUtil.DEFAULT_DEPARTMENT);  //顶层部门
         }
         List<TreeModel> userTree = policeMapper.getUserTree(nodeId);
         for (TreeModel user : userTree) {

@@ -161,7 +161,7 @@ appServiceList.prototype = {
     checkAppService: function () {
         var that = this;
         $('.dio-operate').off('click').on('click', function () {
-            that.operateAppService($('.dio-id').val(),$('.dio-appId').val(), $(this).attr('data-type'));
+            that.operateAppService($('.dio-id').val(), $('.dio-appId').val(), $(this).attr('data-type'));
         });
     },
 

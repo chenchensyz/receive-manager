@@ -30,4 +30,7 @@ public interface AppInfoService {
 
     void check(AppServiceRecord appServiceRecord);
 
+    List<AppService> getAppValidListData(AppService appService);
+
+    void saveAppService(Integer appId, List<TreeModel> params, String creator);
 }

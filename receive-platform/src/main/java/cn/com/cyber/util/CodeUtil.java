@@ -53,7 +53,7 @@ public class CodeUtil {
     public static final String FILE_SAVE_PATH = "file_save_path";
     public static final String SOCKET_OPEN = "socket_open";
     public static final String FILE_ROOT_PATH = "file_root_path";
-    public static final String DEFAULT_DEPARTMENT = "default_department";  //默认密码
+    public static final String DEFAULT_DEPARTMENT = "default_department";  //顶层机构
 
 
     //pstore用户校验

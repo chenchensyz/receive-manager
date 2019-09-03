@@ -1,6 +1,7 @@
 package cn.com.cyber.controller.appInfo;
 
 import cn.com.cyber.controller.BaseController;
+import cn.com.cyber.model.AppModel;
 import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.AppServiceRecord;
 import cn.com.cyber.model.TreeModel;
@@ -103,5 +104,25 @@ public class AppValidController extends BaseController {
         }
         rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));
         return rest;
+    }
+
+    //已授权的接口
+    @RequestMapping("/list")
+    public String getAppValidList() {
+        return "appInfo/appValidList";
+    }
+
+
+    //已授权的接口数据
+    @RequestMapping("/appValidListData")
+    @ResponseBody
+    public RestResponse appValidListData(AppService appService) {
+        int code = CodeUtil.BASE_SUCCESS;
+        appService.setCreator(getShiroUser().id);
+        PageHelper.startPage(appService.getPageNum(), appService.getPageSize());
+        List<AppService> appServices = appInfoService.getAppValidListData(appService);
+        PageInfo<AppService> appServicePage = new PageInfo<AppService>(appServices);
+        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(appServices)
+                .setTotal(appServicePage.getTotal()).setPage(appServicePage.getLastPage());
     }
 }

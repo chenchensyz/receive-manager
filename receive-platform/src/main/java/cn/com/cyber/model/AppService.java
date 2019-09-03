@@ -40,10 +40,6 @@ public class AppService extends BaseEntity {
 
     private String updateUser;
 
-    private Integer appState;
-
-    private String appName;
-
     private Integer controlState;
 
     private String errRemark;
@@ -51,6 +47,12 @@ public class AppService extends BaseEntity {
     private Date controlTime;
 
     private String controlTimeStr;
+
+    private Integer appState;
+
+    private String appName;
+
+    private String appKey;
 
     public Long getId() {
         return id;
@@ -235,5 +237,13 @@ public class AppService extends BaseEntity {
 
     public void setControlTimeStr(String controlTimeStr) {
         this.controlTimeStr = controlTimeStr;
+    }
+
+    public String getAppKey() {
+        return appKey;
+    }
+
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
     }
 }

@@ -142,4 +142,35 @@ public class AppInfoServiceImpl implements AppInfoService {
             }
         }
     }
+
+    @Override
+    public List<AppService> getAppValidListData(AppService appService) {
+        return appServiceMapper.getAppValidListData(appService);
+    }
+
+    @Override
+    public void saveAppService(Integer appId, List<TreeModel> params, String creator) {
+        List<AppModel> appModelList = Lists.newArrayList();
+        for (TreeModel model : params) {
+            if (StringUtils.isBlank(model.getParentId()) || "null".equals(model.getParentId())) {
+                continue;
+            }
+            AppModel appModel = new AppModel();
+            if (StringUtils.isBlank(model.getBasicData()) || "null".equals(model.getBasicData())) {
+                appModel.setAppKey(model.getParentId());
+            } else {
+                appModel.setAppKey(model.getBasicData().replaceAll("\\\"", ""));
+            }
+            appModel.setServiceKey(model.getParentId());
+            appModel.setApply(creator);
+            appModel.setAppId(appId);
+            appModel.setRecordId(0);
+            appModelList.add(appModel);
+        }
+        appInfoMapper.deleteAppServiceByAppId(appId);
+        int save = appInfoMapper.approveAppServiceMore(appModelList);
+        if (save != appModelList.size()) {
+            throw new ValueRuntimeException(CodeUtil.SERVICE_RECORD_ERR_SAVE);
+        }
+    }
 }

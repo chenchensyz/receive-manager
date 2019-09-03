@@ -15,6 +15,7 @@ function queryDateBetween(start, end) {
     var date_all = [], i = 0;
     var startTime = getDate(start);
     var endTime = getDate(end);
+    debugger
     while ((endTime.getTime() - startTime.getTime()) >= 0) {
         var year = startTime.getFullYear();
         var month = (startTime.getMonth() + 1).toString().length == 1 ? "0" + (startTime.getMonth() + 1).toString() : (startTime.getMonth() + 1).toString();
@@ -43,7 +44,9 @@ function timeFormat(date) {
 
 function getDate(datestr) {
     var temp = datestr.split("-");
-    var date = new Date(temp[0], temp[1], temp[2]);
+    debugger
+    var date = new Date(temp[0], temp[1]-1, temp[2]);
+    console.log(date)
     return date;
 }
 

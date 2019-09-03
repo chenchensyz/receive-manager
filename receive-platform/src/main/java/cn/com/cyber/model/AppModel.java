@@ -1,6 +1,6 @@
 package cn.com.cyber.model;
 
-public class AppModel {
+public class AppModel extends BaseEntity {
 
     private String appKey;
 
@@ -61,4 +61,5 @@ public class AppModel {
     public void setRecordId(Integer recordId) {
         this.recordId = recordId;
     }
+
 }

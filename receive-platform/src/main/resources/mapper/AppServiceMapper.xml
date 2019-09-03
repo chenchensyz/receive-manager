@@ -20,6 +20,7 @@
         <result column="uname" property="updateUser"/>
         <result column="app_state" property="appState"/>
         <result column="app_name" property="appName"/>
+        <result column="app_key" property="appKey"/>
 
         <result column="control_state" property="controlState"/>
         <result column="err_remark" property="errRemark"/>
@@ -197,5 +198,21 @@
       left join td_app ta on sasa.app_key=ta.app_uuid
       left join se_service_info ssi on sasa.service_key=ssi.service_key
        where sasa.record_id =#{recordId}
+    </select>
+
+    <select id="getAppValidListData" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppService">
+      select tar.name app_name,sas.app_key,sas.service_key ,ssi.service_name, ssi.url_suffix, ssi.method,
+        ssi.content_type
+        from SE_APP_SERVICE sas
+        left join td_app ta on sas.app_id=ta.id
+        left join td_app tar on sas.app_key=tar.app_uuid
+        left join se_service_info ssi on sas.service_key=ssi.service_key
+         where ta.company_id = #{creator} and ta.status = 1 and ssi.state = 1
+        <if test="appKey != null and appKey !=''">
+            and sas.service_key = #{appKey}
+        </if>
+        <if test="serviceKey != null and serviceKey !=''">
+            and sas.service_key = #{serviceKey}
+        </if>
     </select>
 </mapper>
