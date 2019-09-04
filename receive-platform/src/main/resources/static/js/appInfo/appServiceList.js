@@ -5,10 +5,14 @@ function appServiceList() {
     var that = this;
     var pageCurr;
     var tableIns;
-    layui.use(['table', 'form', 'upload'], function () {
+    var appTree;
+    layui.extend({
+        dtree: '{/}' + getRootPath() + '/dtree/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+    }).use(['table', 'form', 'upload', 'dtree'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
         that.upload = layui.upload;
+        that.layDtree = layui.dtree;
         that.init();
     });
 }
@@ -19,42 +23,26 @@ appServiceList.prototype = {
         this.changeServiceFile();
         this.alertServiceFile();
         this.refuseMoreAppService();
-        this.appSec();
         this.toAdd();
     },
 
     queryAppList: function () {
         var that = this;
-        $.ajax({
-            url: getRootPath() + "/appInfo/queryAppList",
-            type: 'get',
-            success: function (res) {
-                if (res.code == 0) {
-                    for (i = 0; i < res.data.length; i++) {
-                        $('.app-list').append(`<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid layui-btn-sm app-sec" data-type="${res.data[i].id}">${res.data[i].title}</button>`);
-                    }
-                    debugger
-                    if (res.data.length > 0) {
-                        $('#appId').val(res.data[0].id);
-                        $('#appName').val(res.data[0].title);
-                        that.initData(res.data[0].id);
-                        $('.app-list').find('.app-sec').each(function (index, element) {
-                            if (index == 0) {
-                                $(this).attr('style', 'background-color: #c3c3c3');
-                            }
-                        });
-                    }
-                } else {
-                    layer.alert(res.message, function () {
-                        layer.closeAll();
-                    });
+        that.appTree = that.layDtree.render({
+            elem: "#appSelect",
+            url: getRootPath() + '/appInfo/queryAppList', // 该JSON格式被配置过了
+            dataStyle: "layuiStyle",  //使用layui风格的数据格式
+            response: {statusName: "code", statusCode: 0, rootName: "data", treeId: "id"}, // 这里指定了返回的数据格式，组件会根据这些值来替换返回JSON中的指定格式，从而读取信息
+            done: function (obj) {
+                if (obj.data.length > 0) {
+                    that.layDtree.click(that.appTree, obj.data[0].id); // 会自动帮你触发一次对应Id的节点的点击事件
                 }
-            },
-            error: function (err) {
-                layer.alert(err.message, function () {
-                    layer.closeAll();
-                });
             }
+        });
+        // 点击节点名称获取选中节点值
+        that.layDtree.on("node('appSelect')", function (obj) {
+            $('#appId').val(obj.param.nodeId)
+            that.initData(obj.param.nodeId);
         });
     },
 
@@ -80,18 +68,18 @@ appServiceList.prototype = {
             }
             , cols: [[
                 {type: 'checkbox'}
-                , {field: 'serviceName', title: '接口名称', width: 270}
+                , {field: 'serviceName', title: '接口名称', width: 202}
                 , {field: 'serviceKey', title: '接口密钥', width: 305}
                 , {field: 'method', title: '请求方式', align: 'center', width: 89}
                 // , {field: 'right', title: '操作', align: 'center', toolbar: '#optBar'}
                 , {
-                    field: 'right', align: 'center', templet: function (d) {
+                    field: 'right', templet: function (d) {
                         var span = ' <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
                         if (source == 0 && d.state == 1) {
                             span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="2">下线</a>';
                         } else if (source == 0 && d.state == 2) {
                             span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="1">上线</a>';
-                        }else if (source == 1 && d.state == 2) {
+                        } else if (source == 1 && d.state == 2) {
                             span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="0">提交</a>';
                         }
                         if (d.state != 1) {
@@ -112,11 +100,9 @@ appServiceList.prototype = {
         that.layTable.on('tool(appServiceTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {//编辑
-                var appId = $('#appId').val();
-                location.href = getRootPath() + '/appService/getAppService?appId=' + appId + '&appServiceId=' + data.id;
+                location.href = getRootPath() + '/appService/getAppService?appId=' + obj.data.appId + '&appServiceId=' + data.id;
             } else if (obj.event === 'opt') {
                 var state = $('.opt-btn').attr('data-type');
-                console.log(state)
                 that.delAppService(obj, obj.data.id, state);
             } else if (obj.event === 'del') {
                 that.delAppService(obj, obj.data.id, -1);
@@ -151,20 +137,6 @@ appServiceList.prototype = {
             , page: {
                 curr: that.pageCurr //从当前页码开始
             }
-        });
-    },
-
-    //切换应用
-    appSec: function () {
-        var that = this;
-        $('.app-list').on('click', '.app-sec', function () {
-            $(".rest-btn").click();
-            $('.app-sec').attr('style', 'background-color: #fefefe');
-            var appId = $(this).attr('data-type');
-            $(this).attr('style', 'background-color: #c3c3c3');
-            $('#appId').val(appId);
-            $('#appName').val($(this).text());
-            that.initData(appId)
         });
     },
 

@@ -45,6 +45,9 @@ public class AppServiceController extends BaseController {
     @RequestMapping("queryAppServiceListData")
     @ResponseBody
     public RestResponse queryAppInfoListData(AppService appService) {
+        if (getShiroUser().source == 1) {  //开发者用户
+            appService.setCreator(getShiroUser().id);
+        }
         PageHelper.startPage(appService.getPageNum(), appService.getPageSize());
         List<AppService> appServices = appServiceService.getList(appService);
         PageInfo<AppService> appServicePage = new PageInfo<AppService>(appServices);
@@ -136,5 +139,11 @@ public class AppServiceController extends BaseController {
     @RequestMapping("/waitList")
     public String waitList() {
         return "appInfo/serviceWaitList";
+    }
+
+    //接口注册
+    @RequestMapping("/register")
+    public String register() {
+        return "service/register";
     }
 }

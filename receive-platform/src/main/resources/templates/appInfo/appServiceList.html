@@ -2,13 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::commonHeader('接口列表')"></head>
 <head>
+    <link rel="stylesheet" th:href="@{/dtree/dtree.css}">
+    <link rel="stylesheet" th:href="@{/dtree/font/dtreefont.css}">
     <link rel="stylesheet" th:href="@{/css/module/appServiceList.css}">
 </head>
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
         <fieldset class="layui-elem-field layuimini-search">
-            <legend>接口列表</legend>
+            <legend>应用接口<span style="font-size: 10px">(全部接口查询请通过 服务管理-服务检索)</span></legend>
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" action="">
                     <input id="appId" name="appId" type="hidden"/>
@@ -16,13 +18,14 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">接口名称</label>
                             <div class="layui-input-inline">
-                                <input  name="name" autocomplete="off" class="layui-input" type="text"/>
+                                <input  name="serviceName" autocomplete="off" class="layui-input" type="text"/>
                             </div>
                         </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">接口状态</label>
                             <div class="layui-input-inline">
                                 <select name="state" class="state">
+                                    <option value="">请选择</option>
                                     <option value="1" selected>已通过</option>
                                     <option value="0">待审核</option>
                                     <option value="2">未通过</option>
@@ -31,26 +34,29 @@
                         </div>
                         <div class="layui-inline">
                             <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm rest-btn">重置</button>
-                            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">提交</button>
+                            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">检索</button>
                         </div>
                     </div>
                 </form>
             </div>
         </fieldset>
 
-        <div class="layui-row layui-col-space15">
-            <div class="layui-col-md2">
+        <div class="layui-row layui-col-space16">
+            <div class="layui-col-md3">
                 <div class="layui-card">
                     <div class="layui-card-header">选择应用</div>
-                    <div class="layui-card-body app-list"></div>
+                    <!--<div class="layui-card-body app-list" style="height: 350px;overflow: auto"></div>-->
+                    <div class="layui-card-body" style="height: 400px;overflow-x: hidden ;overflow-y: auto;margin-top: 10px">
+                            <ul id="appSelect" class="dtree"></ul>
+                    </div>
                 </div>
             </div>
-            <div class="layui-col-md10">
+            <div class="layui-col-md9">
                 <div class="layui-card">
                     <div class="layui-card-header">
                         <div class="layui-btn-group">
-                            <button class="layui-btn add-btn">添加</button>
-                            <button class="layui-btn alertServiceFile" style="margin-left: 10px!important;">批量增加</button>
+                            <button class="layui-btn add-btn">注册</button>
+                            <button class="layui-btn alertServiceFile" style="margin-left: 10px!important;">批量注册</button>
                             <button class="layui-btn layui-btn-danger refuse-btn">批量禁用</button>
                             <input type="file" style="display: none" class="addServiceFile"/>
                         </div>

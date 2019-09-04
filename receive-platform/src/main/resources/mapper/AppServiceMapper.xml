@@ -100,7 +100,8 @@
                 and ssi.id = #{id,jdbcType=BIGINT}
             </if>
             <if test="serviceName != null and serviceName !=''">
-                and ssi.service_name like "%"#{serviceName}"%"
+                <bind name="serviceNameSec" value=" '%' + serviceName + '%' "/>
+                and ssi.service_name like #{serviceNameSec}
             </if>
             <if test="serviceKey != null and serviceKey !=''">
                 and ssi.service_key = #{serviceKey,jdbcType=VARCHAR}
@@ -130,7 +131,7 @@
         select ssi.*,ta.name app_name from se_service_info ssi
         left join td_app ta on ssi.app_id=ta.id
         <include refid="sql_where"/>
-        order by ta.id
+        order by ssi.create_time desc,ta.id asc
     </select>
 
     <update id="updateControl" parameterType="cn.com.cyber.model.AppService">
@@ -208,6 +209,14 @@
         left join td_app tar on sas.app_key=tar.app_uuid
         left join se_service_info ssi on sas.service_key=ssi.service_key
          where ta.company_id = #{creator} and ta.status = 1 and ssi.state = 1
+        <if test="appName != null and appName !=''">
+            <bind name="appNameSec" value=" '%' + appName + '%' "/>
+            and tar.name like #{appNameSec}
+        </if>
+        <if test="serviceName != null and serviceName !=''">
+            <bind name="serviceNameSec" value=" '%' + serviceName + '%' "/>
+            and ssi.service_name like #{serviceNameSec}
+        </if>
         <if test="appKey != null and appKey !=''">
             and sas.service_key = #{appKey}
         </if>

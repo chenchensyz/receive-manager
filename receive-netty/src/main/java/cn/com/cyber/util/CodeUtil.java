@@ -38,7 +38,16 @@ public class CodeUtil {
     public static final String CACHE_TIME = "cache_time";
     public static final String SOCKET_OPEN = "socket_open";
 
+    //pstore用户校验
+    public static final String PSTORE_LOGIN_URL = "pstore_login_url";
+    public static final int PSTORE_LOGIN_REDIS_INDEX = 1; //redis保存1号库
+    public static final String PSTORE_LOGIN_REDIS_PREFIX = "u:";
+
+    public static final int USERINFO_ERR_CONNECT = 20104; //连接用户查询服务器失败
+    public static final int USERINFO_ERR_VALIED = 20105; //用户校验失败，请确认用户信息是否正确
+
     //响应状态码
+    public static final int BASE_SUCCESS = 0; //请求成功
     public static final int REQUEST_TIMEOUT = 99101; //服务接口请求超时
     public static final int REQUEST_CONN_FILED = 99102; //服务接口连接失败
     public static final int REQUEST_USE_FILED = 99103; //访问内网异常
@@ -48,6 +57,7 @@ public class CodeUtil {
     public static final int REQUEST_SERVICEURL_NULL = 99107;//请求的参数中serviceurl元素为空
     public static final int REQUEST_KEY_FILED = 99108;//请检查appKey或serviceKey是否正确
     public static final int REQUEST_SERVICE_FILED = 99109;//服务器内部异常
+
 
     /**
      * app状态 审核通过

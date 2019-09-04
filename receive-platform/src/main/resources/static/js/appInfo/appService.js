@@ -45,11 +45,7 @@ appService.prototype = {
         this.layForm.on('submit(create)', function (data) {
             $.post(getRootPath() + '/appService/addOrEdit', data.field).then(function (res) {
                 if (res.code == 0) {
-                    if(appId){
-                        location.href = getRootPath() + '/appService/list?appId=' + appId;
-                    }else{
-                        location.href = getRootPath() + '/appService/onlyList';
-                    }
+                    location.href = getRootPath() + '/appService/list?appId=' + appId;
                 } else {
                     layer.alert(res.message, function () {
                         layer.closeAll();

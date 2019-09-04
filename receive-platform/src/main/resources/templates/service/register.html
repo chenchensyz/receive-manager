@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('服务注册')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/js/lay-module/step-lay/step.css}">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-fluid">
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 40px;">
+                    <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;">
+                        <div carousel-item>
+                            <div>
+                                <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+                                    <div class="layui-form-item">
+                                            <label class="layui-form-label">接口名称：</label>
+                                            <div class="layui-input-block">
+                                                <input class="layui-input " type="text" name="serviceName" lay-verify="required"/>
+                                            </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">请求地址：</label>
+                                        <div class="layui-input-block">
+                                            <input  name="urlSuffix" type="text" class="layui-input" lay-verify="required"/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">请求方式：</label>
+                                        <div class="layui-input-block">
+                                            <select name="method" lay-filter="method" class="method" lay-verify="required">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">编码格式：</label>
+                                        <div class="layui-input-block">
+                                            <select name="contentType" lay-filter="contentType" class="contentType">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button class="layui-btn" lay-submit lay-filter="formStep">
+                                                &emsp;下一步&emsp;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div>
+                                <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">接口名称:</label>
+                                        <div class="layui-input-block">
+                                            <div class="layui-form-mid layui-word-aux param-serviceName"></div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">请求地址:</label>
+                                        <div class="layui-input-block">
+                                            <div class="layui-form-mid layui-word-aux param-urlSuffix"></div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">请求方式:</label>
+                                        <div class="layui-input-block">
+                                            <div class="layui-form-mid layui-word-aux param-method"></div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">编码格式:</label>
+                                        <div class="layui-input-block">
+                                            <div class="layui-form-mid layui-word-aux param-contentType"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
+                                            <button class="layui-btn" lay-submit lay-filter="formStep2">
+                                                &emsp;确认提交&emsp;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div>
+                                <div style="text-align: center;margin-top: 90px;">
+                                    <i class="layui-icon layui-circle"
+                                       style="color: white;font-size:30px;font-weight:bold;background: #52C41A;padding: 20px;line-height: 80px;">&#xe605;</i>
+                                    <div style="font-size: 24px;color: #333;font-weight: 500;margin-top: 30px;">
+                                        服务注册成功
+                                    </div>
+                                    <div style="font-size: 14px;color: #666;margin-top: 20px;">请等待管理员审核</div>
+                                </div>
+                                <div style="text-align: center;margin-top: 50px;">
+                                    <button class="layui-btn next">再次注册</button>
+                                    <!--<button class="layui-btn layui-btn-primary">查看账单</button>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/js/service/register.js}"></script>
+</body>
+</html>

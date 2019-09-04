@@ -22,16 +22,13 @@ appInfoList.prototype = {
 
     initData: function () {
         var that = this;
-        var urlState = $('#url-state').val();
-        var owner = $('#owner').val();
-        var source = $('#source').val();
         that.tableIns = that.layTable.render({
             elem: '#appInfoList'
             , url: getRootPath() + '/appInfo/queryAppInfoListData'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
             , page: true,
-            where: {state: urlState},
+            where: {'state': 1},
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
@@ -40,13 +37,22 @@ appInfoList.prototype = {
                 , statusCode: 0 //成功的状态码，默认：0
                 , countName: 'total' //数据总数的字段名称，默认：count
                 , dataName: 'data' //数据列表的字段名称，默认：data
-            },
-            where: {'state': urlState}
+            }
             , cols: [[
                 {type: 'numbers'}
                 , {field: 'appName', title: '应用名称'}
                 , {field: 'appKey', title: '应用密钥'}
-                , {field: 'state', title: '应用状态', width: 90, align: 'center', templet: '#stateJob'}
+                , {
+                    field: 'state', align: 'center', templet: function (d) {
+                        if (d.state == 1) {
+                            return '<span>可用</span>';
+                        } else if (d.state == 2) {
+                            return '<span>下架</span>';
+                        } else if (d.state == 3) {
+                            return '<span>注销</span>';
+                        }
+                    }, title: '应用状态', width: 90
+                }
                 , {field: 'createTimeStr', title: '创建时间', width: 162}
                 // , {field: 'right', title: '操作', width: 170, align: 'center', toolbar: '#optBar'}
             ]]
@@ -54,14 +60,6 @@ appInfoList.prototype = {
                 //如果是异步请求数据方式，res即为你接口返回的信息。
                 //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
                 that.pageCurr = curr;
-                $("[data-field='state']").children().each(function () {
-                    var eachState;
-                    if ($(this).text() == '1') {
-                        $(this).text("可用")
-                    } else if ($(this).text() == '2') {
-                        $(this).text("下架")
-                    }
-                });
             }
         });
 
@@ -82,16 +80,6 @@ appInfoList.prototype = {
             that.load(data);
             return false;
         });
-
-        if (urlState == 0) {
-            $('.app-state').remove();
-        }
-        $(".state-btn").each(function () {
-            if ($(this).attr('data-type') == urlState) {
-                $(this).attr('style', 'background-color:white');
-            }
-        });
-
     },
 
     delAppInfo: function (obj) {

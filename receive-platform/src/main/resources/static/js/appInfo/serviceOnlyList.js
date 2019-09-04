@@ -31,7 +31,7 @@ appServiceList.prototype = {
             , url: getRootPath() + '/appService/queryAppServiceListData'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
-            , where: {serviceType: 1, state: 1}
+            , where: {state: 1}
             , page: true,
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
@@ -46,7 +46,15 @@ appServiceList.prototype = {
                 {type: 'checkbox'}
                 , {field: 'serviceName', title: '接口名称', width: 270}
                 , {field: 'serviceKey', title: '接口密钥', width: 305}
-                , {field: 'method', title: '请求方式', align: 'center', width: 89}
+                , {
+                    field: 'appName', templet: function (d) {
+                        if (d.appName) {
+                            return '<span>' + d.appName + '</span>'
+                        } else {
+                            return '<span>无</span>';
+                        }
+                    }, title: '所属应用'
+                }
                 , {field: 'createTimeStr', title: '创建时间', align: 'center'}
                 , {
                     field: 'right', align: 'center', templet: function (d) {
@@ -55,6 +63,8 @@ appServiceList.prototype = {
                             span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="2">下线</a>';
                         } else if (source == 0 && d.state == 2) {
                             span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="1">上线</a>';
+                        }else if (source == 1 && d.state == 2) {
+                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="0">提交</a>';
                         }
                         if (d.state != 1) {
                             span += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';

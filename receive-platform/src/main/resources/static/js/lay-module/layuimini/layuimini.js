@@ -777,28 +777,16 @@ layui.define(["element", "jquery"], function (exports) {
     /**
      * 清理
      */
-    $('body').on('click', '[data-clear]', function () {
+    $('body').on('click', '[data-download]', function () {
         var loading = layer.load(0, {shade: false, time: 2 * 1000});
-        sessionStorage.clear();
-
-        // 判断是否清理服务端
-        var clearUrl = $(this).attr('data-href');
-        if (clearUrl != undefined && clearUrl != '' && clearUrl != null) {
-            $.getJSON(clearUrl, function (data, status) {
-                layer.close(loading);
-                if (data.code != 1) {
-                    return layuimini.msg_error(data.msg);
-                } else {
-                    return layuimini.msg_success(data.msg);
-                }
-            }).fail(function () {
-                layer.close(loading);
-                return layuimini.msg_error('清理缓存接口有误');
-            });
-        } else {
-            layer.close(loading);
-            return layuimini.msg_success('清除缓存成功');
-        }
+        $.get(getRootPath() + "/index/downLoadText", function (res) {
+            if (res.code == 0) {
+                location.href = res.data;
+            } else {
+                layuimini.msg_error(res.message);
+            }
+        });
+        layer.close(loading);
     });
 
     /**
