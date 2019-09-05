@@ -15,22 +15,32 @@
                             <div>
                                 <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
                                     <div class="layui-form-item">
-                                            <label class="layui-form-label">接口名称：</label>
-                                            <div class="layui-input-block">
-                                                <input class="layui-input " type="text" name="serviceName" lay-verify="required"/>
-                                            </div>
+                                        <label class="layui-form-label">选择应用：</label>
+                                        <div class="layui-input-block">
+                                            <select name="appId" lay-filter="appId" class="appId"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">接口名称：</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input " type="text" name="serviceName"
+                                                   lay-verify="required"/>
+                                        </div>
                                     </div>
 
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">请求地址：</label>
                                         <div class="layui-input-block">
-                                            <input  name="urlSuffix" type="text" class="layui-input" lay-verify="required"/>
+                                            <input name="urlSuffix" type="text" class="layui-input"
+                                                   lay-verify="required"/>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">请求方式：</label>
                                         <div class="layui-input-block">
-                                            <select name="method" lay-filter="method" class="method" lay-verify="required">
+                                            <select name="method" lay-filter="method" class="method"
+                                                    lay-verify="required">
                                             </select>
                                         </div>
                                     </div>
@@ -48,12 +58,24 @@
                                             <button class="layui-btn" lay-submit lay-filter="formStep">
                                                 &emsp;下一步&emsp;
                                             </button>
+                                            <button class="alertServiceFile layui-btn layui-btn-sm  layui-btn-radius layui-btn-warm"
+                                                    style=" position: fixed;right: 100px;" type="button">
+                                                批量注册
+                                            </button>
+                                            <input type="file" style="display: none" class="addServiceFile"/>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div>
                                 <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">应用名称:</label>
+                                        <div class="layui-input-block">
+                                            <input type="hidden" class="param-appId">
+                                            <div class="layui-form-mid layui-word-aux param-appName"></div>
+                                        </div>
+                                    </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">接口名称:</label>
                                         <div class="layui-input-block">
@@ -100,14 +122,37 @@
                                 </div>
                                 <div style="text-align: center;margin-top: 50px;">
                                     <button class="layui-btn next">再次注册</button>
-                                    <!--<button class="layui-btn layui-btn-primary">查看账单</button>-->
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div id="register-more" style="display:none;">
+    <form class="layui-form">
+        <div class="layui-form-item" style="margin-top: 40px;margin-right: 20px">
+            <label class="layui-form-label">选择应用：</label>
+            <div class="layui-input-block">
+                <select name="appId"  lay-filter="more-appId" class="more-appId"></select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn uploadMore" type="button" >下载示例文件 </button>
+                <button class="layui-btn layui-btn-normal" id="upFile" type="button" style="margin-right: 10px"><i class="layui-icon"></i>上传</button>
+                <input type="file" style="display: none" class="addServiceFile"/>
+            </div>
+        </div>
+    </form>
+    <hr>
+    <div style="color: #666;padding-left: 30px;">
+        <h3>批量上传</h3><br>
+        <p>请下载示例文件填写上传，如已下载请点击上传</p>
+        <p>上传文件格式xlsx</p>
     </div>
 </div>
 <div th:include="head :: commonjs"></div>

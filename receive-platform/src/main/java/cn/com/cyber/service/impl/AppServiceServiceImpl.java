@@ -94,12 +94,13 @@ public class AppServiceServiceImpl implements AppServiceService {
             service.setServiceName(serviceExcel.getServiceName());
             service.setUrlSuffix(serviceExcel.getUrlSuffix());
             if (appId == null) {
-                service.setServiceType(1);
+                service.setServiceType(1); //接口类型 0：应用接口  1：独立接口
+            }else{
+                service.setServiceType(0);
             }
             service.setAppId(appId);
             service.setMethod(serviceExcel.getMethod().toUpperCase());
             service.setContentType(serviceExcel.getContentType());
-            service.setServiceType(1);
             service.setCreator(shiroUser.id);
 
             String uuid;

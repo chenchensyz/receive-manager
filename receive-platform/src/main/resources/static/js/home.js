@@ -14,9 +14,16 @@ function home() {
 
 home.prototype = {
     init: function () {
+        this.initSse()
         this.inletSelect();
         this.initData();
         this.queryEcharts();
+    },
+
+    initSse: function () {
+        if (!!window.EventSource) {
+            console.log('支持')
+        }
     },
 
     inletSelect: function () {
@@ -153,7 +160,7 @@ home.prototype = {
                     echartsRecords.setOption(option);
 
                     // echarts 窗口缩放自适应
-                    window.onresize = function(){
+                    window.onresize = function () {
                         echartsRecords.resize();
                     }
                 } else {
