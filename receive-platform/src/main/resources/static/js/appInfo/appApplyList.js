@@ -5,9 +5,7 @@ function appApplyList() {
     var that = this;
     var pageCurr;
     var interfaceTree;
-    layui.extend({
-        dtree: '{/}' + getRootPath() + '/dtree/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
-    }).use(['table', 'tree', 'form', 'util', 'dtree'], function () {
+    layui.use(['table', 'tree', 'form', 'util', 'dtree'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
         that.layTree = layui.tree;

@@ -2,8 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::commonHeader('应用权限分配')"></head>
 <head>
-    <link rel="stylesheet" th:href="@{/dtree/dtree.css}">
-    <link rel="stylesheet" th:href="@{/dtree/font/dtreefont.css}">
     <link rel="stylesheet" th:href="@{/css/module/userEmpower.css}">
 </head>
 <body>
@@ -39,6 +37,7 @@
     </div>
 </div>
 <div th:include="head :: commonjs"></div>
+<script th:src="@{/js/lay-config.js?v=1.0.4}"></script>
 <script th:src="@{/js/appInfo/userEmpower.js}"></script>
 </body>
 </html>

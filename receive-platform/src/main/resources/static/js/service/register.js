@@ -1,14 +1,11 @@
 function serviceRegister() {
     var that = this;
     var upFile;
-    layui.extend({
-        step: '{/}' + getRootPath() + '/js/lay-module/step-lay/step'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
-    }).use(['form', 'step', 'upload'], function () {
+    layui.use(['form', 'step', 'upload'], function () {
         that.layForm = layui.form;
         that.layStep = layui.step;
         that.layUpload = layui.upload;
         that.init();
-        that.layForm.render();
     });
 }
 

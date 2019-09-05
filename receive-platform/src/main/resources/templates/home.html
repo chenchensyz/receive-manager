@@ -78,8 +78,7 @@
     </div>
 </div>
 <div th:include="head :: commonjs"></div>
-<script src="../js/lay-config.js?v=1.0.4" charset="utf-8"></script>
-<script src="../echarts/echarts-all.js"></script>
-<script src="../js/home.js" charset="utf-8"></script>
+<script th:src="@{/echarts/echarts-all.js}"></script>
+<script th:src="@{/js/home.js}"></script>
 </body>
 </html>

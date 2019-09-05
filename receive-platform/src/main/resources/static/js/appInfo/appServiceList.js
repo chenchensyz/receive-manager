@@ -6,9 +6,7 @@ function appServiceList() {
     var pageCurr;
     var tableIns;
     var appTree;
-    layui.extend({
-        dtree: '{/}' + getRootPath() + '/dtree/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
-    }).use(['table', 'form', 'upload', 'dtree'], function () {
+    layui.use(['table', 'form', 'upload', 'dtree'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
         that.upload = layui.upload;

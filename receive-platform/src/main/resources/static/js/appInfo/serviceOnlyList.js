@@ -84,8 +84,17 @@ appServiceList.prototype = {
         that.layTable.on('tool(appServiceTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {//编辑
-                var appId = $('#appId').val();
-                location.href = getRootPath() + '/appService/getAppService?appId=' + appId + '&appServiceId=' + data.id;
+                location.href = getRootPath() + '/appService/getAppService?appId=' + data.appId + '&appServiceId=' + data.id;
+                // layer.open({
+                //     type: 1,
+                //     title: "批量增加",
+                //     fixed: false,
+                //     resize: false,
+                //     shadeClose: true,
+                //     maxmin: true, //开启最大化最小化按钮
+                //     area: ['600px', '350px'], //宽高
+                //     content: $("#serviceDialog")
+                // });
             } else if (obj.event === 'opt') {
                 var state = $('.opt-btn').attr('data-type');
                 that.delAppService(obj, obj.data.id, state);

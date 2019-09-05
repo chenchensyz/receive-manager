@@ -2,8 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::commonHeader('接口列表')"></head>
 <head>
-    <link rel="stylesheet" th:href="@{/dtree/dtree.css}">
-    <link rel="stylesheet" th:href="@{/dtree/font/dtreefont.css}">
     <link rel="stylesheet" th:href="@{/css/module/appServiceList.css}">
 </head>
 <body>
@@ -129,6 +127,7 @@
         </form>
     </div>
 <div th:include="head :: commonjs"></div>
+<script th:src="@{/js/lay-config.js?v=1.0.4}"></script>
 <script th:src="@{/js/appInfo/appServiceList.js}"></script>
 </body>
 </html>
