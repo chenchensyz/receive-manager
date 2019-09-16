@@ -69,6 +69,7 @@ serviceRegister.prototype = {
 
         $('.next').click(function () {
             that.layStep.next('#stepForm');
+            $('.layui-form')[0].reset()
         });
     },
 

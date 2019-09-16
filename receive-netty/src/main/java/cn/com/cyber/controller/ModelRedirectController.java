@@ -6,6 +6,7 @@ import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.RestResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,36 +34,25 @@ public class ModelRedirectController extends BaseController {
         LOGGER.info("接收二类网请求：{}", jsonData);
         JSONObject json = JSONObject.parseObject(jsonData);
 
-        String params = getString(json, "params");
-        String requestUrl = getString(json, "requestUrl");
-        String method = getString(json, "method");
-        String contentType = getString(json, "contentType");
+        String params = json.getString("params");
+        String requestUrl = json.getString("requestUrl");
+        String method = json.getString("method");
+        String contentType = json.getString("contentType");
         String responseType = json.getString("responseType");
+        Map<String, String> serviceHeader = JSON.parseObject(json.getString("serviceHeader"), new TypeReference<Map<String, String>>() {
+        });
         LOGGER.info("接收请求json：{}", json);
         String result = "";
         try {
             if (StringUtils.isNoneBlank(requestUrl, method)) {
-                LOGGER.info("requestUrl:{} , method:{} , contentType:{}", requestUrl, method, contentType);
-                if (StringUtils.isNotBlank(params)) {
-                    String paramsString = params;
-                    Map<String, Object> paramMap = (Map<String, Object>) JSONObject.parseObject(paramsString);
-                    params = HttpConnection.newParams(paramMap, method, contentType, requestUrl);
-                }
-                //请求http接口
-                LOGGER.info("请求内网参数：{}", params);
-                Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, responseType, null);
+                Map<String, Object> resultMap = HttpConnection.requestNewParams(params, method, contentType, requestUrl, serviceHeader);
                 if (resultMap.get("code") != null) {
-                    if (CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
-                        result = resultMap.get("result").toString();
-                    } else {
-                        result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED) + resultMap.get("error")));
-                        response.setStatus((Integer) resultMap.get("code"));
-                    }
+                    result = resultMap.get("result").toString();
                 }
+                response.setStatus((Integer) resultMap.get("code"));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.setStatus(500);
             result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED)));
             return result;
         }

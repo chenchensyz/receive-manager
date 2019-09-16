@@ -12,6 +12,7 @@ import cn.com.cyber.util.RestResponse;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,13 +62,16 @@ public class RedirectController extends BaseController {
             receiveLog.setServiceKey(serviceKey);
 
             String params = null;
+            Map<String, String> serviceHeader = null;
             if (StringUtils.isNotBlank(jsonData)) {
                 JSONObject jsonObject = JSONObject.parseObject(jsonData);
                 params = jsonObject.getString("params");
+                serviceHeader = JSON.parseObject(jsonObject.getString("serviceHeader"), new TypeReference<Map<String, String>>() {
+                });
             }
             //发送请求
             LOGGER.info("params:{}", params);
-            Map<String, Object> resultMap = HttpConnection.requestNewParams(params, appService.getMethod(), appService.getContentType(), appService.getUrlSuffix(), null);
+            Map<String, Object> resultMap = HttpConnection.requestNewParams(params, appService.getMethod(), appService.getContentType(), appService.getUrlSuffix(), serviceHeader);
             receiveLog.setResponseTime(new Date());
             if (resultMap.get("code") != null) {
                 if (CodeUtil.HTTP_OK != (Integer) resultMap.get("code")) {

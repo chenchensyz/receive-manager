@@ -40,11 +40,11 @@ appServiceList.prototype = {
         // 点击节点名称获取选中节点值
         that.layDtree.on("node('appSelect')", function (obj) {
             $('#appId').val(obj.param.nodeId)
-            that.initData(obj.param.nodeId);
+            that.initData(obj.param.nodeId, $('.state').val());
         });
     },
 
-    initData: function (appId) {
+    initData: function (appId, state) {
         var that = this;
         var source = sessionStorage.getItem("source")
         that.tableIns = that.layTable.render({
@@ -53,7 +53,7 @@ appServiceList.prototype = {
             , url: getRootPath() + '/appService/queryAppServiceListData'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
-            , where: {appId: appId, state: 1}
+            , where: {appId: appId, state: state}
             , page: true,
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
@@ -68,7 +68,17 @@ appServiceList.prototype = {
                 {type: 'checkbox'}
                 , {field: 'serviceName', title: '接口名称', width: 202}
                 , {field: 'serviceKey', title: '接口密钥', width: 305}
-                , {field: 'method', title: '请求方式', align: 'center', width: 89}
+                , {
+                    field: 'state', templet: function (d) {
+                        if (d.state == 1) {
+                            return '<span>已通过</span>'
+                        } else if (d.state == 0) {
+                            return '<span>待审核</span>'
+                        } else if (d.state == 2) {
+                            return '<span>未通过</span>'
+                        }
+                    }, title: '接口状态', width: 92, align: 'center'
+                }
                 // , {field: 'right', title: '操作', align: 'center', toolbar: '#optBar'}
                 , {
                     field: 'right', templet: function (d) {
@@ -157,7 +167,6 @@ appServiceList.prototype = {
         layer.confirm('您确定要执行此操作吗？', {
             btn: ['确认', '返回'] //按钮n
         }, function () {
-            debugger
             $.ajax({
                 url: getRootPath() + "/appService/changeAppService",//提交的url,
                 type: 'POST',

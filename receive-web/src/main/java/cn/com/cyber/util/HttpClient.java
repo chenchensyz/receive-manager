@@ -37,6 +37,7 @@ public class HttpClient {
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
         BufferedReader bufferedReader = null;
+        int code = 402;  //内网返回错误
         try {
             URL url = new URL(null, requestUrl, new Handler());
             conn = (HttpURLConnection) url.openConnection();
@@ -59,7 +60,11 @@ public class HttpClient {
                 outputStream.write(outputStr.getBytes("UTF-8"));
             }
             int responseCode = conn.getResponseCode();
-            inputStream = conn.getInputStream();
+            if (CodeUtil.HTTP_OK == responseCode) {
+                inputStream = conn.getInputStream();
+            } else {
+                inputStream = conn.getErrorStream();
+            }
             inputStreamReader = new InputStreamReader(inputStream, "utf-8");
             bufferedReader = new BufferedReader(inputStreamReader);
             String str;
@@ -67,16 +72,11 @@ public class HttpClient {
             while ((str = bufferedReader.readLine()) != null) {
                 buffer.append(str);
             }
-            if (CodeUtil.HTTP_OK == responseCode) {
-                result = buffer.toString();
-            } else {
-                map.put("error", buffer.toString());
-                LOGGER.error("响应异常code:{}, requestUrl:{} ,msg:{}", responseCode, requestUrl, conn.getResponseMessage());
-            }
-            map.put("code", responseCode);
+            result = buffer.toString();
+            code = responseCode;
         } catch (Exception e) {
             LOGGER.error("请求异常 requestUrl:{},error:{}", requestUrl, e);
-            map.put("error", e);
+            result = e.toString();
         } finally {
             // 释放资源
             try {
@@ -99,6 +99,7 @@ public class HttpClient {
                 e.printStackTrace();
             }
         }
+        map.put("code", code);
         map.put("result", result);
         return map;
     }

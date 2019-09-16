@@ -74,12 +74,11 @@ public class RedirectDLController extends BaseController {
             if (serviceUrl != null && "getTest".equals(serviceUrl)) {
                 url += "/getTest";
             }
-            Map<String, Object> resultMap = HttpClient.httpRequest(url, CodeUtil.METHOD_POST, CodeUtil.CONTEXT_JSON, jsonParam.toString());
-            if (resultMap.get("code") != null && CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
+            Map<String, Object> resultMap = HttpClient.httpRequest(url, CodeUtil.METHOD_POST, CodeUtil.CONTEXT_JSON, jsonParam.toJSONString());
+            if (resultMap.get("code") != null) {
                 result = resultMap.get("result").toString();
-            } else {
-                result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED) + resultMap.get("error")));
             }
+            response.setStatus((Integer) resultMap.get("code"));
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();
         } catch (Exception e) {
@@ -90,7 +89,7 @@ public class RedirectDLController extends BaseController {
         if (msgCode != CodeUtil.SELECT_SUCCESS) {
             contentMap.put("content", RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)));
         } else {
-            contentMap.put("content",result);
+            contentMap.put("content", result);
         }
         receiveDL.getData().add(contentMap);
         Object o = JSONObject.toJSON(receiveDL);

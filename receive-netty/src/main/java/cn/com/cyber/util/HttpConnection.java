@@ -1,12 +1,14 @@
 package cn.com.cyber.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import sun.net.www.protocol.http.Handler;
 
 import java.io.*;
@@ -95,7 +97,7 @@ public class HttpConnection {
             code = responseCode;
         } catch (Exception e) {
             LOGGER.error("请求异常 requestUrl:{},error:{}", requestUrl, e);
-            result = e.toString();
+            result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, requestUrl + ":" + e.toString()));
         } finally {
             // 释放资源
             try {
@@ -123,7 +125,7 @@ public class HttpConnection {
         return map;
     }
 
-    public static String newParams(Map<String, Object> paramMap,String method, String contentType, String requestUrl) throws UnsupportedEncodingException {
+    public static String newParams(Map<String, Object> paramMap, String method, String contentType, String requestUrl) throws UnsupportedEncodingException {
         String newParam = "";
         if (CodeUtil.RESPONSE_POST.equals(method)) {
             if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
@@ -189,5 +191,58 @@ public class HttpConnection {
 
         String encode = new String(Base64.encodeBase64(data), CodeUtil.cs);
         return encode;
+    }
+
+    public static Map<String, Object> requestNewParams(String params, String method, String contentType, String requestUrl, Map<String, String> serviceHeader) throws UnsupportedEncodingException {
+        String newParam = "";
+        if (StringUtils.isNotBlank(params)) {
+            JSONObject dataParams = JSONObject.parseObject(params);
+            JSONObject jsonParams = new JSONObject();
+
+            boolean getFlag = true;
+            if (requestUrl.contains("{")) { //拼在地址栏
+                for (String key : dataParams.keySet()) {
+                    Object value = dataParams.get(key);
+                    if (!requestUrl.contains("{" + key + "}")) {
+                        jsonParams.put(key, value);
+                    }
+                    String replace = requestUrl.replace("{" + key + "}", value.toString());
+                    requestUrl = replace;
+                    getFlag = false;
+                }
+            } else {
+                jsonParams = dataParams;
+            }
+            if (CodeUtil.RESPONSE_POST.equals(method)) {
+                if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
+                    newParam = jsonParams.toJSONString();
+                } else {
+                    int i = 1;
+                    for (String key : jsonParams.keySet()) {
+                        String value = jsonParams.get(key).toString();
+                        newParam += key + "=" + URLEncoder.encode(value, "UTF-8");
+                        if (i < jsonParams.size()) {
+                            newParam += "&";
+                        }
+                        i++;
+                    }
+                }
+            } else if (CodeUtil.RESPONSE_GET.equals(method) && getFlag) {//地址栏未变化
+                requestUrl = requestUrl + "?";
+                int i = 1;
+                for (String key : jsonParams.keySet()) {
+                    String value = jsonParams.get(key).toString();
+                    requestUrl += key + "=" + URLEncoder.encode(value, "UTF-8");
+                    if (i < jsonParams.size()) {
+                        requestUrl += "&";
+                    }
+                    i++;
+                }
+            }
+        }
+        LOGGER.info("newParam:{}", newParam);
+        LOGGER.info("method:{},ContentType:{},url:{}", method, contentType, requestUrl);
+        Map<String, Object> resultMap = httpRequest(requestUrl, method, contentType, newParam, null, serviceHeader);
+        return resultMap;
     }
 }
