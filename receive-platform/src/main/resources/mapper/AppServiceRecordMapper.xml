@@ -30,6 +30,9 @@
     <update id="updateAppServiceRecord" parameterType="cn.com.cyber.model.AppServiceRecord">
         update se_app_service_record
         set state = #{state}, approver = #{approver}, approve_time = sysdate
+        <if test="remark !=null">
+            ,remark= #{remark}
+        </if>
         where id = #{id}
     </update>
 
@@ -37,7 +40,18 @@
        select sasr.*,ta.name app_name,tc.name user_name from se_app_service_record sasr
        left join td_app ta on sasr.app_id=ta.id
        left join td_company tc on sasr.apply= tc.username
-       where sasr.state=#{state}
+       <where>
+           <if test="state!=null">
+               and sasr.state = #{state}
+           </if>
+           <if test="apply!=null">
+               and sasr.apply = #{apply}
+           </if>
+           <if test="appName != null and appName !=''" >
+               <bind name="appNameSec" value=" '%' + appName + '%' "/>
+               and ta.name like #{appNameSec}
+           </if>
+       </where>
        order by sasr.apply_time desc
     </select>
 

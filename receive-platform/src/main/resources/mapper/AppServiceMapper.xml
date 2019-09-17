@@ -15,6 +15,7 @@
         <result column="reviser" property="reviser" jdbcType="BIGINT"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark"/>
 
         <result column="cname" property="createUser"/>
         <result column="uname" property="updateUser"/>
@@ -28,7 +29,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, service_name, service_key, app_id, url_suffix, method, content_type, state, creator,
-    reviser, create_time, update_time, service_ype
+    reviser, create_time, update_time, service_ype, remark
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
         select
@@ -88,6 +89,9 @@
             </if>
             <if test="reviser != null">
                 reviser = #{reviser},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
             </if>
             update_time = sysdate
         </set>

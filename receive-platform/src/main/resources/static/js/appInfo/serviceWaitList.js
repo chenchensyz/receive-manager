@@ -1,5 +1,5 @@
 /**
- * 应用管理
+ * 待审核接口
  */
 function appServiceList() {
     var that = this;
@@ -136,31 +136,45 @@ appServiceList.prototype = {
     },
 
     refuseAppService: function (id, state) {
-        layer.confirm('您确定要执行此操作吗？', {
-            btn: ['确认', '返回'] //按钮n
-        }, function () {
-            $.ajax({
-                url: getRootPath() + "/appService/addOrEdit",
-                type: 'POST',
-                data: {'id': id, 'state': state},
-                success: function (res) {
-                    if (res.code == 0) {
-                        layer.msg(res.message);
-                        location.href = getRootPath() + '/appService/waitList';
-                    } else {
-                        layer.alert(res.message, function () {
-                            layer.closeAll();
-                        });
-                    }
-                },
-                error: function (XMLHttpRequest) {
-                    layer.alert(XMLHttpRequest.status, function () {
+        var that = this;
+        var data = {'id': id, 'state': state}
+        if (state == 2) {
+            layer.prompt({title: '请输入拒绝理由', formType: 2}, function (text, index) {
+                layer.close(index);
+                data.remark = text;
+                that.checkPost(data);
+            });
+        } else {
+            layer.confirm('您确定要执行此操作吗？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                that.checkPost(data);
+            }, function () {
+                layer.closeAll();
+            });
+        }
+    },
+
+    checkPost: function (data) {
+        $.ajax({
+            url: getRootPath() + "/appService/addOrEdit",
+            type: 'POST',
+            data: data,
+            success: function (res) {
+                if (res.code == 0) {
+                    location.href = getRootPath() + '/appService/waitList';
+                    layer.msg(res.message);
+                } else {
+                    layer.alert(res.message, function () {
                         layer.closeAll();
                     });
                 }
-            });
-        }, function () {
-            layer.closeAll();
+            },
+            error: function (XMLHttpRequest) {
+                layer.alert(XMLHttpRequest.status, function () {
+                    layer.closeAll();
+                });
+            }
         });
     }
 };

@@ -125,4 +125,5 @@ public class AppServiceRecord extends BaseEntity {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
 }

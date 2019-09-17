@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::commonHeader('我的申请')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/appServiceList.css}">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>我的申请</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">应用名称</label>
+                            <div class="layui-input-inline">
+                                <input name="appName" autocomplete="off" class="layui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-inline">
+                                <select name="state" class="state">
+                                    <option value="">请选择</option>
+                                    <option value="1">已通过</option>
+                                    <option value="0">待审核</option>
+                                    <option value="2">未通过</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm rest-btn">重置</button>
+                            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">检索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table id="appServiceList" lay-filter="appServiceTable" lay-size="sm"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="serviceDialog" class="layer_self_wrap" style="margin-top: 20px;">
+    <input class="dio-appId" type="hidden">
+    <input class="dio-id" type="hidden">
+    <div style="margin-left: 13px;margin-bottom: 10px">
+        <table id="serviceApproveList" lay-filter="serviceApproveTable" lay-data="{id: 'serviceApproveTable'}"
+               lay-size="sm"></table>
+    </div>
+</div>
+<div th:include="head :: commonjs"></div>
+<script th:src="@{/js/service/personalApply.js}"></script>
+</body>
+</html>

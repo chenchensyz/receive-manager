@@ -1,7 +1,7 @@
 /**
- * 应用管理
+ * 待审核接口申请
  */
-function appServiceList() {
+function appValidList() {
     var that = this;
     var pageCurr;
     var tableIns;
@@ -13,7 +13,7 @@ function appServiceList() {
     });
 }
 
-appServiceList.prototype = {
+appValidList.prototype = {
     init: function () {
         this.initData();
     },
@@ -113,4 +113,4 @@ appServiceList.prototype = {
         });
     }
 };
-new appServiceList();
+new appValidList();

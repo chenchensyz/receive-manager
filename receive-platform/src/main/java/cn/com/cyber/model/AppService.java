@@ -28,6 +28,8 @@ public class AppService extends BaseEntity {
 
     private Long reviser;
 
+    private String remark;
+
     private Date createTime;
 
     private String createTimeStr;
@@ -245,5 +247,13 @@ public class AppService extends BaseEntity {
 
     public void setAppKey(String appKey) {
         this.appKey = appKey;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

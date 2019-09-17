@@ -1,7 +1,6 @@
 package cn.com.cyber.controller.appInfo;
 
 import cn.com.cyber.controller.BaseController;
-import cn.com.cyber.model.AppModel;
 import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.AppServiceRecord;
 import cn.com.cyber.model.TreeModel;
@@ -66,12 +65,22 @@ public class AppValidController extends BaseController {
     @RequestMapping("/approveListData")
     @ResponseBody
     public RestResponse approveListData(AppServiceRecord appServiceRecord) {
-        PageHelper.startPage(appServiceRecord.getPageNum(), appServiceRecord.getPageSize());
-        List<AppServiceRecord> appServices = appInfoService.getAppServiceRecordList(appServiceRecord);
-        PageInfo<AppServiceRecord> appServicePage = new PageInfo<AppServiceRecord>(appServices);
+        RestResponse rest = new RestResponse();
         int code = CodeUtil.BASE_SUCCESS;
-        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(appServices)
-                .setTotal(appServicePage.getTotal()).setPage(appServicePage.getLastPage());
+        try {
+            if (getShiroUser().source == 1) { //开发者
+                appServiceRecord.setApply(getShiroUser().userId);
+            }
+            PageHelper.startPage(appServiceRecord.getPageNum(), appServiceRecord.getPageSize());
+            List<AppServiceRecord> appServices = appInfoService.getAppServiceRecordList(appServiceRecord);
+            PageInfo<AppServiceRecord> appServicePage = new PageInfo<AppServiceRecord>(appServices);
+            rest.setData(appServices).setTotal(appServicePage.getTotal()).setPage(appServicePage.getLastPage());
+        } catch (ValueRuntimeException e) {
+            code = (Integer) e.getValue();
+        }
+        rest.setCode(code);
+        rest.setMessage(messageCodeUtil.getMessage(code));
+        return rest;
     }
 
     //根据recordId获取接口
@@ -124,5 +133,11 @@ public class AppValidController extends BaseController {
         PageInfo<AppService> appServicePage = new PageInfo<AppService>(appServices);
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(appServices)
                 .setTotal(appServicePage.getTotal()).setPage(appServicePage.getLastPage());
+    }
+
+    //我的申请
+    @RequestMapping("/personalApply")
+    public String personalApply() {
+        return "service/personalApply";
     }
 }

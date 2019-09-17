@@ -1,7 +1,7 @@
 /**
- * 应用管理
+ * 我的申请
  */
-function appServiceList() {
+function personalApply() {
     var that = this;
     var pageCurr;
     var tableIns;
@@ -13,7 +13,7 @@ function appServiceList() {
     });
 }
 
-appServiceList.prototype = {
+personalApply.prototype = {
     init: function () {
         this.initData();
         this.checkAppService();
@@ -21,14 +21,12 @@ appServiceList.prototype = {
 
     initData: function () {
         var that = this;
-        var source = sessionStorage.getItem("source")
         that.tableIns = that.layTable.render({
             id: 'appServiceTable',
             elem: '#appServiceList'
             , url: getRootPath() + '/appValid/approveListData'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
-            , where: {state: 0}
             , page: true,
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
@@ -42,23 +40,24 @@ appServiceList.prototype = {
             , cols: [[
                 {type: 'numbers'}
                 , {field: 'appName', title: '应用名称', width: 270}
-                , {field: 'userName', title: '申请人', align: 'center'}
                 , {field: 'applyTimeStr', title: '申请时间', align: 'center'}
+                , {field: 'approveTimeStr', title: '审批时间', align: 'center'}
                 , {
                     field: 'state', align: 'center', templet: function (d) {
                         if (d.state == 0) {
                             return ' <span>待审核</span>';
+                        } else if (d.state == 1) {
+                            return ' <span>已通过</span>';
+                        } else if (d.state == 2) {
+                            return ' <span>未通过</span>';
                         }
                     }, title: '状态'
                 }
                 , {
                     field: 'right', align: 'center', templet: function (d) {
-                        var span = '';
-                        if (source == 0) {
-                            span += ' <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>' +
-                                '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">拒绝</a>';
-                        } else if (source == 1) {
-                            span += ' <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>';
+                        var span = ' <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>';
+                        if (d.state == 2) {
+                            span += ' <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refuse">理由</a>';
                         }
                         return span;
                     }, title: '操作'
@@ -74,13 +73,12 @@ appServiceList.prototype = {
         //监听工具条
         that.layTable.on('tool(appServiceTable)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'check') {//编辑
+            if (obj.event === 'view') {//编辑
                 that.alertCheck(obj.data);
-            } else if (obj.event === 'view') {
-                var state = $('.opt-btn').attr('data-type');
-                that.delAppService(obj, obj.data.id, state);
             } else if (obj.event === 'refuse') {
-                that.operateAppService(obj.data.id, obj.data.appId, 2);
+                layer.alert(data.remark, {
+                    closeBtn: 0
+                });
             }
         });
 
@@ -208,4 +206,4 @@ appServiceList.prototype = {
         });
     }
 };
-new appServiceList();
+new personalApply();

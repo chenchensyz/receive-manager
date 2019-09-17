@@ -146,4 +146,10 @@ public class AppServiceController extends BaseController {
     public String register() {
         return "service/register";
     }
+
+    //我的服务
+    @RequestMapping("/personalList")
+    public String personalList() {
+        return "service/personalList";
+    }
 }
