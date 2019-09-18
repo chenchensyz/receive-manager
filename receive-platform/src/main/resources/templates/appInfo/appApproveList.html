@@ -13,9 +13,9 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">接口名称</label>
+                            <label class="layui-form-label">应用名称</label>
                             <div class="layui-input-inline">
-                                <input name="serviceName" autocomplete="off" class="layui-input" type="text"/>
+                                <input name="appName" autocomplete="off" class="layui-input" type="text"/>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -41,12 +41,12 @@
 <div id="serviceDialog" class="layer_self_wrap" style="margin-top: 20px;">
     <input class="dio-appId" type="hidden">
     <input class="dio-id" type="hidden">
-    <div style="margin-left: 13px;margin-bottom: 10px">
+    <div style="margin-left: 13px;margin-bottom: 10px;margin-right: 13px;">
         <table id="serviceApproveList" lay-filter="serviceApproveTable" lay-data="{id: 'serviceApproveTable'}"
                lay-size="sm"></table>
     </div>
-    <div class="layui-form-item">
-        <div class="layui-input-block submit-div">
+    <div class="layui-form-item" style="float:right;margin-right: 13px;">
+        <div class="layui-input-block">
             <button class="layui-btn dio-operate" type="button" data-type="1">审核通过</button>
             <button class="layui-btn layui-btn-danger dio-operate" type="button" data-type="2">拒绝</button>
         </div>

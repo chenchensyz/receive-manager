@@ -5,46 +5,22 @@ function appServiceList() {
     var that = this;
     var pageCurr;
     var tableIns;
-    var appTree;
-    layui.use(['table', 'form', 'upload', 'dtree'], function () {
+    layui.use(['table', 'form'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
-        that.upload = layui.upload;
-        that.layDtree = layui.dtree;
         that.init();
     });
 }
 
 appServiceList.prototype = {
     init: function () {
-        this.queryAppList();
-        this.changeServiceFile();
-        this.alertServiceFile();
+        this.initData();
         this.refuseMoreAppService();
-        this.toAdd();
+        this.getContentType();
+        this.updateForm();
     },
 
-    queryAppList: function () {
-        var that = this;
-        that.appTree = that.layDtree.render({
-            elem: "#appSelect",
-            url: getRootPath() + '/appInfo/queryAppList', // 该JSON格式被配置过了
-            dataStyle: "layuiStyle",  //使用layui风格的数据格式
-            response: {statusName: "code", statusCode: 0, rootName: "data", treeId: "id"}, // 这里指定了返回的数据格式，组件会根据这些值来替换返回JSON中的指定格式，从而读取信息
-            done: function (obj) {
-                if (obj.data.length > 0) {
-                    that.layDtree.click(that.appTree, obj.data[0].id); // 会自动帮你触发一次对应Id的节点的点击事件
-                }
-            }
-        });
-        // 点击节点名称获取选中节点值
-        that.layDtree.on("node('appSelect')", function (obj) {
-            $('#appId').val(obj.param.nodeId)
-            that.initData(obj.param.nodeId, $('.state').val());
-        });
-    },
-
-    initData: function (appId, state) {
+    initData: function () {
         var that = this;
         var source = sessionStorage.getItem("source")
         that.tableIns = that.layTable.render({
@@ -53,7 +29,7 @@ appServiceList.prototype = {
             , url: getRootPath() + '/appService/queryAppServiceListData'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
-            , where: {appId: appId, state: state}
+            , where: {'state': 1, 'serviceType': 0}
             , page: true,
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
@@ -66,8 +42,9 @@ appServiceList.prototype = {
             }
             , cols: [[
                 {type: 'checkbox'}
-                , {field: 'serviceName', title: '接口名称', width: 202}
+                , {field: 'serviceName', title: '接口名称', width: 222}
                 , {field: 'serviceKey', title: '接口密钥', width: 305}
+                 , {field: 'appName', title: '所属应用', width: 222}
                 , {
                     field: 'state', templet: function (d) {
                         if (d.state == 1) {
@@ -83,18 +60,14 @@ appServiceList.prototype = {
                 , {
                     field: 'right', templet: function (d) {
                         var span = ' <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
-                        if (source == 0 && d.state == 1) {
-                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="2">下线</a>';
-                        } else if (source == 0 && d.state == 2) {
-                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="1">上线</a>';
-                        } else if (source == 1 && d.state == 2) {
-                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="0">提交</a>';
+                        if (d.state == 2) {
+                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="view">理由</a>';
                         }
                         if (d.state != 1) {
                             span += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
                         }
                         return span;
-                    }, title: '操作'
+                    }, title: '操作', align: 'center'
                 }
             ]]
             , done: function (res, curr, count) {
@@ -108,10 +81,34 @@ appServiceList.prototype = {
         that.layTable.on('tool(appServiceTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {//编辑
-                location.href = getRootPath() + '/appService/getAppService?appId=' + obj.data.appId + '&appServiceId=' + data.id;
-            } else if (obj.event === 'opt') {
-                var state = $('.opt-btn').attr('data-type');
-                that.delAppService(obj, obj.data.id, state);
+                // location.href = getRootPath() + '/appService/getAppService?appId=' + obj.data.appId + '&appServiceId=' + data.id;
+                $('.param-method').val(data.method);
+                $('.param-contentType').val(data.contentType);
+                $('.param-appName').val(!data.appName ? '无' : data.appName);
+                $('.param-id').val(data.id);
+                if (data.state == 2) {
+                    $('.submit-apply').show();
+                } else {
+                    $('.submit-apply').hide();
+                }
+                that.layForm.val("serviceInfoFrom", {
+                    "serviceName": data.serviceName
+                    , 'urlSuffix': data.urlSuffix
+                })
+                layer.open({
+                    type: 1,
+                    title: "接口编辑",
+                    fixed: false,
+                    resize: false,
+                    shadeClose: true,
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['600px', '80%'], //宽高
+                    content: $("#serviceDialog")
+                });
+            } else if (obj.event === 'view') {
+                layer.alert(data.remark, {
+                    closeBtn: 0
+                });
             } else if (obj.event === 'del') {
                 that.delAppService(obj, obj.data.id, -1);
             }
@@ -193,92 +190,44 @@ appServiceList.prototype = {
         });
     },
 
-    changeServiceFile: function () {
+    updateForm: function () {
         var that = this;
-        // ①设定change事件
-        $(".addServiceFile").change(function () {
-            //    ②如果value不为空，调用文件加载方法
-            if ($(this).val() != "") {
-                that.addServiceFile(this);
+        this.layForm.on('submit(addOrEdit)', function (data) {
+            var state = $(this).attr('data-type');
+            if (state == 0) {
+                data.field.state = 0;  //提交待审核
             }
-        })
-    },
-    alertServiceFile: function () {
-        var that = this;
-        $('.alertServiceFile').off('click').on('click', function () {
-            layer.confirm('请下载示例文件填写上传，如已下载请点击上传', {
-                btn: ['下载示例文件', '上传', '取消'] //按钮
-            }, function () {
-                location.href = getRootPath() + '/file/批量上传接口.xlsx';
-                layer.closeAll();
-            }, function () {
-                $(".addServiceFile").click();
-            }, function () {
-                layer.closeAll();
-            });
-        });
-    },
-    addServiceFile: function (ele) {
-        var that = this;
-        //④创建一个formData对象
-        var formData = new FormData;
-        //⑥获取files
-        var files = $(ele)[0].files[0];
-        if (files.name.indexOf(".xlsx") == -1) {
-            layer.alert('对不起，文件格式不正确');
-            return
-        }
-        files.name = new Date().getTime() + ".xlsx";
-        //⑦将name 和 files 添加到formData中，键值对形式
-        formData.append("file", files);
-        formData.append("appId", $('#appId').val());
-        $.ajax({
-            url: getRootPath() + '/appService/uploadServiceFile',//提交的url,
-            type: 'POST',
-            data: formData,
-            processData: false,// ⑧告诉jQuery不要去处理发送的数据
-            contentType: false, // ⑨告诉jQuery不要去设置Content-Type请求头
-            success: function (res) {
+            $.post(getRootPath() + '/appService/addOrEdit', data.field).then(function (res) {
                 if (res.code == 0) {
+                    layer.closeAll();
                     layer.msg(res.message);
-                    $('.addServiceFile').val('');
-                    that.load(ele); //加载load方法
+                    that.initData();
                 } else {
                     layer.alert(res.message, function () {
                         layer.closeAll();
                     });
                 }
-            },
-            error: function (err) {
-                layer.alert(err.message, function () {
-                    layer.closeAll();
-                });
-            }
+            });
+            return false;
         });
     },
 
-    toAdd: function () {
-        var that = this;
-        $('.add-btn').off('click').on('click', function () {
-            // // $('.add-btn').attr('href', getRootPath() + '/user/getUserInfo?userId=0');
-            var appId = $('#appId').val();
-            location.href = getRootPath() + '/appService/getAppService?appId=' + appId;
-            // $('.param-reset-btn').click();
-            // $('.param-appName').val($('#appName').val());
-            // that.getContentType(1, 1);
-            // layer.open({
-            //     type: 1,
-            //     title: "编排接口",
-            //     fixed: false,
-            //     resize: false,
-            //     shadeClose: true,
-            //     area: ['600px', '400px'],
-            //     maxmin: true, //开启最大化最小化按钮
-            //     content: $('#serviceDialog'),
-            //     end: function () {
-            //         // $('#interfaceDialog').css("display", "none");
-            //     }
-            // });
+    getContentType: function () {
+        var option = '<option value="" >请选择...</option>';
+        $.get(getRootPath() + '/appService/getContentType', function (res) {
+            if (res.code == 0) {
+                $.each(res.data.method, function (i, ele) {
+                    option += "<option value='" + ele + "'>" + ele + "</option>";
+                });
+                $(".param-method").append(option);
+
+                option = '<option value="" >请选择...</option>';
+                $.each(res.data.contentType, function (i, ele) {
+                    option += "<option value='" + ele + "'>" + ele + "</option>";
+                });
+                $(".param-contentType").append(option);
+                layui.form.render('select');
+            }
         });
     }
 };

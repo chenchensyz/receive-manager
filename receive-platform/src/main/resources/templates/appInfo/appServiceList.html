@@ -8,15 +8,20 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
         <fieldset class="layui-elem-field layuimini-search">
-            <legend>应用接口<span style="font-size: 10px">(全部接口查询请通过 服务管理-服务检索)</span></legend>
-            <div style="margin: 10px 10px 10px 10px">
+            <legend>应用接口</legend>
+            <div style="margin: 10px -3px 10px 10px">
                 <form class="layui-form layui-form-pane" action="">
-                    <input id="appId" name="appId" type="hidden"/>
                     <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">应用名称</label>
+                            <div class="layui-input-inline">
+                                <input name="appName" autocomplete="off" class="layui-input" type="text"/>
+                            </div>
+                        </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">接口名称</label>
                             <div class="layui-input-inline">
-                                <input  name="serviceName" autocomplete="off" class="layui-input" type="text"/>
+                                <input name="serviceName" autocomplete="off" class="layui-input" type="text"/>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -39,95 +44,70 @@
             </div>
         </fieldset>
 
-        <div class="layui-row layui-col-space16">
-            <div class="layui-col-md3">
-                <div class="layui-card">
-                    <div class="layui-card-header">选择应用</div>
-                    <!--<div class="layui-card-body app-list" style="height: 350px;overflow: auto"></div>-->
-                    <div class="layui-card-body" style="height: 400px;overflow-x: hidden ;overflow-y: auto;margin-top: 10px">
-                            <ul id="appSelect" class="dtree"></ul>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-col-md9">
-                <div class="layui-card">
-                    <div class="layui-card-header">
-                        <legend>接口列表</legend>
-                        <!--<div class="layui-btn-group">-->
-                         <!--<button class="layui-btn add-btn">注册</button>-->
-                            <!--<button class="layui-btn alertServiceFile" style="margin-left: 10px!important;">批量注册</button>-->
-                            <!--<button class="layui-btn layui-btn-danger refuse-btn">批量禁用</button>-->
-                            <!--<input type="file" style="display: none" class="addServiceFile"/>-->
-                        <!--</div>-->
-                    </div>
-                    <div class="layui-card-body">
-                        <table id="appServiceList" lay-filter="appServiceTable" lay-data="{id: 'appServiceTable'}" lay-size="sm"></table>
-                    </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table id="appServiceList" lay-filter="appServiceTable" lay-data="{id: 'appServiceTable'}"
+                           lay-size="sm"></table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-    <div id="serviceDialog" class="layer_self_wrap" style="margin-top: 20px;">
-        <form id="serviceInfoFrom" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;margin-left: 44px;">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">所属应用：</label>
-                    <div class="layui-input-inline ">
-                        <input class="layui-input param-appName" type="text" disabled="disabled"/>
-                    </div>
+<div id="serviceDialog" class="layer_self_wrap" style="margin-top: 20px;">
+    <form id="serviceInfoFrom" class="layui-form layui-form-pane" lay-filter="serviceInfoFrom"
+          style="margin-top: 20px;margin-left: 44px;">
+        <input class="param-id"  name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">所属应用：</label>
+                <div class="layui-input-inline ">
+                    <input class="layui-input param-appName" type="text" disabled="disabled"/>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">接口名称：</label>
-                    <div class="layui-input-inline">
-                        <input class="layui-input param-serviceName" type="text" name="name" lay-verify=""/>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item layui-hide">
-                <div class="layui-inline">
-                    <label class="layui-form-label">接口服务密钥：</label>
-                    <div class="layui-input-inline">
-                        <input class="layui-input param-serviceKey" type="text"/>
-                    </div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">请求地址后缀：</label>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">接口名称：</label>
                 <div class="layui-input-inline">
-                    <input  name="urlSuffix" type="text" class="layui-input param-urlSuffix" lay-verify=""/>
+                    <input class="layui-input param-serviceName" name="serviceName" type="text" lay-verify="required"/>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">请求方式：</label>
-                <div class="layui-input-inline">
-                    <select name="method" lay-filter="method" class="param-method" lay-verify="">
-                    </select>
-                </div>
-            </div>
+        </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">请求编码格式：</label>
-                <div class="layui-input-inline">
-                    <select name="contentType" lay-filter="contentType" class="param-contentType">
-                    </select>
-                </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求地址：</label>
+            <div class="layui-input-inline">
+                <input name="urlSuffix" type="text" class="layui-input param-urlSuffix" lay-verify="required"/>
             </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求方式：</label>
+            <div class="layui-input-inline">
+                <select name="method" lay-filter="method" class="param-method" lay-verify="required">
+                </select>
+            </div>
+        </div>
 
-            <div class="layui-form-item">
-                <div class="layui-input-block submit-div">
-                    <button class="layui-btn addOrEdit" lay-submit="" lay-filter="addOrEdit">提交</button>
-                    <button type="reset"  class="layui-btn layui-btn-primary param-reset-btn">重置</button>
-                </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">编码格式：</label>
+            <div class="layui-input-inline">
+                <select name="contentType" lay-filter="contentType" class="param-contentType">
+                </select>
             </div>
-        </form>
-    </div>
+        </div>
+
+        <div class="layui-form-item  submit-div">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal submit-apply" lay-submit="" lay-filter="addOrEdit" data-type="0" style="display: none">提交</button>
+                <button class="layui-btn" lay-submit="" lay-filter="addOrEdit" data-type="1">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary param-reset-btn">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
 <div th:include="head :: commonjs"></div>
-<script th:src="@{/js/lay-config.js?v=1.0.4}"></script>
 <script th:src="@{/js/appInfo/appServiceList.js}"></script>
 </body>
 </html>

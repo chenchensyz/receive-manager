@@ -41,17 +41,17 @@
         <div class="layui-row layui-col-space15">
             <div class="layui-card">
                 <div class="layui-card-body">
-                    <table id="appServiceList" lay-filter="appServiceTable" lay-size="sm"></table>
+                    <table id="appServiceList" lay-filter="appServiceTable" lay-size="sm" lay-data="{id: 'appServiceTable'}"></table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div id="serviceDialog" class="layer_self_wrap" style="margin-top: 20px;">
+<div id="serviceDialog" class="layer_self_wrap">
     <input class="dio-appId" type="hidden">
     <input class="dio-id" type="hidden">
-    <div style="margin-left: 13px;margin-bottom: 10px">
+    <div style="margin-left: 13px;margin-bottom: 10px;margin-right: 13px;">
         <table id="serviceApproveList" lay-filter="serviceApproveTable" lay-data="{id: 'serviceApproveTable'}"
                lay-size="sm"></table>
     </div>

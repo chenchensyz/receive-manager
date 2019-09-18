@@ -105,7 +105,7 @@ appServiceList.prototype = {
 
     alertCheck: function (data) {
         var that = this;
-        that.tableIns = that.layTable.render({
+        that.layTable.render({
             id: 'serviceApproveTable',
             elem: '#serviceApproveList'
             , url: getRootPath() + '/appValid/approveService?recordId=' + data.id

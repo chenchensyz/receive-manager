@@ -23,14 +23,13 @@ appServiceList.prototype = {
 
     initData: function () {
         var that = this;
-        var source = sessionStorage.getItem("source")
         that.tableIns = that.layTable.render({
             id: 'appServiceTable',
             elem: '#appServiceList'
             , url: getRootPath() + '/appService/queryAppServiceListData'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
-            , where: {state: 1}
+            , where: {'state': 1}
             , page: true,
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
@@ -44,7 +43,7 @@ appServiceList.prototype = {
             , cols: [[
                 {type: 'checkbox'}
                 , {field: 'serviceName', title: '接口名称', width: 270}
-                , {field: 'serviceKey', title: '接口密钥', width: 305}
+                , {field: 'serviceKey', title: '接口密钥', width: 278}
                 , {
                     field: 'appName', templet: function (d) {
                         if (d.appName) {
@@ -68,12 +67,8 @@ appServiceList.prototype = {
                 , {
                     field: 'right', align: 'center', templet: function (d) {
                         var span = ' <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
-                        if (source == 0 && d.state == 1) {
-                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="2">下线</a>';
-                        } else if (source == 0 && d.state == 2) {
-                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="1">上线</a>';
-                        } else if (source == 1 && d.state == 2) {
-                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="opt" data-type="0">提交</a>';
+                        if (d.state == 2) {
+                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="view">理由</a>';
                         }
                         if (d.state != 1) {
                             span += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
@@ -97,6 +92,11 @@ appServiceList.prototype = {
                 $('.param-contentType').val(data.contentType);
                 $('.param-appName').val(!data.appName ? '无' : data.appName);
                 $('.param-id').val(data.id);
+                if (data.state == 2) {
+                    $('.submit-apply').show();
+                } else {
+                    $('.submit-apply').hide();
+                }
                 that.layForm.val("serviceInfoFrom", {
                     "serviceName": data.serviceName
                     , 'urlSuffix': data.urlSuffix
@@ -107,13 +107,14 @@ appServiceList.prototype = {
                     fixed: false,
                     resize: false,
                     shadeClose: true,
-                    maxmin: true, //开启最大化最小化按钮
+                    maxmin: false, //开启最大化最小化按钮
                     area: ['600px', '80%'], //宽高
                     content: $("#serviceDialog")
                 });
-            } else if (obj.event === 'opt') {
-                var state = $('.opt-btn').attr('data-type');
-                that.delAppService(obj, obj.data.id, state);
+            } else if (obj.event === 'view') {
+                layer.alert(data.remark, {
+                    closeBtn: 0
+                });
             } else if (obj.event === 'del') {
                 that.delAppService(obj, obj.data.id, -1);
             }
@@ -202,6 +203,10 @@ appServiceList.prototype = {
     updateForm: function () {
         var that = this;
         this.layForm.on('submit(addOrEdit)', function (data) {
+            var state = $(this).attr('data-type');
+            if (state == 0) {
+                data.field.state = 0;  //提交待审核
+            }
             $.post(getRootPath() + '/appService/addOrEdit', data.field).then(function (res) {
                 if (res.code == 0) {
                     layer.closeAll();

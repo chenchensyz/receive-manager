@@ -40,14 +40,18 @@
             </div>
         </fieldset>
 
-        <div>
-            <table id="appInfoList" lay-filter="appInfoTable"></table>
+        <div class="layui-row layui-col-space16">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table id="appInfoList" lay-filter="appInfoTable"></table>
 
-            <script type="text/html" id="optBar">
-                <a class="layui-btn layui-btn-xs app-edit" lay-event="edit">编辑</a>
-                <!--<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="interface">接口</a>-->
-                <a class="layui-btn layui-btn-warm layui-btn-xs app-opt" lay-event="opt"></a>
-            </script>
+                    <script type="text/html" id="optBar">
+                        <a class="layui-btn layui-btn-xs app-edit" lay-event="edit">编辑</a>
+                        <!--<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="interface">接口</a>-->
+                        <a class="layui-btn layui-btn-warm layui-btn-xs app-opt" lay-event="opt"></a>
+                    </script>
+                </div>
+            </div>
         </div>
     </div>
 </div>

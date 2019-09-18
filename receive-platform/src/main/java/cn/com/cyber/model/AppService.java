@@ -56,6 +56,8 @@ public class AppService extends BaseEntity {
 
     private String appKey;
 
+    private String approveAppName;  //授权的应用
+
     public Long getId() {
         return id;
     }
@@ -255,5 +257,13 @@ public class AppService extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getApproveAppName() {
+        return approveAppName;
+    }
+
+    public void setApproveAppName(String approveAppName) {
+        this.approveAppName = approveAppName;
     }
 }

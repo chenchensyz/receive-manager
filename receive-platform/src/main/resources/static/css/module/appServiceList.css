@@ -16,12 +16,8 @@
 }
 
 .layer_self_wrap {
-    width: 580px;
+    /*width: 580px;*/
     display: none;
-}
-
-.layui-form-pane .layui-form-label {
-    width: 133px;
 }
 
 .layer_self_wrap .layui-form-item .layui-input-inline {
@@ -29,7 +25,8 @@
 }
 
 .submit-div {
-    margin-left: 189px !important;
+    float: right;
+    margin-right: 50px;
 }
 
 /*.input-disabled {*/

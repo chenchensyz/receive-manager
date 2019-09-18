@@ -1,32 +1,34 @@
 /**
- * 待审核接口申请
+ * 应用管理
  */
-function appValidList() {
+function appServiceList() {
     var that = this;
     var pageCurr;
     var tableIns;
-    layui.use(['table', 'form', 'upload'], function () {
+    var appTree;
+    layui.use(['table', 'form', 'upload', 'dtree'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
         that.upload = layui.upload;
+        that.layDtree = layui.dtree;
         that.init();
     });
 }
 
-appValidList.prototype = {
+appServiceList.prototype = {
     init: function () {
         this.initData();
     },
 
     initData: function () {
         var that = this;
-        var source = sessionStorage.getItem("source")
         that.tableIns = that.layTable.render({
             id: 'appServiceTable',
             elem: '#appServiceList'
-            , url: getRootPath() + '/appValid/appValidListData'
+            , url: getRootPath() + '/appService/searchData'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
+            , where: {'state': 1}
             , page: true,
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
@@ -38,8 +40,8 @@ appValidList.prototype = {
                 , dataName: 'data' //数据列表的字段名称，默认：data
             }
             , cols: [[
-                {type: 'numbers'}
-                , {field: 'approveAppName', title: '授权应用'}
+                {type: 'checkbox'}
+                , {field: 'serviceName', title: '接口名称', align: 'center'}
                 , {
                     field: 'appName', templet: function (d) {
                         if (d.appName) {
@@ -47,17 +49,18 @@ appValidList.prototype = {
                         } else {
                             return '<span>无</span>';
                         }
-                    }, title: '调用应用'
+                    }, title: '所属应用', align: 'center'
                 }
-                , {field: 'appKey', title: '应用密钥(appKey)'}
-                , {field: 'serviceName', title: '调用接口'}
-                , {field: 'serviceKey', title: '接口密钥(serviceKey)'}
                 , {
-                    field: 'right', align: 'center', templet: function (d) {
-                        var span = ' <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>';
-                        return span;
-                    }, title: '操作', width: 80
+                    field: 'state', templet: function (d) {
+                        if (d.state == 1) {
+                            return '<span>已通过</span>'
+                        }
+                    }, title: '接口状态', width: 92, align: 'center'
                 }
+                , {field: 'createUser', title: '创建者', align: 'center'}
+                , {field: 'createTimeStr', title: '创建时间', align: 'center'}
+                // , {field: 'right', title: '操作', align: 'center', toolbar: '#optBar'}
             ]]
             , done: function (res, curr, count) {
                 //如果是异步请求数据方式，res即为你接口返回的信息。
@@ -69,8 +72,25 @@ appValidList.prototype = {
         //监听工具条
         that.layTable.on('tool(appServiceTable)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'view') {//编辑
-                that.alertView(obj.data);
+            if (obj.event === 'edit') {//编辑
+                location.href = getRootPath() + '/appService/getAppService?appId=' + obj.data.appId + '&appServiceId=' + data.id;
+            } else if (obj.event === 'opt') {
+                var state = $('.opt-btn').attr('data-type');
+                that.delAppService(obj, obj.data.id, state);
+            } else if (obj.event === 'del') {
+                that.delAppService(obj, obj.data.id, -1);
+            }
+        });
+
+        that.layTable.on('checkbox(appServiceTable)', function (obj) {
+            var checkStatus = that.layTable.checkStatus('appServiceTable'); //appServiceTable 即为 id 对应的值
+            if (checkStatus.data.length > 0) {
+                if ($('.state').val() == 2) {
+                    $('.refuse-btn').text('批量恢复');
+                }
+                $('.refuse-btn').show();
+            } else {
+                $('.refuse-btn').hide();
             }
         });
 
@@ -80,27 +100,6 @@ appValidList.prototype = {
             return false;
         });
 
-    },
-
-    alertView: function (data) {
-        $('.param-id').val(data.id);
-        $('.param-urlSuffix').val(data.urlSuffix);
-        $('.param-method').val(data.method);
-        $('.param-contentType').val(data.contentType);
-        var that = this;
-        layer.open({
-            type: 1,
-            title: "详情",
-            fixed: false,
-            resize: false,
-            shadeClose: true,
-            area: ['600px', '300px'],
-            maxmin: true, //开启最大化最小化按钮
-            content: $('#serviceDialog'),
-            end: function () {
-                $('#serviceDialog').css("display", "none");
-            }
-        });
     },
 
     load: function (obj) {
@@ -113,5 +112,6 @@ appValidList.prototype = {
             }
         });
     }
+
 };
-new appValidList();
+new appServiceList();

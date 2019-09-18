@@ -40,8 +40,9 @@ personalApply.prototype = {
             , cols: [[
                 {type: 'numbers'}
                 , {field: 'appName', title: '应用名称', width: 270}
-                , {field: 'applyTimeStr', title: '申请时间', align: 'center'}
-                , {field: 'approveTimeStr', title: '审批时间', align: 'center'}
+                , {field: 'applyTimeStr', title: '申请时间', align: 'center',width: 169}
+                , {field: 'approveTimeStr', title: '审批时间', align: 'center',width: 169}
+                , {field: 'userName', title: '申请人', align: 'center'}
                 , {
                     field: 'state', align: 'center', templet: function (d) {
                         if (d.state == 0) {
@@ -103,7 +104,7 @@ personalApply.prototype = {
 
     alertCheck: function (data) {
         var that = this;
-        that.tableIns = that.layTable.render({
+        that.layTable.render({
             id: 'serviceApproveTable',
             elem: '#serviceApproveList'
             , url: getRootPath() + '/appValid/approveService?recordId=' + data.id

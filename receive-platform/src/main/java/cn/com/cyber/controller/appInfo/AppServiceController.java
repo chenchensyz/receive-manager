@@ -129,7 +129,7 @@ public class AppServiceController extends BaseController {
     }
 
 
-    //独立接口
+    //我的服务
     @RequestMapping("/onlyList")
     public String onlyList() {
         return "appInfo/serviceOnlyList";
@@ -147,9 +147,21 @@ public class AppServiceController extends BaseController {
         return "service/register";
     }
 
-    //我的服务
-    @RequestMapping("/personalList")
-    public String personalList() {
-        return "service/personalList";
+    //服务检索
+    @RequestMapping("/search")
+    public String search() {
+        return "service/search";
+    }
+
+    //服务检索接口数据
+    @RequestMapping("searchData")
+    @ResponseBody
+    public RestResponse searchData(AppService appService) {
+        PageHelper.startPage(appService.getPageNum(), appService.getPageSize());
+        List<AppService> appServices = appServiceService.getList(appService);
+        PageInfo<AppService> appServicePage = new PageInfo<AppService>(appServices);
+        int code = CodeUtil.BASE_SUCCESS;
+        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(appServices)
+                .setTotal(appServicePage.getTotal()).setPage(appServicePage.getLastPage());
     }
 }
