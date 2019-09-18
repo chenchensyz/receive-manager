@@ -45,6 +45,10 @@ public class NettyRedirectController extends BaseController {
         int msgCode;
         String result = "";
         try {
+            String property = env.getProperty(CodeUtil.VALID_TOKEN);
+            if (Boolean.valueOf(property)) {
+                validToken(request, response);//校验token
+            }
             JSONObject jsonObject = new JSONObject();
             if (StringUtils.isNotBlank(jsonData)) {
                 jsonObject = JSONObject.parseObject(jsonData);
@@ -118,6 +122,37 @@ public class NettyRedirectController extends BaseController {
         token = HttpConnection.getUUID();
         jedis.setex(CodeUtil.PSTORE_LOGIN_REDIS_PREFIX + username, 60 * 60 * 2, token);
         return token;
+    }
+
+    //校验token
+    public void validToken(HttpServletRequest request, HttpServletResponse response) {
+        String token = request.getHeader("token");
+        String username = request.getHeader("username");
+        if (StringUtils.isBlank(token)) {
+            response.setStatus(401);
+            throw new ValueRuntimeException(CodeUtil.REQUEST_TOKEN_NULL);
+        }
+        if (StringUtils.isBlank(username)) {
+            response.setStatus(401);
+            throw new ValueRuntimeException(CodeUtil.REQUEST_USER_NULL);
+        }
+
+        JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(CodeUtil.PSTORE_LOGIN_REDIS_INDEX);
+        try {
+            String tokenSec = jedis.get(CodeUtil.PSTORE_LOGIN_REDIS_PREFIX + username);
+            if (StringUtils.isBlank(tokenSec) || !tokenSec.equals(token)) {
+                response.setStatus(401);
+                throw new ValueRuntimeException(CodeUtil.REQUEST_TOKEN_ERR);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(401);
+            throw new ValueRuntimeException(CodeUtil.USERINFO_ERR_VALIED); //用户登陆失败
+        } finally {
+            jedis.close();
+        }
     }
 
     @RequestMapping("/getTest")

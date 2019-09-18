@@ -37,6 +37,7 @@ public class CodeUtil {
     public static final String FILE_SAVE_PATH = "file_save_path";
     public static final String CACHE_TIME = "cache_time";
     public static final String SOCKET_OPEN = "socket_open";
+    public static final String VALID_TOKEN = "valid_token";
 
     //pstore用户校验
     public static final String PSTORE_LOGIN_URL = "pstore_login_url";
@@ -57,6 +58,9 @@ public class CodeUtil {
     public static final int REQUEST_SERVICEURL_NULL = 99107;//请求的参数中serviceurl元素为空
     public static final int REQUEST_KEY_FILED = 99108;//请检查appKey或serviceKey是否正确
     public static final int REQUEST_SERVICE_FILED = 99109;//服务器内部异常
+    public static final int REQUEST_TOKEN_NULL = 99110;//头信息中缺少 token 信息
+    public static final int REQUEST_USER_NULL = 99111;//头信息中缺少 用户 信息
+    public static final int REQUEST_TOKEN_ERR = 99112;//token验证失败，请重新获取
 
 
     /**
