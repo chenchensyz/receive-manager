@@ -6,23 +6,32 @@ import cn.com.cyber.model.AppService;
 import cn.com.cyber.service.AppServiceService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.excel.ExcelUtil;
+import cn.com.cyber.util.excel.FileOperateUtil;
 import cn.com.cyber.util.excel.ServiceKeyExcel;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AppServiceServiceImpl implements AppServiceService {
 
     @Autowired
     private AppServiceMapper appServiceMapper;
+
+    @Autowired
+    private Environment environment;
 
     @Override
     public AppService getById(Long id) {
@@ -77,7 +86,7 @@ public class AppServiceServiceImpl implements AppServiceService {
 
     @Override
     @Transactional
-    public void uploadServiceFile(MultipartFile file, Long appId) {
+    public void uploadMoreService(MultipartFile file, Long appId) {
         List<Object> datas = ExcelUtil.readExcel(file, new ServiceKeyExcel());
         if (datas == null || datas.size() == 0) {
             throw new ValueRuntimeException(CodeUtil.APPINFO_NULL_SERVICEFILE);
@@ -95,7 +104,7 @@ public class AppServiceServiceImpl implements AppServiceService {
             service.setUrlSuffix(serviceExcel.getUrlSuffix());
             if (appId == null) {
                 service.setServiceType(1); //接口类型 0：应用接口  1：独立接口
-            }else{
+            } else {
                 service.setServiceType(0);
             }
             service.setAppId(appId);
@@ -115,6 +124,26 @@ public class AppServiceServiceImpl implements AppServiceService {
                 throw new ValueRuntimeException(CodeUtil.APPSERVICE_ERR_SAVE);
             }
         }
+    }
+
+    @Override
+    public String uploadFile(HttpServletRequest request, String pathSuffix) {
+        String filePath = environment.getProperty(CodeUtil.FILE_SAVE_PATH) + CodeUtil.SERVICE_FILE_PATH + File.separator;
+        if (StringUtils.isNotBlank(pathSuffix)) {
+            File sourceFile = new File(filePath + pathSuffix);  // 源文件
+            FileOperateUtil.delFile(sourceFile.getParentFile()); //删除源文件目录
+        }
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+        if (fileMap.size() != 1) {  //只能上传单个文件
+            throw new ValueRuntimeException(CodeUtil.BASE_FILE_ONLY_UP);
+        }
+
+//        String filePath = "D:\\file\\" + MEETING_PATH + File.separator;
+        long currentTime = System.currentTimeMillis();
+        String meeting = FileOperateUtil.uploadFile(fileMap, filePath + currentTime); //保存文件
+        String resultPath = File.separator + currentTime + File.separator + meeting; //返回终端格式
+        return resultPath;
     }
 
     @Override

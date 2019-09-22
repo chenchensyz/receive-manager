@@ -15,12 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -116,16 +114,31 @@ public class AppServiceController extends BaseController {
 
 
     //批量增加接口
-    @RequestMapping("uploadServiceFile")
+    @RequestMapping("uploadMoreService")
     @ResponseBody
-    public RestResponse uploadServiceFile(MultipartFile file, Long appId) {
+    public RestResponse uploadMoreService(MultipartFile file, Long appId) {
         int code = CodeUtil.BASE_SUCCESS;
         try {
-            appServiceService.uploadServiceFile(file, appId);
+            appServiceService.uploadMoreService(file, appId);
         } catch (ValueRuntimeException e) {
             code = (Integer) e.getValue();
         }
         return RestResponse.res(code, messageCodeUtil.getMessage(code));
+    }
+
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResponse uploadFile(HttpServletRequest request, String pathSuffix) {
+        int code = CodeUtil.BASE_SUCCESS;
+        RestResponse rest = new RestResponse();
+        try {
+            String filePath = appServiceService.uploadFile(request, pathSuffix);
+            rest.setData(filePath);
+        } catch (ValueRuntimeException e) {
+            code = (Integer) e.getValue();
+        }
+        rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));
+        return rest;
     }
 
 

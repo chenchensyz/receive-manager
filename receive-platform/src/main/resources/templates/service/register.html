@@ -4,16 +4,22 @@
 <head>
     <link rel="stylesheet" th:href="@{/js/lay-module/step-lay/step.css}">
 </head>
+<style>
+    .layui-form .layui-form-item{
+        margin-left: 78px;
+    }
+</style>
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
         <div class="layui-fluid">
             <div class="layui-card">
-                <div class="layui-card-body" style="padding-top: 40px;">
-                    <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;">
+                <div class="layui-card-body" style="padding-top: 40px">
+                    <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;;height: 800px;">
                         <div carousel-item>
                             <div>
-                                <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+                                <form class="layui-form" style="margin: 0 246px;max-width: 460px;padding-top: 40px;">
+                                   <h2>基本信息</h2>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">选择应用：</label>
                                         <div class="layui-input-block">
@@ -22,34 +28,16 @@
                                     </div>
 
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">接口名称：</label>
+                                        <label class="layui-form-label">服务名称：</label>
                                         <div class="layui-input-block">
-                                            <input class="layui-input " type="text" name="serviceName"
-                                                   lay-verify="required"/>
+                                            <input class="layui-input serviceName" type="text" name="serviceName"  lay-verify="required"/>
                                         </div>
                                     </div>
 
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">请求地址：</label>
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label">服务描述：</label>
                                         <div class="layui-input-block">
-                                            <input name="urlSuffix" type="text" class="layui-input"
-                                                   lay-verify="required"/>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">请求方式：</label>
-                                        <div class="layui-input-block">
-                                            <select name="method" lay-filter="method" class="method"
-                                                    lay-verify="required">
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">编码格式：</label>
-                                        <div class="layui-input-block">
-                                            <select name="contentType" lay-filter="contentType" class="contentType">
-                                            </select>
+                                        <textarea placeholder="请输入内容" class="layui-textarea introduce" name="introduce"></textarea>
                                         </div>
                                     </div>
 
@@ -69,44 +57,64 @@
                             </div>
                             <div>
                                 <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+                                    <h2>接口信息</h2>
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">应用名称:</label>
+                                        <label class="layui-form-label">请求地址：</label>
                                         <div class="layui-input-block">
-                                            <input type="hidden" class="param-appId">
-                                            <div class="layui-form-mid layui-word-aux param-appName"></div>
+                                            <input name="urlSuffix" type="text" class="layui-input" lay-verify="required"/>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">接口名称:</label>
+                                        <label class="layui-form-label">请求方式：</label>
                                         <div class="layui-input-block">
-                                            <div class="layui-form-mid layui-word-aux param-serviceName"></div>
+                                            <select name="method" lay-filter="method" class="method" lay-verify="required">
+                                            </select>
                                         </div>
                                     </div>
+
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">请求地址:</label>
+                                        <label class="layui-form-label">请求格式：</label>
                                         <div class="layui-input-block">
-                                            <div class="layui-form-mid layui-word-aux param-urlSuffix"></div>
+                                            <select name="contentType" lay-filter="contentType" class="contentType">
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">请求方式:</label>
+
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label">编码规则：</label>
                                         <div class="layui-input-block">
-                                            <div class="layui-form-mid layui-word-aux param-method"></div>
+                                            <input name="serviceRule" type="text" class="layui-input" lay-verify="required"/>
                                         </div>
                                     </div>
+
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">编码格式:</label>
+                                        <label class="layui-form-label">资源类型：</label>
                                         <div class="layui-input-block">
-                                            <div class="layui-form-mid layui-word-aux param-contentType"></div>
+                                            <input name="sourceType"  class="layui-input " type="text"lay-verify="required"/>
+                                        </div>
+                                    </div>
+
+                                    <h2>接口文档</h2>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">接口文档：</label>
+                                        <div class="layui-input-block">
+                                            <button class="layui-btn layui-btn-normal" id="serviceFile" type="button" style="margin-right: 10px"><i class="layui-icon"></i>上传</button>
+                                            <p class="serviceFileText" style="margin-top: 10px"></p>
+                                        </div>
+                                    </div>
+
+                                    <h2>备注信息</h2>
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label">服务描述：</label>
+                                        <div class="layui-input-block">
+                                            <textarea placeholder="请输入内容" class="layui-textarea" name="remark"></textarea>
                                         </div>
                                     </div>
 
                                     <div class="layui-form-item">
                                         <div class="layui-input-block">
                                             <button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
-                                            <button class="layui-btn" lay-submit lay-filter="formStep2">
-                                                &emsp;确认提交&emsp;
-                                            </button>
+                                            <button class="layui-btn" lay-submit lay-filter="formStep2">确认提交</button>
                                         </div>
                                     </div>
                                 </form>

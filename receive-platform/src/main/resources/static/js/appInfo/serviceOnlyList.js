@@ -112,7 +112,7 @@ appServiceList.prototype = {
                     content: $("#serviceDialog")
                 });
             } else if (obj.event === 'view') {
-                layer.alert(data.remark, {
+                layer.alert(data.refuseMsg, {
                     closeBtn: 0
                 });
             } else if (obj.event === 'del') {

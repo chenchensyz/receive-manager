@@ -24,32 +24,26 @@ serviceRegister.prototype = {
             filter: 'stepForm',
             width: '100%', //设置容器宽度
             stepWidth: '750px',
-            height: '500px',
+            height: '660px',
             stepItems: [{
-                title: '填写服务注册信息'
+                title: '基本信息'
             }, {
-                title: '确认服务注册信息'
+                title: '接口信息'
             }, {
                 title: '完成'
             }]
         });
 
         that.layForm.on('submit(formStep)', function (data) {
-            $('.param-appName').text($('.param-appName').text());
-            $('.param-serviceName').text(data.field.serviceName);
-            $('.param-urlSuffix').text(data.field.urlSuffix);
-            $('.param-method').text(data.field.method);
-            $('.param-contentType').text(data.field.contentType);
             that.layStep.next('#stepForm');
             return false;
         });
 
         that.layForm.on('submit(formStep2)', function (data) {
-            data.field.appId = $('.param-appId').val();
-            data.field.serviceName = $('.param-serviceName').text();
-            data.field.urlSuffix = $('.param-urlSuffix').text();
-            data.field.method = $('.param-method').text();
-            data.field.contentType = $('.param-contentType').text();
+            data.field.appId = $('.appId').val();
+            data.field.serviceName = $('.serviceName').val();
+            data.field.introduce = $('.introduce').val();
+            data.field.filePath = $('.serviceFileText').text();
             $.post(getRootPath() + '/appService/addOrEdit', data.field).then(function (res) {
                 if (res.code == 0) {
                     that.layStep.next('#stepForm');
@@ -69,7 +63,32 @@ serviceRegister.prototype = {
 
         $('.next').click(function () {
             that.layStep.next('#stepForm');
-            $('.layui-form')[0].reset()
+            $('.layui-form')[0].reset();
+            $('.layui-form')[1].reset();
+            $('.serviceFileText').text('');
+        });
+
+        that.serviceFile = that.layUpload.render({ //允许上传的文件后缀
+            elem: '#serviceFile'
+            , url: getRootPath() + '/appService/uploadFile'
+            , accept: 'file' //普通文件
+            , done: function (res) {
+                if (res.code == 0) {
+                    $('.serviceFileText').text(res.data);
+                    that.serviceFile.reload({
+                        data: {'pathSuffix': res.data}
+                    });
+                } else {
+                    layer.alert(res.message, function () {
+                        layer.closeAll();
+                    });
+                }
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+            }
         });
     },
 
@@ -146,7 +165,7 @@ serviceRegister.prototype = {
 
         that.upFile = that.layUpload.render({ //允许上传的文件后缀
             elem: '#upFile'
-            , url: getRootPath() + '/appService/uploadServiceFile'
+            , url: getRootPath() + '/appService/uploadMoreService'
             , accept: 'file' //普通文件
             , exts: 'xlsx' //只允许上传excel
             , done: function (res) {

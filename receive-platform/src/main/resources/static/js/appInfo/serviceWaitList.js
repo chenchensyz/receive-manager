@@ -141,7 +141,7 @@ appServiceList.prototype = {
         if (state == 2) {
             layer.prompt({title: '请输入拒绝理由', formType: 2}, function (text, index) {
                 layer.close(index);
-                data.remark = text;
+                data.refuseMsg = text;
                 that.checkPost(data);
             });
         } else {

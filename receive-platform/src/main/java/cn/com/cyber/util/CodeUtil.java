@@ -55,6 +55,7 @@ public class CodeUtil {
     public static final String FILE_ROOT_PATH = "file_root_path";
     public static final String DEFAULT_DEPARTMENT = "default_department";  //顶层机构
 
+    public static final String SERVICE_FILE_PATH = "service";  //顶层机构
 
     //pstore用户校验
     public static final String PSTORE_LOGIN_URL = "pstore_login_url";
@@ -75,9 +76,13 @@ public class CodeUtil {
     public static final int REQUEST_KEY_FILED = 99108;//请检查appKey或serviceKey是否正确
     public static final int CONNECT_ERR_MOBLIE = 99109;//无法连接移动信息网
     public static final int REQUEST_TOKEN_NULL = 99110;//头信息中缺少 token 信息
-    public static final int REQUEST_USER_NULL = 99110;//头信息中缺少 用户 信息
-    public static final int REQUEST_TOKEN_ERR = 99111;//token验证失败，请重新获取
-    public static final int REQUEST_SERVICE_FILED = 99112;//服务器内部异常
+    public static final int REQUEST_USER_NULL = 99111;//头信息中缺少 用户 信息
+    public static final int REQUEST_TOKEN_ERR = 99112;//token验证失败，请重新获取
+    public static final int REQUEST_SERVICE_FILED = 99113;//服务器内部异常
+    public static final int BASE_FILE_ERR_UP = 99114;      // 文件上传失败
+    public static final int BASE_FILE_ONLY_UP = 99115;    //只能上传单个文件
+    public static final int BASE_FILE_NULL = 99116;       //文件不存在
+    public static final int BASE_FILE_COPY_ERR = 99117;       //文件拷贝失败
 
 
 

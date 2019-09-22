@@ -84,7 +84,7 @@ public class AppServiceServiceImpl implements AppServiceService {
         for (Object o : datas) {
             ServiceKeyExcel serviceExcel = (ServiceKeyExcel) o;
             if (StringUtils.isBlank(serviceExcel.getUrlSuffix()) ||
-                    !serviceExcel.getUrlSuffix().startsWith("/")) {
+                    !serviceExcel.getUrlSuffix().startsWith("http")) {
                 throw new ValueRuntimeException(CodeUtil.APPINFO_ERR_SERVICEKEY);
             }
             AppService service = new AppService();

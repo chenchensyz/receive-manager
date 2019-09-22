@@ -3,6 +3,7 @@ package cn.com.cyber.service;
 import cn.com.cyber.model.AppService;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface AppServiceService {
@@ -20,7 +21,10 @@ public interface AppServiceService {
     void addOrEditAppService(Long userId, AppService appService);
 
     //读取文件-批量增加接口
-    void uploadServiceFile(MultipartFile file, Long appId);
+    void uploadMoreService(MultipartFile file, Long appId);
+
+    //上传文件
+    String uploadFile(HttpServletRequest request, String pathSuffix);
 
     void changeAppService(String appServiceIds, int state, Long updateUserId);
 

@@ -28,6 +28,10 @@ public class AppService extends BaseEntity {
 
     private Long reviser;
 
+    private String refuseMsg;
+
+    private String introduce;
+
     private String remark;
 
     private Date createTime;
@@ -57,6 +61,12 @@ public class AppService extends BaseEntity {
     private String appKey;
 
     private String approveAppName;  //授权的应用
+
+    private String serviceRule;  //编码规则
+
+    private String sourceType;  //资源类型
+
+    private String filePath;  //文件路径后缀
 
     public Long getId() {
         return id;
@@ -251,12 +261,12 @@ public class AppService extends BaseEntity {
         this.appKey = appKey;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getRefuseMsg() {
+        return refuseMsg;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setRefuseMsg(String refuseMsg) {
+        this.refuseMsg = refuseMsg;
     }
 
     public String getApproveAppName() {
@@ -265,5 +275,45 @@ public class AppService extends BaseEntity {
 
     public void setApproveAppName(String approveAppName) {
         this.approveAppName = approveAppName;
+    }
+
+    public String getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getServiceRule() {
+        return serviceRule;
+    }
+
+    public void setServiceRule(String serviceRule) {
+        this.serviceRule = serviceRule;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

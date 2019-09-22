@@ -11,11 +11,7 @@ import java.util.List;
 
 /**
  * Created with IntelliJ IDEA
- *
- * @Author yuanhaoyue swithaoy@gmail.com
- * @Description
  * @Date 2018-06-07
- * @Time 16:47
  */
 public class ExcelWriterFactroy extends ExcelWriter {
     private OutputStream outputStream;
