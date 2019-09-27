@@ -48,7 +48,7 @@ public class UploadServerHandler extends ChannelInboundHandlerAdapter {
                     randomAccessFile = new RandomAccessFile(path, "rw");
                     fileUploadFile.setFilePath(path);
                 }
-                FileUpPool.getThreadPool(1).execute(new FileReceiveThread(fileUploadFile, randomAccessFile,ctx));
+                FileUpPool.getThreadPool(1).execute(new FileReceiveThread(fileUploadFile, randomAccessFile, ctx));
                 ok = true;
             } catch (Exception e) {
                 LOGGER.info("连接异常：{}", ctx.toString());

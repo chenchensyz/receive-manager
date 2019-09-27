@@ -19,6 +19,16 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">运行状态</label>
+                            <div class="layui-input-inline">
+                                <select name="controlState" lay-filter="aihao">
+                                    <option value="">请选择</option>
+                                    <option value="1">正常</option>
+                                    <option value="0">异常</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm rest-btn">重置</button>
                             <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">查询</button>
                         </div>

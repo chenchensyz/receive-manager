@@ -18,6 +18,7 @@ home.prototype = {
         this.inletSelect();
         this.initData();
         this.queryEcharts();
+        this.initErrRemind();
     },
 
     initSse: function () {
@@ -52,20 +53,28 @@ home.prototype = {
     },
 
     addInlet: function (inletNum, inletTitle, bg) {
-        let inletDiv = `<div class="layui-col-xs4">
-                            <div class="panel layui-bg-number">
-                                <div class="panel-body">
-                                    <div class="panel-title">
-                                        <span class="label pull-right ${bg}">实时</span>
-                                        <h5>${inletTitle}</h5>
-                                    </div>
-                                    <div class="panel-content">
-                                        <h1 class="no-margins">${inletNum}</h1>
-                                        <small>当前分类总记录数</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`
+        // var inletDiv = `<div class="layui-col-xs4">
+        //                     <div class="panel layui-bg-number">
+        //                         <div class="panel-body">
+        //                             <div class="panel-title">
+        //                                 <span class="label pull-right ${bg}">实时</span>
+        //                                 <h5>${inletTitle}</h5>
+        //                             </div>
+        //                             <div class="panel-content">
+        //                                 <h1 class="no-margins">${inletNum}</h1>
+        //                                 <small>当前分类总记录数</small>
+        //                             </div>
+        //                         </div>
+        //                     </div>
+        //                 </div>`
+
+        var inletDiv="<div class=\"layui-col-xs4\">" +
+            "<div class=\"panel layui-bg-number\">" +
+            "<div class=\"panel-body\">" +
+            "<div class=\"panel-title\"><span class=\"label pull-right ".concat(bg, "\">实时</span><h5>").concat(inletTitle, "</h5></div>" +
+                "<div class=\"panel-content\"><h1 class=\"no-margins\">").concat(inletNum, "</h1>" +
+                "<small>当前分类总记录数</small></div>" +
+                "</div></div></div>");
         return inletDiv;
     },
 
@@ -96,7 +105,7 @@ home.prototype = {
         date.setDate(date.getDate() - 6)
         var startTime = timeFormat(date);
         var endTime = timeFormat(new Date());
-        let dateList = queryDateBetween(startTime, endTime);
+        var dateList = queryDateBetween(startTime, endTime);
 
         var sucCount = [];
         var errCount = [];
@@ -188,10 +197,24 @@ home.prototype = {
         });
     },
 
-    toAdd: function () {
-        $('.add-btn').off('click').on('click', function () {
-            // $('.add-btn').attr('href', getRootPath() + '/user/getUserInfo?userId=0');
-            location.href = getRootPath() + '/appInfo/getAppInfo?appId=0';
+    initErrRemind: function () {
+        var that = this;
+        that.layTable.render({
+            elem: '#errRemind'
+            , url: getRootPath() + '/appService/queryAppServiceListData'
+            , method: 'get' //默认：get请求
+            , cellMinWidth: 80
+            , where: {controlState: 0}
+            , response: {
+                statusName: 'code' //数据状态的字段名称，默认：code
+                , statusCode: 0 //成功的状态码，默认：0
+                , countName: 'total' //数据总数的字段名称，默认：count
+                , dataName: 'data' //数据列表的字段名称，默认：data
+            },
+            cols: [[
+                {type: 'numbers', title: '序号'}
+                , {field: 'serviceName', title: '服务名称'}
+            ]]
         });
     }
 

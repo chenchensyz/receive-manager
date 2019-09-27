@@ -164,6 +164,9 @@
             <if test="serviceType != null">
                 and ssi.service_type = #{serviceType}
             </if>
+            <if test="controlState != null">
+                and ssi.control_state = #{controlState}
+            </if>
         </where>
     </sql>
 

@@ -45,8 +45,8 @@ public class NettyRedirectController extends BaseController {
         int msgCode;
         String result = "";
         try {
-            String property = env.getProperty(CodeUtil.VALID_TOKEN);
-            if (Boolean.valueOf(property)) {
+            String validToken = env.getProperty(CodeUtil.VALID_TOKEN);
+            if (Boolean.valueOf(validToken)) {
                 validToken(request, response);//校验token
             }
             JSONObject jsonObject = new JSONObject();

@@ -1,5 +1,9 @@
 package cn.com.cyber.controller.manager;
 
+/**
+ * 首页统计
+ */
+
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppInfo;
 import cn.com.cyber.service.RankingService;

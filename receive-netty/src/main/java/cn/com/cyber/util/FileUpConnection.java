@@ -100,8 +100,8 @@ public class FileUpConnection {
             outStream.write(end_data);
             outStream.flush();
             // 得到响应码
-            int res = conn.getResponseCode();
-            if (res == CodeUtil.HTTP_OK) {
+            int resCode = conn.getResponseCode();
+            if (resCode == CodeUtil.HTTP_OK) {
                 // 读取返回数据
                 bufferedReader = new BufferedReader(new InputStreamReader(
                         conn.getInputStream(), "UTF-8")); //$NON-NLS-1$
@@ -109,10 +109,10 @@ public class FileUpConnection {
                 while ((line = bufferedReader.readLine()) != null) {
                     sb2.append(line).append("\n"); //$NON-NLS-1$
                 }
-                map.put("code", res);
+                map.put("code", resCode);
             } else {
-                LOGGER.error("响应code是:{}", res);
-                map.put("code", res);
+                LOGGER.error("响应code是:{}", resCode);
+                map.put("code", resCode);
             }
             conn.disconnect();
         } catch (Exception e) {
