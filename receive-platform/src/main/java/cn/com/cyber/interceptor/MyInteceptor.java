@@ -1,11 +1,10 @@
 package cn.com.cyber.interceptor;
 
-import cn.com.cyber.socket.SpringUtil;
+import cn.com.cyber.config.shiro.ShiroDbRealm;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.RestResponse;
-import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,12 +26,12 @@ import java.util.Map;
 public class MyInteceptor implements WebMvcConfigurer {
 
 
-@Autowired
-private Environment environment;
+    @Autowired
+    private Environment environment;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new InterfaceAuthCheckInterceptor()).addPathPatterns("/redirect/wh");
+        registry.addInterceptor(new InterfaceAuthCheckInterceptor()).addPathPatterns("/apisd");
     }
 
     @Override
@@ -87,31 +84,10 @@ class InterfaceAuthCheckInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String token = request.getHeader("token");
-        String username = request.getHeader("username");
-        if (StringUtils.isBlank(token)) {
-            writeJsonResult(response, 401, CodeUtil.REQUEST_TOKEN_NULL, messageMap.get(CodeUtil.REQUEST_TOKEN_NULL));
+        ShiroDbRealm.ShiroUser shiroUser = (ShiroDbRealm.ShiroUser) SecurityUtils.getSubject().getPrincipal();
+        if (shiroUser == null) {
+            writeJsonResult(response, 401, CodeUtil.REQUEST_TOKEN_ERR, messageMap.get(CodeUtil.REQUEST_TOKEN_ERR));
             return false;
-        }
-        if (StringUtils.isBlank(username)) {
-            writeJsonResult(response, 401, CodeUtil.REQUEST_USER_NULL, messageMap.get(CodeUtil.REQUEST_USER_NULL));
-            return false;
-        }
-
-        JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(CodeUtil.PSTORE_LOGIN_REDIS_INDEX);
-        try {
-            String tokenSec = jedis.get(CodeUtil.PSTORE_LOGIN_REDIS_PREFIX + username);
-            if (StringUtils.isBlank(tokenSec) || !tokenSec.equals(token)) {
-                writeJsonResult(response, 401, CodeUtil.REQUEST_TOKEN_ERR, messageMap.get(CodeUtil.REQUEST_TOKEN_ERR));
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ValueRuntimeException(CodeUtil.USERINFO_ERR_VALIED); //用户登陆失败
-        } finally {
-            jedis.close();
         }
         return true;
     }

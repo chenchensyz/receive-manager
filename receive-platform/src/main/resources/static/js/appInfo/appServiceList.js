@@ -43,7 +43,6 @@ appServiceList.prototype = {
             , cols: [[
                 {type: 'checkbox'}
                 , {field: 'serviceName', title: '接口名称', width: 222}
-                , {field: 'serviceKey', title: '接口密钥', width: 305}
                  , {field: 'appName', title: '所属应用', width: 222}
                 , {
                     field: 'state', templet: function (d) {
@@ -56,7 +55,7 @@ appServiceList.prototype = {
                         }
                     }, title: '接口状态', width: 92, align: 'center'
                 }
-                // , {field: 'right', title: '操作', align: 'center', toolbar: '#optBar'}
+                , {field: 'introduce', title: '服务描述'}
                 , {
                     field: 'right', templet: function (d) {
                         var span = ' <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
@@ -85,6 +84,8 @@ appServiceList.prototype = {
                 $('.param-method').val(data.method);
                 $('.param-contentType').val(data.contentType);
                 $('.param-appName').val(!data.appName ? '无' : data.appName);
+                $('.param-serviceKey').val(data.serviceKey);
+                $('.param-introduce').val(data.introduce);
                 $('.param-id').val(data.id);
                 if (data.state == 2) {
                     $('.submit-apply').show();
@@ -102,7 +103,7 @@ appServiceList.prototype = {
                     resize: false,
                     shadeClose: true,
                     maxmin: false, //开启最大化最小化按钮
-                    area: ['600px', '80%'], //宽高
+                    area: ['600px', '100%'], //宽高
                     content: $("#serviceDialog")
                 });
             } else if (obj.event === 'view') {

@@ -43,7 +43,7 @@ function timeFormat(date) {
 
 function getDate(datestr) {
     var temp = datestr.split("-");
-    var date = new Date(temp[0], temp[1]-1, temp[2]);
+    var date = new Date(temp[0], temp[1] - 1, temp[2]);
     return date;
 }
 

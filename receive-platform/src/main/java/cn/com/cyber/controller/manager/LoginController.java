@@ -32,14 +32,17 @@ public class LoginController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
-    @Autowired
-    private UserService userService;
-
 
     //跳转登录页
     @RequestMapping("toLogin")
     public String toLogin() {
         return "login";
+    }
+
+    //权限登录页
+    @RequestMapping("authLogin")
+    public String authLogin() {
+        return "/error/401";
     }
 
     //登录

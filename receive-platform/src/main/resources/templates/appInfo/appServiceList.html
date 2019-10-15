@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:include="head::commonHeader('接口列表')"></head>
+<head th:include="head::commonHeader('应用服务列表')"></head>
 <head>
     <link rel="stylesheet" th:href="@{/css/module/appServiceList.css}">
 </head>
@@ -8,7 +8,7 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
         <fieldset class="layui-elem-field layuimini-search">
-            <legend>应用接口</legend>
+            <legend>应用服务列表</legend>
             <div style="margin: 10px -3px 10px 10px">
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
@@ -19,13 +19,13 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">接口名称</label>
+                            <label class="layui-form-label">服务名称</label>
                             <div class="layui-input-inline">
                                 <input name="serviceName" autocomplete="off" class="layui-input" type="text"/>
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">接口状态</label>
+                            <label class="layui-form-label">服务状态</label>
                             <div class="layui-input-inline">
                                 <select name="state" class="state">
                                     <option value="">请选择</option>
@@ -37,7 +37,7 @@
                         </div>
                         <div class="layui-inline">
                             <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm rest-btn">重置</button>
-                            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">检索</button>
+                            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="searchSubmit">查询</button>
                         </div>
                     </div>
                 </form>
@@ -69,9 +69,18 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">接口名称：</label>
+                <label class="layui-form-label">服务名称：</label>
                 <div class="layui-input-inline">
                     <input class="layui-input param-serviceName" name="serviceName" type="text" lay-verify="required"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">服务密钥：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input param-serviceKey" type="text" disabled/>
                 </div>
             </div>
         </div>
@@ -95,6 +104,13 @@
             <div class="layui-input-inline">
                 <select name="contentType" lay-filter="contentType" class="param-contentType">
                 </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">服务描述：</label>
+            <div class="layui-input-inline">
+                <textarea placeholder="请输入内容" class="layui-textarea param-introduce" name="introduce"></textarea>
             </div>
         </div>
 
