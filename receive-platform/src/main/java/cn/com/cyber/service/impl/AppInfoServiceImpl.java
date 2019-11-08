@@ -10,6 +10,7 @@ import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,9 @@ public class AppInfoServiceImpl implements AppInfoService {
 
     @Autowired
     private AppServiceMapper appServiceMapper;
+
+    @Autowired
+    private Environment environment;
 
     @Override
     public AppInfo getById(Long id) {
@@ -84,9 +88,11 @@ public class AppInfoServiceImpl implements AppInfoService {
     @Override
     @Transactional
     public void apply(Integer appId, List<TreeModel> params, String creator) {
-        int recordId = appServiceRecordMapper.selectRecordId();
         AppServiceRecord appServiceRecode = new AppServiceRecord();
-        appServiceRecode.setId(recordId);
+        if (CodeUtil.MAPPER_DB_ORACLE.equals(environment.getProperty(CodeUtil.MAPPER_DB))) { //oracle数据库
+            int recordId = appServiceRecordMapper.selectRecordId();
+            appServiceRecode.setId(recordId);
+        }
         appServiceRecode.setAppId(appId);
         appServiceRecode.setApply(creator);
         int count = appServiceRecordMapper.insertAppServiceRecord(appServiceRecode);
@@ -108,7 +114,7 @@ public class AppInfoServiceImpl implements AppInfoService {
             appModel.setServiceKey(model.getParentId());
             appModel.setApply(creator);
             appModel.setAppId(appId);
-            appModel.setRecordId(recordId);
+            appModel.setRecordId(appServiceRecode.getId());
             appModelList.add(appModel);
         }
         if (appModelList.isEmpty()) {

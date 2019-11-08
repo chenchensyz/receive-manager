@@ -28,7 +28,7 @@
         <!-- com.github.pagehelper为PageHelper类所在包名 -->
         <plugin interceptor="com.github.pagehelper.PageHelper">
             <!-- 4.0.0以后版本可以不设置该参数 -->
-            <property name="dialect" value="oracle"/>
+            <property name="dialect" value="mysql"/>
             <!-- 该参数默认为false -->
             <!-- 设置为true时，会将RowBounds第一个参数offset当成pageNum页码使用 -->
             <!-- 和startPage中的pageNum效果一样 -->
@@ -57,15 +57,15 @@
     </plugins>
 
     <mappers>
-        <mapper resource="mapper/AppInfoMapper.xml"/>
-        <mapper resource="mapper/AppServiceMapper.xml"/>
-        <mapper resource="mapper/AppServiceRecordMapper.xml"/>
-        <mapper resource="mapper/DeveloperMapper.xml"/>
-        <mapper resource="mapper/PermissionMapper.xml"/>
-        <mapper resource="mapper/PoliceMapper.xml"/>
-        <mapper resource="mapper/ReceiveLogMapper.xml"/>
-        <mapper resource="mapper/RoleMapper.xml"/>
-        <mapper resource="mapper/UserMapper.xml"/>
-        <mapper resource="mapper/UserRoleMapper.xml"/>
+        <mapper resource="mapper-mysql/AppInfoMapper.xml"/>
+        <mapper resource="mapper-mysql/AppServiceMapper.xml"/>
+        <mapper resource="mapper-mysql/AppServiceRecordMapper.xml"/>
+        <mapper resource="mapper-mysql/DeveloperMapper.xml"/>
+        <mapper resource="mapper-mysql/PermissionMapper.xml"/>
+        <mapper resource="mapper-mysql/PoliceMapper.xml"/>
+        <mapper resource="mapper-mysql/ReceiveLogMapper.xml"/>
+        <mapper resource="mapper-mysql/RoleMapper.xml"/>
+        <mapper resource="mapper-mysql/UserMapper.xml"/>
+        <mapper resource="mapper-mysql/UserRoleMapper.xml"/>
     </mappers>
 </configuration>

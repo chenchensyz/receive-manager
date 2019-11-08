@@ -15,6 +15,7 @@ public interface ReceiveLogMapper {
 
     List<Integer> getReceiveLogRanking(@Param("startTime") String startTime,
                                        @Param("endTime") String endTime,
+                                       @Param("dateList") List<String> dateList,
                                        @Param("code") Integer code);
 }
 

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.AppServiceMapper">
+    <resultMap id="BaseResultMap" type="cn.com.cyber.model.AppService">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="service_name" property="serviceName" jdbcType="VARCHAR"/>
+        <result column="service_key" property="serviceKey" jdbcType="VARCHAR"/>
+        <result column="app_id" property="appId" jdbcType="BIGINT"/>
+        <result column="url_suffix" property="urlSuffix" jdbcType="VARCHAR"/>
+        <result column="method" property="method" jdbcType="VARCHAR"/>
+        <result column="content_type" property="contentType" jdbcType="VARCHAR"/>
+        <result column="service_type" property="serviceType"/>
+        <result column="state" property="state" jdbcType="INTEGER"/>
+        <result column="creator" property="creator" jdbcType="BIGINT"/>
+        <result column="reviser" property="reviser" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="refuse_msg" property="refuseMsg"/>
+        <result column="introduce" property="introduce"/>
+        <result column="remark" property="remark"/>
+        <result column="service_rule" property="serviceRule"/>
+        <result column="source_type" property="sourceType"/>
+        <result column="file_path" property="filePath"/>
+
+        <result column="cname" property="createUser"/>
+        <result column="uname" property="updateUser"/>
+        <result column="app_state" property="appState"/>
+        <result column="app_name" property="appName"/>
+        <result column="app_key" property="appKey"/>
+        <result column="approve_app_name" property="approveAppName"/>
+
+        <result column="control_state" property="controlState"/>
+        <result column="err_remark" property="errRemark"/>
+        <result column="control_time" property="controlTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, service_name, service_key, app_id, url_suffix, method, content_type, state, creator,
+    reviser, create_time, update_time, service_ype, refuse_msg,introduce, remark, approve_app_name,
+    service_rule, source_type, file_path
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from se_service_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from se_service_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insertSelective" parameterType="cn.com.cyber.model.AppService">
+        insert into se_service_info
+        (service_name, service_key, url_suffix, method, service_rule, source_type,
+        <if test="appId != null">
+            app_id,
+        </if>
+        <if test="contentType != null">
+            content_type,
+        </if>
+        <if test="serviceType != null">
+            service_type,
+        </if>
+        <if test="introduce != null">
+            introduce,
+        </if>
+        <if test="remark != null">
+            remark,
+        </if>
+        <if test="filePath != null">
+            file_path,
+        </if>
+        state, creator, create_time)
+        VALUES(#{serviceName},#{serviceKey},#{urlSuffix},#{method}, #{serviceRule},#{sourceType},
+        <if test="appId != null">
+            #{appId},
+        </if>
+        <if test="contentType != null">
+            #{contentType},
+        </if>
+        <if test="serviceType != null">
+            #{serviceType},
+        </if>
+        <if test="introduce != null">
+            #{introduce},
+        </if>
+        <if test="remark != null">
+            #{remark},
+        </if>
+        <if test="filePath != null">
+            #{filePath},
+        </if>
+        0,#{creator},sysdate())
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="cn.com.cyber.model.AppService">
+        update se_service_info
+        <set>
+            <if test="serviceName != null">
+                service_name = #{serviceName},
+            </if>
+            <if test="urlSuffix != null">
+                url_suffix = #{urlSuffix},
+            </if>
+            <if test="method != null">
+                method = #{method},
+            </if>
+            <if test="contentType != null">
+                content_type = #{contentType},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="reviser != null">
+                reviser = #{reviser},
+            </if>
+            <if test="refuseMsg != null">
+                refuse_msg = #{refuseMsg},
+            </if>
+            <if test="introduce != null">
+                introduce= #{introduce},
+            </if>
+            <if test="remark != null">
+                remark= #{remark},
+            </if>
+            <if test="filePath != null">
+                file_path= #{filePath},
+            </if>
+            update_time = sysdate()
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <sql id="sql_where">
+        <where>
+            <if test="appName != null and appName !=''" >
+                <bind name="appNameSec" value=" '%' + appName + '%' "/>
+                and ta.name like #{appNameSec}
+            </if>
+            <if test="serviceName != null and serviceName !=''">
+                <bind name="serviceNameSec" value=" '%' + serviceName + '%' "/>
+                and ssi.service_name like #{serviceNameSec}
+            </if>
+            <if test="serviceKey != null and serviceKey !=''">
+                and ssi.service_key = #{serviceKey,jdbcType=VARCHAR}
+            </if>
+            <if test="appId != null">
+                and ssi.app_id = #{appId,jdbcType=BIGINT}
+            </if>
+            <if test="state != null">
+                and ssi.state = #{state,jdbcType=INTEGER}
+            </if>
+            <if test="creator != null">
+                and ssi.creator = #{creator,jdbcType=BIGINT}
+            </if>
+            <if test="reviser != null">
+                and ssi.reviser = #{reviser,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and ssi.create_time = #{createTime}
+            </if>
+            <if test="serviceType != null">
+                and ssi.service_type = #{serviceType}
+            </if>
+            <if test="controlState != null">
+                and ssi.control_state = #{controlState}
+            </if>
+        </where>
+    </sql>
+
+    <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppService">
+        select ssi.*,ta.name app_name,tc.name cname from se_service_info ssi
+        left join td_app ta on ssi.app_id=ta.id
+        left join td_company tc on ssi.creator=tc.id
+        <include refid="sql_where"/>
+        order by ssi.create_time desc,ta.id asc
+    </select>
+
+    <update id="updateControl" parameterType="cn.com.cyber.model.AppService">
+        update se_service_info
+        <set>
+            <if test="controlState != null">
+                control_state = #{controlState},
+            </if>
+            <if test="errRemark != null">
+                err_remark = #{errRemark},
+            </if>
+            control_time = sysdate(),
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getCountServiceKey" resultType="int" parameterType="map">
+        SELECT count(id) FROM se_service_info
+        <where>
+            <if test="serviceKey">
+                and service_key=#{serviceKey}
+            </if>
+            <if test="state">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <select id="getEditByServiceId" resultMap="BaseResultMap" parameterType="long">
+      SELECT ais.*, cu.name cname, cuu.name uname FROM se_service_info ais
+        LEFT JOIN td_company cu ON ais.creator = cu.id
+        LEFT JOIN td_company cuu ON ais.reviser = cuu.id
+        WHERE ais.id = #{serviceId}
+   </select>
+
+    <update id="updateMoreAppService" parameterType="map">
+        update se_service_info set state = #{state} WHERE id in
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="deleteMoreAppService">
+        delete FROM se_service_info WHERE id in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getByAppKeyAndServiceKey" resultMap="BaseResultMap" parameterType="map">
+     select ssi.*, ta.status app_state from se_service_info ssi
+     left join  td_app ta  on ta.id = ssi.app_id
+     where ta.app_uuid = #{appKey} and ssi.service_key = #{serviceKey}
+   </select>
+
+    <!--授权的接口-->
+    <select id="getValidAppAndService" resultMap="BaseResultMap" parameterType="map">
+        select ssi.* from se_app_service sas left join TD_APP ta on  ta.id=sas.app_id
+        left join se_service_info ssi  on sas.service_key = ssi.service_key
+        where ta.app_uuid = #{appKey} and sas.service_key = #{serviceKey}
+   </select>
+
+    <select id="getAppServiceByRecordId" resultMap="BaseResultMap" parameterType="int">
+      select ssi.*,ta.name app_name from SE_APP_SERVICE_APPLY sasa
+      left join td_app ta on sasa.app_key=ta.app_uuid
+      left join se_service_info ssi on sasa.service_key=ssi.service_key
+       where sasa.record_id =#{recordId}
+    </select>
+
+    <select id="getAppValidListData" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppService">
+      select ta.name approve_app_name, tar.name app_name,sas.app_key,sas.service_key ,ssi.service_name,
+        ssi.url_suffix, ssi.method, ssi.content_type, ssi.introduce, ssi.file_path, tc.name cname
+        from SE_APP_SERVICE sas
+        left join td_app ta on sas.app_id=ta.id
+        left join td_app tar on sas.app_key=tar.app_uuid
+        left join se_service_info ssi on sas.service_key=ssi.service_key
+        left join td_company tc on tc.id = ssi.creator
+         where ta.company_id = #{creator} and ta.status = 1 and ssi.state = 1
+        <if test="appName != null and appName !=''">
+            <bind name="appNameSec" value=" '%' + appName + '%' "/>
+            and tar.name like #{appNameSec}
+        </if>
+        <if test="serviceName != null and serviceName !=''">
+            <bind name="serviceNameSec" value=" '%' + serviceName + '%' "/>
+            and ssi.service_name like #{serviceNameSec}
+        </if>
+        <if test="appKey != null and appKey !=''">
+            and sas.service_key = #{appKey}
+        </if>
+        <if test="serviceKey != null and serviceKey !=''">
+            and sas.service_key = #{serviceKey}
+        </if>
+        order by ta.id
+    </select>
+</mapper>

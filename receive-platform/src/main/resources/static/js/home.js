@@ -68,7 +68,7 @@ home.prototype = {
         //                     </div>
         //                 </div>`
 
-        var inletDiv="<div class=\"layui-col-xs4\">" +
+        var inletDiv = "<div class=\"layui-col-xs4\">" +
             "<div class=\"panel layui-bg-number\">" +
             "<div class=\"panel-body\">" +
             "<div class=\"panel-title\"><span class=\"label pull-right ".concat(bg, "\">实时</span><h5>").concat(inletTitle, "</h5></div>" +
@@ -109,10 +109,12 @@ home.prototype = {
 
         var sucCount = [];
         var errCount = [];
+        var data = {'startTime': startTime, 'endTime': endTime, "dateList": dateList};
         $.ajax({
             url: getRootPath() + "/ranking/receiveLog",//提交的url,
-            type: 'GET',
-            data: {'startTime': startTime, 'endTime': endTime},
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
             success: function (res) {
                 if (res.code == 0) {
                     sucCount = res.data.sucCount;

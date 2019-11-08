@@ -47,9 +47,9 @@ public class RankingServiceImpl implements RankingService {
     }
 
     @Override
-    public Map<String, Object> receiveLogRanking(String startTime, String endTime) {
-        List<Integer> sucCount = receiveLogMapper.getReceiveLogRanking(startTime, endTime, 1);
-        List<Integer> errCount = receiveLogMapper.getReceiveLogRanking(startTime, endTime, 2);
+    public Map<String, Object> receiveLogRanking(String startTime, String endTime, List<String> dateList) {
+        List<Integer> sucCount = receiveLogMapper.getReceiveLogRanking(startTime, endTime, dateList, 1);
+        List<Integer> errCount = receiveLogMapper.getReceiveLogRanking(startTime, endTime, dateList, 2);
         Map<String, Object> map = Maps.newHashMap();
         map.put("sucCount", sucCount);
         map.put("errCount", errCount);

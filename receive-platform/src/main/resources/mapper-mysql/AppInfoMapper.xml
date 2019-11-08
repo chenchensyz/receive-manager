@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.AppInfoMapper" >
+    <resultMap id="BaseResultMap" type="cn.com.cyber.model.AppInfo" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="app_uuid" property="appKey" jdbcType="VARCHAR" />
+        <result column="name" property="appName" jdbcType="VARCHAR" />
+        <result column="status" property="state" jdbcType="INTEGER" />
+        <result column="company_id" property="creator" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime"/>
+        <result column="receive_num" property="receiveNum"/>
+
+        <collection property="services" ofType="cn.com.cyber.model.AppService">
+            <id column="service_id" property="id"/>
+            <result column="service_name" property="name"/>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List" >
+    id, app_uuid, name, status, company_id
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select <include refid="Base_Column_List" /> from td_app  where id = #{id}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from td_app where id = #{id}
+  </delete>
+
+    <insert id="insertSelective" parameterType="cn.com.cyber.model.AppInfo" >
+        insert into td_app
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="appKey != null" >
+                app_key,
+            </if>
+            <if test="appName != null" >
+                app_name,
+            </if>
+            <if test="urlPrefix != null" >
+                url_prefix,
+            </if>
+            <if test="introduce != null" >
+                introduce,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="companyId != null" >
+                company_id,
+            </if>
+            <if test="state != null" >
+                state,
+            </if>
+            <if test="createUserId != null" >
+                create_user_id,
+            </if>
+            <if test="lastUpdateUserId != null" >
+                last_update_user_id,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="lastUpdateTime != null" >
+                last_update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="appKey != null" >
+                #{appKey,jdbcType=VARCHAR},
+            </if>
+            <if test="appName != null" >
+                #{appName,jdbcType=VARCHAR},
+            </if>
+            <if test="urlPrefix != null" >
+                #{urlPrefix,jdbcType=VARCHAR},
+            </if>
+            <if test="introduce != null" >
+                #{introduce,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null" >
+                #{companyId,jdbcType=BIGINT},
+            </if>
+            <if test="state != null" >
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null" >
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="lastUpdateUserId != null" >
+                #{lastUpdateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdateTime != null" >
+                #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="cn.com.cyber.model.AppInfo" >
+        update td_app
+        <set >
+            <if test="appName != null" >
+                app_name = #{appName},
+            </if>
+            <if test="urlPrefix != null" >
+                url_prefix = #{urlPrefix},
+            </if>
+            <if test="introduce != null" >
+                introduce = #{introduce},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark},
+            </if>
+            <if test="companyId != null" >
+                company_id = #{companyId},
+            </if>
+            <if test="state != null" >
+                state = #{state},
+            </if>
+            <if test="lastUpdateUserId != null" >
+                last_update_user_id = #{lastUpdateUserId},
+            </if>
+            <if test="lastUpdateTime != null" >
+                last_update_time = #{lastUpdateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <sql id="sql_where" >
+        <where >
+            <if test="id != null" >
+                and id = #{id}
+            </if>
+            <if test="appKey != null and appKey !=''" >
+                and app_uuid = #{appKey}
+            </if>
+            <if test="appName != null and appName !=''" >
+                <bind name="appNameSec" value=" '%' + appName + '%' "/>
+                and name like #{appNameSec}
+            </if>
+            <if test="state != null" >
+                and status = #{state}
+            </if>
+            <if test="creator != null" >
+                and company_id = #{creator}
+            </if>
+        </where>
+    </sql>
+    <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppInfo" >
+        select * from td_app
+        <include refid="sql_where" />
+    </select>
+
+    <select id="getByAppKeyAndState" resultMap="BaseResultMap" parameterType="map">
+        select * from td_app where app_uuid = #{appKey} and status = #{state}
+    </select>
+
+    <select id="getCountAppKey" resultType="int" parameterType="string">
+      SELECT count(id) FROM  td_app  WHERE app_uuid=#{appKey}
+    </select>
+
+    <select id="getEditById" resultMap="BaseResultMap" parameterType="long">
+          SELECT ai.*, ci.company_name, cu.nick_name cname, cuu.nick_name uname
+            FROM td_app ai
+                LEFT JOIN company_info ci ON ai.company_id = ci.id
+                LEFT JOIN sys_user cu ON ai.create_user_id = cu.id
+                LEFT JOIN sys_user cuu ON ai.last_update_user_id = cuu.id
+            WHERE ai.id = #{appId}
+    </select>
+
+    <select id="getCountAppInfoByState" resultType="int" parameterType="map">
+          select count(id) from td_app where status = #{state}
+          <if test="companyId != null" >
+              and company_id = #{companyId}
+          </if>
+    </select>
+
+    <!--统计app访问排行-->
+    <select id="getReceiveAppRanking" resultMap="BaseResultMap">
+        select ta.id, ta.name, count(srl.id) receive_num
+        from td_app ta
+        left join se_receive_log srl
+        on ta.app_uuid = srl.app_key
+        group by ta.id, ta.name
+        order by receive_num desc
+        limit 10
+  </select>
+
+    <resultMap id="appTreeMap"  type="cn.com.cyber.model.TreeModel">
+        <result property="id" column="id"/>
+        <result property="title" column="app_name" />
+        <result property="parentId" column="app_uuid" />
+        <collection property="children" ofType="cn.com.cyber.model.TreeModel" javaType="list">
+            <result property="id" column="service_id"/>
+            <result property="title" column="service_name" />
+            <result property="parentId" column="service_key" />
+            <result property="basicData" column="basicData" />
+        </collection>
+    </resultMap>
+
+    <select id="getAppServiceTree" resultMap="appTreeMap" parameterType="map">
+        select ai.id,ai.name app_name ,ssi.id service_id ,ssi.service_name ,ssi.app_id ,ssi.service_key
+        ,app_uuid basicData
+        from td_app ai  join se_service_info ssi on ai.id = ssi.app_id
+        where ai.status = 1 and ssi.state = 1
+        <if test="companyId != null" >
+            and ai.company_id != #{companyId}
+        </if>
+    </select>
+
+    <select id="getOnlyServiceTree" resultMap="appTreeMap" parameterType="map">
+        select ssi.id ,ssi.service_name app_name,ssi.service_key app_uuid
+        from se_service_info ssi where  ssi.service_type=1 and ssi.state=1
+        <if test="companyId != null" >
+            and ssi.creator != #{companyId}
+        </if>
+    </select>
+
+
+    <select id="getAppListTree" resultMap="appTreeMap" parameterType="map">
+        select  id ,name app_name,app_uuid
+        from td_app where status = #{state}
+        <if test="companyId != null" >
+            and company_id = #{companyId}
+        </if>
+    </select>
+
+    <select id="getCheckedService" resultType="string" parameterType="int">
+        select group_concat(ssi.id) from SE_APP_SERVICE sas
+        left join td_app ai on ai.app_uuid=sas.app_key
+        left join se_service_info ssi on sas.service_key = ssi.service_key
+        where sas.app_id = #{appId}
+    </select>
+
+    <insert id="applyAppServiceMore">
+        INSERT INTO se_app_service_apply(app_key, service_key, app_id, record_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.appKey},#{item.serviceKey},#{item.appId},#{item.recordId})
+        </foreach>
+    </insert>
+
+    <insert id="approveAppServiceMore">
+        INSERT INTO se_app_service(app_key, service_key, app_id, record_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.appKey},#{item.serviceKey},#{item.appId}, #{item.recordId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteAppServiceByAppId" parameterType="int">
+        delete from se_app_service where app_id = #{appId}
+    </delete>
+
+</mapper>

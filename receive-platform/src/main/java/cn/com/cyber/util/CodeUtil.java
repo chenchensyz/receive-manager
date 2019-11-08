@@ -62,6 +62,12 @@ public class CodeUtil {
     public static final int PSTORE_LOGIN_REDIS_INDEX = 1; //redis保存1号库
     public static final String PSTORE_LOGIN_REDIS_PREFIX = "u:";
 
+    //数据库判断
+    public static final String MAPPER_SOURCE = "mapper_source";
+    public static final String MAPPER_DB = "mapper_db";
+    public static final String MAPPER_DB_ORACLE = "oracle";
+    public static final String MAPPER_DB_MYSQL = "mysql";
+
 
     //响应状态码
     public static final int BASE_SUCCESS = 0; //请求成功
@@ -85,7 +91,6 @@ public class CodeUtil {
     public static final int BASE_FILE_COPY_ERR = 99117;       //文件拷贝失败
 
 
-
     //管理平台状态码
     //应用/接口
     public static final int APPINFO_ERR_SELECT = 10101; //未查到应用
@@ -100,10 +105,10 @@ public class CodeUtil {
     public static final int APPSERVICE_ERR_SAVE = 10110; //保存接口失败
     public static final int APPSERVICE_ERR_OPTION = 10111; //接口操作失败
     public static final int APPSERVICE_ERR_VALID = 10112; //接口未授权
-    public static final int SERVICE_RECORD_ERR_SAVE= 10113; //接口申请记录保存失败
-    public static final int SERVICE_APPLY_ERR_DEL= 10114; //修改旧接口记录失败
-    public static final int SERVICE_APPLY_ERR_SAVE= 10115; //接口申请失败
-    public static final int SERVICE_APPROVE_ERR_SAVE= 10116; //接口审核失败
+    public static final int SERVICE_RECORD_ERR_SAVE = 10113; //接口申请记录保存失败
+    public static final int SERVICE_APPLY_ERR_DEL = 10114; //修改旧接口记录失败
+    public static final int SERVICE_APPLY_ERR_SAVE = 10115; //接口申请失败
+    public static final int SERVICE_APPROVE_ERR_SAVE = 10116; //接口审核失败
 
 
     //编排接口

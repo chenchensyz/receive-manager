@@ -13,5 +13,5 @@ public interface RankingService {
 
     Map<String,Object> inletCount();
 
-    Map<String,Object> receiveLogRanking(String startTime, String endTime);
+    Map<String,Object> receiveLogRanking(String startTime, String endTime, List<String> dateList);
 }
