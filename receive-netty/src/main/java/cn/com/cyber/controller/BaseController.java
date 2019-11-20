@@ -1,11 +1,54 @@
 package cn.com.cyber.controller;
 
+import cn.com.cyber.util.CodeUtil;
+import cn.com.cyber.util.SpringUtil;
+import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 public class BaseController {
+
+    //将图片输出至网页
+    public static void setResponseFile(HttpServletResponse response, byte[] defalutImg,
+                                       String contentType) {
+        try {
+            if (defalutImg == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+
+            response.setContentType(contentType);
+            response.setCharacterEncoding("UTF-8");
+            if (defalutImg == null) {
+                response.setContentLength(defalutImg.length);
+                response.getOutputStream().write(defalutImg, 0, defalutImg.length);
+                return;
+            }
+
+            response.setContentLength(defalutImg.length);
+
+            OutputStream opStream = response.getOutputStream();
+            InputStream inStream = new ByteArrayInputStream(defalutImg);
+
+            int dataLen = 4 * 1024;
+            byte[] data = new byte[dataLen];
+
+            int len;
+            while ((len = inStream.read(data, 0, dataLen)) != -1) {
+                opStream.write(data, 0, len);
+            }
+            opStream.close();
+            inStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     //将图片输出至网页
     public static void setResponseImage(HttpServletResponse response, byte[] defalutImg) {
@@ -98,5 +141,36 @@ public class BaseController {
     protected String errorMsg(String message, String errorCode, String errorMsg) {
         String result = message + errorCode + ":" + errorMsg;
         return result;
+    }
+
+    //校验token
+    public void validToken(HttpServletRequest request, HttpServletResponse response) {
+        String token = request.getHeader("token");
+        String username = request.getHeader("username");
+        if (StringUtils.isBlank(token)) {
+            response.setStatus(401);
+            throw new ValueRuntimeException(CodeUtil.REQUEST_TOKEN_NULL);
+        }
+        if (StringUtils.isBlank(username)) {
+            response.setStatus(401);
+            throw new ValueRuntimeException(CodeUtil.REQUEST_USER_NULL);
+        }
+
+        JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(CodeUtil.PSTORE_LOGIN_REDIS_INDEX);
+        try {
+            String tokenSec = jedis.get(CodeUtil.PSTORE_LOGIN_REDIS_PREFIX + username);
+            if (StringUtils.isBlank(tokenSec) || !tokenSec.equals(token)) {
+                response.setStatus(401);
+                throw new ValueRuntimeException(CodeUtil.REQUEST_TOKEN_ERR);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(401);
+            throw new ValueRuntimeException(CodeUtil.USERINFO_ERR_VALIED); //用户登陆失败
+        } finally {
+            jedis.close();
+        }
     }
 }

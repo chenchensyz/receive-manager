@@ -56,7 +56,7 @@
                 <div class="layui-form-item ">
                     <div class="layui-input-block update-operation">
                         <button class="layui-btn" lay-submit="" lay-filter="addOrEdit">立即提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary" onclick="return resetForm();">重置</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                     </div>
                 </div>
             </form>
@@ -68,10 +68,5 @@
 </div>
 <div th:include="head :: commonjs"></div>
 <script th:src="@{/js/user/roleInfo.js}"></script>
- <script type="text/javascript">
-         function resetForm() {
-             return confirm("您确定要重置表单内容么?");
-         }
-    </script>
 </body>
 </html>

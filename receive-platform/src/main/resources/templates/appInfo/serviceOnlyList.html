@@ -13,6 +13,12 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
+                            <label class="layui-form-label">应用名称</label>
+                            <div class="layui-input-inline">
+                                <input name="appName" autocomplete="off" class="layui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">服务名称</label>
                             <div class="layui-input-inline">
                                 <input name="serviceName" autocomplete="off" class="layui-input" type="text"/>
@@ -27,6 +33,18 @@
                                     <option value="0">待审核</option>
                                     <option value="2">未通过</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">appKey</label>
+                            <div class="layui-input-inline">
+                                <input name="appKey" autocomplete="off" class="layui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">serviceKey</label>
+                            <div class="layui-input-inline">
+                                <input name="serviceKey" autocomplete="off" class="layui-input" type="text"/>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -72,6 +90,15 @@
                 <label class="layui-form-label">服务名称：</label>
                 <div class="layui-input-inline">
                     <input class="layui-input param-serviceName" name="serviceName" type="text" lay-verify="required"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">应用密钥：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input param-appKey" type="text" disabled/>
                 </div>
             </div>
         </div>

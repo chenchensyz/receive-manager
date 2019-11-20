@@ -143,6 +143,9 @@
                 <bind name="serviceNameSec" value=" '%' + serviceName + '%' "/>
                 and ssi.service_name like #{serviceNameSec}
             </if>
+            <if test="appKey != null and appKey !=''">
+                and ta.app_uuid = #{appKey}
+            </if>
             <if test="serviceKey != null and serviceKey !=''">
                 and ssi.service_key = #{serviceKey,jdbcType=VARCHAR}
             </if>
@@ -171,7 +174,7 @@
     </sql>
 
     <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppService">
-        select ssi.*,ta.name app_name,tc.name cname from se_service_info ssi
+        select ssi.*,ta.name app_name,tc.name cname, ta.app_uuid app_key from se_service_info ssi
         left join td_app ta on ssi.app_id=ta.id
         left join td_company tc on ssi.creator=tc.id
         <include refid="sql_where"/>

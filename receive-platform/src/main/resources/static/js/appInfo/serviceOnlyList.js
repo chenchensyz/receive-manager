@@ -89,6 +89,7 @@ appServiceList.prototype = {
             var data = obj.data;
             if (obj.event === 'edit') {//编辑
                 $('.param-method').val(data.method);
+                $('.param-appKey').val(data.appKey);
                 $('.param-serviceKey').val(data.serviceKey);
                 $('.param-contentType').val(data.contentType);
                 $('.param-appName').val(!data.appName ? '无' : data.appName);

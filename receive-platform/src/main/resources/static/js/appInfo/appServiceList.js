@@ -43,7 +43,7 @@ appServiceList.prototype = {
             , cols: [[
                 {type: 'checkbox'}
                 , {field: 'serviceName', title: '接口名称', width: 222}
-                 , {field: 'appName', title: '所属应用', width: 222}
+                , {field: 'appName', title: '所属应用', width: 222}
                 , {
                     field: 'state', templet: function (d) {
                         if (d.state == 1) {
@@ -55,7 +55,16 @@ appServiceList.prototype = {
                         }
                     }, title: '接口状态', width: 92, align: 'center'
                 }
-                , {field: 'introduce', title: '服务描述'}
+                , {
+                    field: 'filePath', templet: function (d) {
+                        var span = ' <span>无</span>';
+                        if (d.filePath) {
+                            span = '<a class="layui-btn layui-btn-normal layui-btn-xs">附件</a>';
+                        }
+                        return span;
+                    }, title: '附件', align: 'center'
+                }
+                , {field: 'createTimeStr', title: '创建时间', width: 183, align: 'center'}
                 , {
                     field: 'right', templet: function (d) {
                         var span = ' <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
@@ -84,6 +93,7 @@ appServiceList.prototype = {
                 $('.param-method').val(data.method);
                 $('.param-contentType').val(data.contentType);
                 $('.param-appName').val(!data.appName ? '无' : data.appName);
+                $('.param-appKey').val(data.appKey);
                 $('.param-serviceKey').val(data.serviceKey);
                 $('.param-introduce').val(data.introduce);
                 $('.param-id').val(data.id);

@@ -53,7 +53,7 @@ appInfoList.prototype = {
                         }
                     }, title: '应用状态', width: 90
                 }
-                , {field: 'createTimeStr', title: '创建时间', width: 162}
+                , {field: 'createTimeStr', title: '创建时间', width: 172}
                 // , {field: 'right', title: '操作', width: 170, align: 'center', toolbar: '#optBar'}
             ]]
             , done: function (res, curr, count) {

@@ -46,10 +46,10 @@ public class AppServiceController extends BaseController {
         if (getShiroUser().source == 1) {  //开发者用户
             appService.setCreator(getShiroUser().id);
         }
+        int code = CodeUtil.BASE_SUCCESS;
         PageHelper.startPage(appService.getPageNum(), appService.getPageSize());
         List<AppService> appServices = appServiceService.getList(appService);
         PageInfo<AppService> appServicePage = new PageInfo<AppService>(appServices);
-        int code = CodeUtil.BASE_SUCCESS;
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(appServices)
                 .setTotal(appServicePage.getTotal()).setPage(appServicePage.getLastPage());
     }
