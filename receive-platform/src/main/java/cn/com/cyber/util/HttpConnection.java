@@ -1,6 +1,5 @@
 package cn.com.cyber.util;
 
-import cn.com.cyber.socket.SpringUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;

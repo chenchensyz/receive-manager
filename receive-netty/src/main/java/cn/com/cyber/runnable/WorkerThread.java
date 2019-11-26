@@ -126,13 +126,4 @@ public class WorkerThread implements Runnable {
         return this.command;
     }
 
-
-    public static void main(String[] args) {
-        String url = "http://10.48.3.189:9982/pmmanage/api/pmuser/photo/{userId}/{uww}";
-        String nu = url.replace("{userId}", "1111");
-        url = nu;
-        String uww = url.replace("{uww}", "2222");
-        System.out.println(uww);
-    }
-
 }

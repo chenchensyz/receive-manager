@@ -4,14 +4,20 @@ package cn.com.cyber.runnable;
  * 服务监控
  */
 
+import cn.com.cyber.controller.webSocket.WebSocketServer;
 import cn.com.cyber.dao.AppServiceMapper;
+import cn.com.cyber.dao.UserMapper;
 import cn.com.cyber.model.AppService;
-import cn.com.cyber.socket.SpringUtil;
+import cn.com.cyber.model.User;
+import cn.com.cyber.util.SpringUtil;
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.net.www.protocol.http.Handler;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -29,6 +35,7 @@ public class ConnectThread implements Runnable {
                 AppService appService = new AppService();
                 appService.setState(1);
                 List<AppService> serviceList = appServiceMapper.getList(appService);
+                List<String> errors = Lists.newArrayList();
                 if (serviceList != null && serviceList.size() > 0) {
                     for (AppService service : serviceList) {
                         try {
@@ -38,13 +45,25 @@ public class ConnectThread implements Runnable {
                                 service.setErrRemark(map.get("msg").toString());
                             }
                             appServiceMapper.updateControl(service);
+                            if (Integer.valueOf(map.get("code").toString()) == 0) {
+                                errors.add(service.getServiceName());
+                            }
                         } catch (Exception e) {
                             LOGGER.error(e.getMessage(), e);
                             continue;
                         }
                     }
+                    UserMapper userMapper = SpringUtil.getBean(UserMapper.class);//获取后台用户
+                    List<User> userList = userMapper.getUserList(new User());
+                    try {
+                        for (User user : userList) {
+                            WebSocketServer.sendInfo(JSON.toJSONString(errors), user.getUserId());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                Thread.sleep(600 * 1000);
+                Thread.sleep(30 * 60 * 1000);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -236,15 +236,15 @@
 
     <!--授权的接口-->
     <select id="getValidAppAndService" resultMap="BaseResultMap" parameterType="map">
-        select ssi.* from se_app_service sas left join TD_APP ta on  ta.id=sas.app_id
+        select ssi.*, ta.status app_state from se_app_service sas left join TD_APP ta on  ta.id=sas.app_id
         left join se_service_info ssi  on sas.service_key = ssi.service_key
         where ta.app_uuid = #{appKey} and sas.service_key = #{serviceKey}
    </select>
 
     <select id="getAppServiceByRecordId" resultMap="BaseResultMap" parameterType="int">
       select ssi.*,ta.name app_name from SE_APP_SERVICE_APPLY sasa
-      left join td_app ta on sasa.app_key=ta.app_uuid
       left join se_service_info ssi on sasa.service_key=ssi.service_key
+      left join td_app ta on ssi.app_id=ta.id
        where sasa.record_id =#{recordId}
     </select>
 

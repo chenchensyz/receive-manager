@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>山东统一资源服务管理平台</title>
+    <link rel="stylesheet" th:href="@{/css/common/base.css}">
+    <link rel="stylesheet" th:href="@{/js/common/jquery/jquery_ui/jquery-ui-custom.css}">
+    <link rel="stylesheet" th:href="@{/css/product/index.css}">
+</head>
+<body>
+<input id="text" type="text"/>
+<button onclick="send()">发送消息</button>
+<hr/>
+<button onclick="closeWebSocket()">关闭WebSocket连接</button>
+<hr/>
+<div id="message"></div>
+</body>
+
+<script th:src="@{/js/tool.js}"></script>
+<script th:src="@{/js/common/base.js}"></script>
+<script th:src="@{/js/common/jquery/jquery_ui/jquery-ui-custom.js}"></script>
+<script th:src="@{/js/product/index.js}"></script>
+
+<script type="text/javascript">
+    var socket;
+    if (typeof (WebSocket) == "undefined") {
+        console.log("您的浏览器不支持WebSocket");
+    } else {
+        console.log("您的浏览器支持WebSocket");
+        //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
+        //等同于socket = new WebSocket("ws://localhost:8083/checkcentersys/websocket/20");
+        socket = new WebSocket(getRootPath() + "/websocket/${cid}".replace("http", "ws"));
+        //打开事件
+        socket.onopen = function () {
+            console.log("Socket 已打开");
+            //socket.send("这是来自客户端的消息" + location.href + new Date());
+        };
+        //获得消息事件
+        socket.onmessage = function (msg) {
+            console.log(msg.data);
+            //发现消息进入    开始处理前端触发逻辑
+        };
+        //关闭事件
+        socket.onclose = function () {
+            console.log("Socket已关闭");
+        };
+        //发生了错误事件
+        socket.onerror = function () {
+            console.log("Socket发生了错误");
+            //此时可以尝试刷新页面
+        }
+    }
+</script>

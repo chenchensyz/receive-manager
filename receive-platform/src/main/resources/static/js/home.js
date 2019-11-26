@@ -14,17 +14,10 @@ function home() {
 
 home.prototype = {
     init: function () {
-        this.initSse()
         this.inletSelect();
         this.initData();
         this.queryEcharts();
         this.initErrRemind();
-    },
-
-    initSse: function () {
-        if (!!window.EventSource) {
-            console.log('支持')
-        }
     },
 
     inletSelect: function () {

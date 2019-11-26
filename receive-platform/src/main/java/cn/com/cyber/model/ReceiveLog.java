@@ -27,6 +27,14 @@ public class ReceiveLog extends BaseEntity {
 
     private Integer companyId;    //用户、公司id
 
+    private String appName;
+
+    private String serviceName;
+
+    private String beginTime;
+
+    private String endTime;
+
     public Long getId() {
         return id;
     }
@@ -113,5 +121,37 @@ public class ReceiveLog extends BaseEntity {
 
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

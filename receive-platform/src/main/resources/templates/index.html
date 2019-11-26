@@ -49,6 +49,7 @@
                     </dd>
                 </dl>
             </li>
+            <p id="message"></p>
             <!--<li class="layui-nav-item layuimini-select-bgcolor mobile layui-hide-xs">-->
                 <!--<a href="javascript:;" data-bgcolor="配色方案"><i class="fa fa-ellipsis-v"></i></a>-->
             <!--</li>-->
@@ -75,34 +76,32 @@
                 </li>
             </ul>
             <div class="layui-tab-content clildFrame">
-                <div id="layuiminiHomeTabIframe" class="layui-tab-item layui-show">
-                </div>
+                <div id="layuiminiHomeTabIframe" class="layui-tab-item layui-show"></div>
             </div>
         </div>
     </div>
-
 </div>
 <div th:include="head :: commonjs"></div>
 <script th:src="@{/js/lay-config.js?v=1.0.4}"></script>
-<script>
-    layui.use(['element', 'layer', 'layuimini'], function () {
-        var $ = layui.jquery,
-            element = layui.element,
-            layer = layui.layer;
+<script th:src="@{/js/index.js}"></script>
+<!--<script>-->
+    <!--layui.use(['element', 'layer', 'layuimini'], function () {-->
+        <!--var $ = layui.jquery,-->
+            <!--element = layui.element,-->
+            <!--layer = layui.layer;-->
+        <!--layuimini.init();-->
 
-        layuimini.init();
-
-        $('.login-out').on("click", function () {
-            layer.confirm('您确定要退出吗？', {
-                btn: ['确认', '返回'] //按钮
-            }, function () {
-                sessionStorage.clear();
-                location.href = getRootPath() + "/login/quit";
-            }, function () {
-                layer.closeAll();
-            });
-        });
-    });
-</script>
+        <!--$('.login-out').on("click", function () {-->
+            <!--layer.confirm('您确定要退出吗？', {-->
+                <!--btn: ['确认', '返回'] //按钮-->
+            <!--}, function () {-->
+                <!--sessionStorage.clear();-->
+                <!--location.href = getRootPath() + "/login/quit";-->
+            <!--}, function () {-->
+                <!--layer.closeAll();-->
+            <!--});-->
+        <!--});-->
+    <!--});-->
+<!--</script>-->
 </body>
 </html>

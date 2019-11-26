@@ -8,12 +8,15 @@ function receiveLogList() {
     layui.use(['table', 'form'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
+        that.laydate = layui.laydate;
         that.init();
     });
 }
 
 receiveLogList.prototype = {
     init: function () {
+        this.laydate.render({elem: '#beginTime', type: 'datetime'});
+        this.laydate.render({elem: '#endTime', type: 'datetime'});
         this.initData();
         this.toAdd();
     },
@@ -37,12 +40,20 @@ receiveLogList.prototype = {
             }
             , cols: [[
                 {type: 'numbers'}
-                , {field: 'url', title: '请求地址', width: 410}
+                , {field: 'serviceName', title: '服务名称'}
+                , {field: 'appName', title: '调用应用'}
                 , {field: 'requestTimeStr', title: '请求时间'}
                 , {field: 'responseTimeStr', title: '响应时间'}
-                , {field: 'responseCode',  title: '响应状态', width: 165, align: 'center'}
-                , {field: 'remark',  title: '备注'}
-                // , {field: 'right', title: '操作', width: 80, align: 'center', toolbar: '#optBar'}
+                , {field: 'responseCode', title: '响应状态', width: 165, align: 'center'}
+                , {
+                    field: 'right', align: 'center', templet: function (d) {
+                        var span = '<span>请求成功</span>'
+                        if (d.filePath) {
+                            span = '<a class="layui-btn layui-btn-xs" lay-event="view">查看详情</a>';
+                        }
+                        return span;
+                    }, title: '操作',width: 124
+                }
             ]]
             , done: function (res, curr, count) {
                 //如果是异步请求数据方式，res即为你接口返回的信息。
@@ -61,8 +72,10 @@ receiveLogList.prototype = {
         //监听工具条
         that.layTable.on('tool(receiveLogTable)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'edit') {//编辑
-                location.href = getRootPath() + "/companyInfo/getCompanyInfo?compId=" + data.id;
+            if (obj.event === 'view') {//编辑
+                layer.alert(data.remark, {
+                    closeBtn: 0
+                });
             }
         });
 

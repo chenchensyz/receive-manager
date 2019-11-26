@@ -18,7 +18,6 @@ import javax.servlet.MultipartConfigElement;
 
 @SpringBootApplication
 public class NettyApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(NettyApplication.class, args);
 
@@ -35,7 +34,6 @@ public class NettyApplication {
                 if ("mobile".equals(env.getProperty(CodeUtil.PROJECT_ENVIRONMENT))) {
                     MyThreadPool.getThreadPool().execute(new SendFileThread());
                 }
-
             }
             //启动Socket
             SocketClient.init();

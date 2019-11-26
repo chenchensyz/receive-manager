@@ -55,5 +55,4 @@ public class ReceiveLogController extends BaseController {
         return RestResponse.success().setData(controlListData).setTotal(controlListPage.getTotal()).
                 setPage(controlListPage.getLastPage());
     }
-
 }

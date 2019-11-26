@@ -87,6 +87,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/file/**", "anon");
         filterChainDefinitionMap.put("/redirect_wh/**", "anon");
         filterChainDefinitionMap.put("/redirect_dl/**", "anon");
+        filterChainDefinitionMap.put("/webSocket/**", "anon");
 
         filterChainDefinitionMap.put("/images/**", "anon");//img
         filterChainDefinitionMap.put("/css/**", "anon");//css

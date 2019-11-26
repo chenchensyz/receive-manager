@@ -3,14 +3,11 @@ package cn.com.cyber.controller.appInfo;
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.AppServiceRecord;
-import cn.com.cyber.model.TreeModel;
 import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.RestResponse;
 import cn.com.cyber.util.exception.ValueRuntimeException;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -44,11 +41,9 @@ public class AppValidController extends BaseController {
     @ResponseBody
     public RestResponse applyAppService(@RequestBody String param) {
         int code = CodeUtil.BASE_SUCCESS;
-        JSONObject jsonObject = JSONObject.parseObject(param);
-        Integer appId = jsonObject.getInteger("appId");
-        List<TreeModel> params = JSONArray.parseArray(jsonObject.getString("params"), TreeModel.class);
+
         try {
-            appInfoService.apply(appId, params, getShiroUser().userId);
+            appInfoService.apply(param, getShiroUser().userId);
         } catch (ValueRuntimeException e) {
             code = (Integer) e.getValue();
         }

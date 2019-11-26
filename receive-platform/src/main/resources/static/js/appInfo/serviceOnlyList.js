@@ -1,5 +1,5 @@
 /**
- * 应用管理
+ * 我的服务
  */
 function appServiceList() {
     var that = this;
@@ -63,7 +63,16 @@ appServiceList.prototype = {
                         }
                     }, title: '接口状态', width: 92, align: 'center'
                 }
-                , {field: 'introduce', title: '服务描述'}
+                , {
+                    field: 'filePath', templet: function (d) {
+                        var span = ' <span>无</span>';
+                        if (d.filePath) {
+                            span = '<a class="layui-btn layui-btn-normal layui-btn-xs"  lay-event="down">下载</a>';
+                        }
+                        return span;
+                    }, title: '附件', align: 'center'
+                }
+                , {field: 'createTimeStr', title: '创建时间', width: 183, align: 'center'}
                 , {
                     field: 'right', align: 'center', templet: function (d) {
                         var span = ' <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
@@ -110,7 +119,7 @@ appServiceList.prototype = {
                     fixed: false,
                     resize: false,
                     shadeClose: true,
-                    maxmin: false, //开启最大化最小化按钮
+                    maxmin: true, //开启最大化最小化按钮
                     area: ['600px', '100%'], //宽高
                     content: $("#serviceDialog")
                 });
@@ -120,6 +129,8 @@ appServiceList.prototype = {
                 });
             } else if (obj.event === 'del') {
                 that.delAppService(obj, obj.data.id, -1);
+            } else if (obj.event === 'down') {
+                $(this).attr('href',getRootPath()+'/file/service'+data.filePath);
             }
         });
 

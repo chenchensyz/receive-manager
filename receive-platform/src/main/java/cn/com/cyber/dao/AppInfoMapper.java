@@ -8,7 +8,13 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 import java.util.Map;
 
-public interface AppInfoMapper extends BaseDao<AppInfo> {
+public interface AppInfoMapper {
+
+    List<AppInfo> getAppInfoList(AppInfo appInfo);
+
+    int insertAppInfo(AppInfo appInfo);
+
+    int updateAppInfo(AppInfo appInfo);
 
     AppModel selectAppModel(Map<String, Object> map);
 

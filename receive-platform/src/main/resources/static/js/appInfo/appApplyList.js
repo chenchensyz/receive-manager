@@ -33,6 +33,7 @@ appApplyList.prototype = {
         // 点击节点名称获取选中节点值
         that.layDtree.on("node('appSelect')", function (obj) {
             $('.appId').val(obj.param.nodeId);
+            $('.appKey').val(obj.param.parentId);
             that.getCheckedService(obj.param.nodeId);
         });
     },
@@ -79,6 +80,7 @@ appApplyList.prototype = {
         var that = this;
         $(".add-btn").click(function () {
             var appId = $('.appId').val();
+            var appKey = $('.appKey').val();
             var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
             if (!appId) {
                 layer.alert('请选择应用后重试', function () {layer.closeAll();});
@@ -92,7 +94,7 @@ appApplyList.prototype = {
             layer.confirm('是否确定提交接口申请？', {
                 btn: ['确认', '返回'] //按钮
             }, function () {
-                var data = {'appId': appId, "params": params};
+                var data = {'appId': appId, 'appKey': appKey, "params": params};
                 $.ajax({
                     url: getRootPath() + "/appValid/apply",
                     type: 'post',

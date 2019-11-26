@@ -5,7 +5,7 @@
     <link rel="stylesheet" th:href="@{/js/lay-module/step-lay/step.css}">
 </head>
 <style>
-    .layui-form .layui-form-item{
+    .layui-form .layui-form-item {
         margin-left: 78px;
     }
 </style>
@@ -15,11 +15,12 @@
         <div class="layui-fluid">
             <div class="layui-card">
                 <div class="layui-card-body" style="padding-top: 40px">
-                    <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;;height: 800px;">
+                    <div class="layui-carousel" id="stepForm" lay-filter="stepForm"
+                         style="margin: 0 auto;;height: 800px;">
                         <div carousel-item>
                             <div>
                                 <form class="layui-form" style="margin: 0 246px;max-width: 460px;padding-top: 40px;">
-                                   <h2>基本信息</h2>
+                                    <h2>基本信息</h2>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">选择应用：</label>
                                         <div class="layui-input-block">
@@ -30,24 +31,23 @@
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">服务名称：</label>
                                         <div class="layui-input-block">
-                                            <input class="layui-input serviceName" type="text" name="serviceName"  lay-verify="required"/>
+                                            <input class="layui-input serviceName" type="text" name="serviceName"
+                                                   lay-verify="required"/>
                                         </div>
                                     </div>
 
                                     <div class="layui-form-item layui-form-text">
                                         <label class="layui-form-label">服务描述：</label>
                                         <div class="layui-input-block">
-                                        <textarea placeholder="请输入内容" class="layui-textarea introduce" name="introduce"></textarea>
+                                            <textarea placeholder="请输入内容" class="layui-textarea introduce" name="introduce"></textarea>
                                         </div>
                                     </div>
 
                                     <div class="layui-form-item">
                                         <div class="layui-input-block">
-                                            <button class="layui-btn" lay-submit lay-filter="formStep">
-                                                &emsp;下一步&emsp;
-                                            </button>
+                                            <button class="layui-btn" lay-submit lay-filter="formStep"> 下一步</button>
                                             <button class="alertServiceFile layui-btn layui-btn-sm  layui-btn-radius layui-btn-warm"
-                                                    style=" position: fixed;right: 100px;" type="button">
+                                                    style="position: fixed;right: 100px;" type="button">
                                                 批量注册
                                             </button>
                                             <input type="file" style="display: none" class="addServiceFile"/>
@@ -61,13 +61,15 @@
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">请求地址：</label>
                                         <div class="layui-input-block">
-                                            <input name="urlSuffix" type="text" class="layui-input" lay-verify="required"/>
+                                            <input name="urlSuffix" type="text" class="layui-input"
+                                                   lay-verify="required"/>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">请求方式：</label>
                                         <div class="layui-input-block">
-                                            <select name="method" lay-filter="method" class="method" lay-verify="required">
+                                            <select name="method" lay-filter="method" class="method"
+                                                    lay-verify="required">
                                             </select>
                                         </div>
                                     </div>
@@ -83,14 +85,17 @@
                                     <div class="layui-form-item layui-form-text">
                                         <label class="layui-form-label">编码规则：</label>
                                         <div class="layui-input-block">
-                                            <input name="serviceRule" type="text" class="layui-input" lay-verify="required"/>
+                                            <input name="serviceRule" type="text" class="layui-input"
+                                                   lay-verify="required"/>
                                         </div>
                                     </div>
 
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">资源类型：</label>
                                         <div class="layui-input-block">
-                                            <input name="sourceType"  class="layui-input " type="text"lay-verify="required"/>
+                                            <select name="sourceType" lay-filter="sourceType" class="sourceType"
+                                                    lay-verify="required">
+                                            </select>
                                         </div>
                                     </div>
 
@@ -98,7 +103,9 @@
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">接口文档：</label>
                                         <div class="layui-input-block">
-                                            <button class="layui-btn layui-btn-normal" id="serviceFile" type="button" style="margin-right: 10px"><i class="layui-icon"></i>上传</button>
+                                            <button class="layui-btn layui-btn-normal" id="serviceFile" type="button"
+                                                    style="margin-right: 10px"><i class="layui-icon"></i>上传
+                                            </button>
                                             <p class="serviceFileText" style="margin-top: 10px"></p>
                                         </div>
                                     </div>
@@ -107,7 +114,8 @@
                                     <div class="layui-form-item layui-form-text">
                                         <label class="layui-form-label">备注信息：</label>
                                         <div class="layui-input-block">
-                                            <textarea placeholder="请输入内容" class="layui-textarea" name="remark"></textarea>
+                                            <textarea placeholder="请输入内容" class="layui-textarea"
+                                                      name="remark"></textarea>
                                         </div>
                                     </div>
 
@@ -145,13 +153,15 @@
         <div class="layui-form-item" style="margin-top: 40px;margin-right: 20px">
             <label class="layui-form-label">选择应用：</label>
             <div class="layui-input-block">
-                <select name="appId"  lay-filter="more-appId" class="more-appId"></select>
+                <select name="appId" lay-filter="more-appId" class="more-appId"></select>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn uploadMore" type="button" >下载示例文件 </button>
-                <button class="layui-btn layui-btn-normal" id="upFile" type="button" style="margin-right: 10px"><i class="layui-icon"></i>上传</button>
+                <button class="layui-btn uploadMore" type="button">下载示例文件</button>
+                <button class="layui-btn layui-btn-normal" id="upFile" type="button" style="margin-right: 10px"><i
+                        class="layui-icon"></i>上传
+                </button>
                 <input type="file" style="display: none" class="addServiceFile"/>
             </div>
         </div>

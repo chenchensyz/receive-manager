@@ -7,9 +7,9 @@ import java.util.Map;
 
 public interface AppInfoService {
 
-    AppInfo getById(Long id);
+    List<AppInfo> getAppInfoList(AppInfo appInfo);
 
-    List<AppInfo> getList(AppInfo appInfo);
+    void saveAppInfo(Long userId, AppInfo appInfo);
 
     AppModel getAppModel(String serviceKey, String appKey);
 
@@ -22,7 +22,7 @@ public interface AppInfoService {
     String getCheckedService(Integer appId);
 
     //接口审核。申请
-    void apply(Integer appId, List<TreeModel> params, String creator);
+    void apply(String param, String creator);
 
     List<AppServiceRecord> getAppServiceRecordList(AppServiceRecord appServiceRecord);
 
@@ -32,5 +32,5 @@ public interface AppInfoService {
 
     List<AppService> getAppValidListData(AppService appService);
 
-    void saveAppService(Integer appId, List<TreeModel> params, String creator);
+    void saveAppService(String param, String creator);
 }

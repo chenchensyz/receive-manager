@@ -1,4 +1,4 @@
-package cn.com.cyber.socket;
+package cn.com.cyber.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

@@ -5,9 +5,10 @@ function appServiceList() {
     var that = this;
     var pageCurr;
     var tableIns;
-    layui.use(['table', 'form'], function () {
+    layui.use(['table', 'form', 'upload'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
+        that.layUpload = layui.upload;
         that.init();
     });
 }
@@ -15,6 +16,7 @@ function appServiceList() {
 appServiceList.prototype = {
     init: function () {
         this.initData();
+        this.optFile();
         this.refuseMoreAppService();
         this.getContentType();
         this.updateForm();
@@ -57,9 +59,9 @@ appServiceList.prototype = {
                 }
                 , {
                     field: 'filePath', templet: function (d) {
-                        var span = ' <span>无</span>';
+                        var span = '<span>无</span>'
                         if (d.filePath) {
-                            span = '<a class="layui-btn layui-btn-normal layui-btn-xs">附件</a>';
+                            span = '<a class="layui-btn layui-btn-normal layui-btn-xs"  lay-event="down">下载</a>';
                         }
                         return span;
                     }, title: '附件', align: 'center'
@@ -112,7 +114,7 @@ appServiceList.prototype = {
                     fixed: false,
                     resize: false,
                     shadeClose: true,
-                    maxmin: false, //开启最大化最小化按钮
+                    maxmin: true, //开启最大化最小化按钮
                     area: ['600px', '100%'], //宽高
                     content: $("#serviceDialog")
                 });
@@ -122,6 +124,8 @@ appServiceList.prototype = {
                 });
             } else if (obj.event === 'del') {
                 that.delAppService(obj, obj.data.id, -1);
+            } else if (obj.event === 'down') {
+                $(this).attr('href',getRootPath()+'/file/service'+data.filePath);
             }
         });
 
@@ -143,6 +147,14 @@ appServiceList.prototype = {
             return false;
         });
 
+        that.upFile = that.layUpload.render({ //允许上传的文件后缀
+            elem: '#upFile'
+            , url: getRootPath() + '/appService/uploadMoreService'
+            , accept: 'file' //普通文件
+            , done: function (res) {
+                layer.msg(res.message);
+            }
+        });
     },
 
     load: function (obj) {
@@ -239,6 +251,19 @@ appServiceList.prototype = {
                 $(".param-contentType").append(option);
                 layui.form.render('select');
             }
+        });
+    },
+
+    optFile: function () {//上传下载附件
+        var that = this;
+        $('#appServiceList .optFile').off('click').on('click', function () {
+            var dataType = $(this).attr('data-type');
+            if ('up' == dataType) {
+
+            } else if ('down' == dataType) {
+
+            }
+            return false;
         });
     }
 };

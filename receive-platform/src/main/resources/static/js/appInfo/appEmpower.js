@@ -32,6 +32,7 @@ appEmpower.prototype = {
         // 点击节点名称获取选中节点值
         that.layDtree.on("node('appEmpower')", function (obj) {
             $('.appId').val(obj.param.nodeId);
+            $('.appKey').val(obj.param.parentId);
             that.getCheckedService(obj.param.nodeId);
         });
     },
@@ -60,7 +61,7 @@ appEmpower.prototype = {
             elem: "#interfaceSelect",
             url: getRootPath() + '/appInfo/appServiceTree',
             initLevel: 1,  // 指定初始展开节点级别
-            type:"all",
+            type: "all",
             checkbarData: "change",
             checkbar: true,
             checkbarType: "no-all",
@@ -77,6 +78,7 @@ appEmpower.prototype = {
         var that = this;
         $(".add-btn").click(function () {
             var appId = $('.appId').val();
+            var appKey = $('.appKey').val();
             var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
             if (!appId) {
                 layer.alert('请选择应用后重试', function () {
@@ -84,33 +86,38 @@ appEmpower.prototype = {
                 });
                 return false;
             }
+            var message = '您确定要执行此操作吗？';
             if (params.length == 0) {
-                layer.alert('请选择接口后重试', function () {
-                    layer.closeAll();
-                });
-                return false;
+                message = '未选择接口，点击确认清空接口权限'
             }
-            var data = {'appId': appId, "params": params};
-            $.ajax({
-                url: getRootPath() + "/appEmpower/saveAppService",
-                type: 'post',
-                data: JSON.stringify(data),
-                contentType: 'application/json',
-                success: function (res) {
-                    if (res.code == 0) {
-                        layer.msg(res.message);
-                    } else {
-                        layer.alert(res.message, function () {
+            layer.confirm(message, {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                var data = {'appId': appId, 'appKey': appKey, "params": params};
+                $.ajax({
+                    url: getRootPath() + "/appEmpower/saveAppService",
+                    type: 'post',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (res) {
+                        if (res.code == 0) {
+                            layer.msg(res.message);
+                        } else {
+                            layer.alert(res.message, function () {
+                                layer.closeAll();
+                            });
+                        }
+                    },
+                    error: function (err) {
+                        layer.alert(JSON.stringify(err), function () {
                             layer.closeAll();
                         });
                     }
-                },
-                error: function (err) {
-                    layer.alert(err, function () {
-                        layer.closeAll();
-                    });
-                }
+                });
+            }, function () {
+                layer.closeAll();
             });
+            return false;
         })
     }
 };

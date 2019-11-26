@@ -91,33 +91,38 @@ userEmpower.prototype = {
                 });
                 return false;
             }
-            if (params.length==0) {
-                layer.alert('请选择接口后重试', function () {
-                    layer.closeAll();
-                });
-                return false;
+            var message = '您确定要执行此操作吗？';
+            if (params.length == 0) {
+                message = '未选择接口，点击确认清空接口权限'
             }
-            var data = {'userName': userName, "params": params};
-            $.ajax({
-                url: getRootPath() + "/userEmpower/saveUserService",
-                type: 'post',
-                "data": JSON.stringify(data),
-                contentType: 'application/json',
-                success: function (res) {
-                    if (res.code == 0) {
-                        layer.msg(res.message);
-                    } else {
-                        layer.alert(res.message, function () {
+            layer.confirm(message, {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                var data = {'userName': userName, "params": params};
+                $.ajax({
+                    url: getRootPath() + "/userEmpower/saveUserService",
+                    type: 'post',
+                    "data": JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (res) {
+                        if (res.code == 0) {
+                            layer.msg(res.message);
+                        } else {
+                            layer.alert(res.message, function () {
+                                layer.closeAll();
+                            });
+                        }
+                    },
+                    error: function (err) {
+                        layer.alert(JSON.stringify(err), function () {
                             layer.closeAll();
                         });
                     }
-                },
-                error: function (err) {
-                    layer.alert(err.message, function () {
-                        layer.closeAll();
-                    });
-                }
+                });
+            }, function () {
+                layer.closeAll();
             });
+            return false;
         })
     }
 };

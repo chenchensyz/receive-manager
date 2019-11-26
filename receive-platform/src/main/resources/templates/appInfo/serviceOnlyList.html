@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:include="head::commonHeader('业务接口列表')"></head>
+<head th:include="head::commonHeader('我的服务')"></head>
 <head>
     <link rel="stylesheet" th:href="@{/css/module/appServiceList.css}">
 </head>
@@ -56,20 +56,8 @@
             </div>
         </fieldset>
 
-        <div class="layui-row layui-col-space15">
-            <div class="layui-card">
-                <!--<div class="layui-card-header refuse-div" style="display: none">-->
-                    <!--<div class="layui-btn-group">-->
-                        <!--<button class="layui-btn layui-btn-danger refuse-btn">批量禁用</button>-->
-                        <!--<input type="file" style="display: none" class="addServiceFile"/>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <div class="layui-card-body">
-                    <table id="appServiceList" lay-filter="appServiceTable" lay-data="{id: 'appServiceTable'}"
-                           lay-size="sm"></table>
-                </div>
-            </div>
-        </div>
+        <table id="appServiceList" lay-filter="appServiceTable" lay-data="{id: 'appServiceTable'}"
+               lay-size="sm"></table>
     </div>
 </div>
 

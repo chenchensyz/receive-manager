@@ -1,6 +1,7 @@
 package cn.com.cyber.socket;
 
 import cn.com.cyber.util.CodeUtil;
+import cn.com.cyber.util.SpringUtil;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

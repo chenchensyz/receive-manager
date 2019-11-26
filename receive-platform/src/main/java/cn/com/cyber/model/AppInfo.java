@@ -21,9 +21,15 @@ public class AppInfo extends BaseEntity {
 
     private String createTimeStr;
 
+    private Date updateTime;
+
     private List<AppService> services;
 
     private Integer receiveNum;  //访问量
+
+    private String description;  //描述
+
+    private String statusRemark;
 
     public Long getId() {
         return id;
@@ -96,5 +102,29 @@ public class AppInfo extends BaseEntity {
 
     public void setReceiveNum(Integer receiveNum) {
         this.receiveNum = receiveNum;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStatusRemark() {
+        return statusRemark;
+    }
+
+    public void setStatusRemark(String statusRemark) {
+        this.statusRemark = statusRemark;
     }
 }

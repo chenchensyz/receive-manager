@@ -4,7 +4,6 @@ import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppInfo;
 import cn.com.cyber.model.TreeModel;
 import cn.com.cyber.service.AppInfoService;
-import cn.com.cyber.service.UserService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.RestResponse;
@@ -16,10 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -39,6 +40,16 @@ public class AppInfoController extends BaseController {
         return "appInfo/appInfoList";
     }
 
+    @RequestMapping("peoples")
+    public String getAppInfoPeoples() {
+        return "peoples/peoples";
+    }
+
+    @RequestMapping("peoples/approve")
+    public String getAppInfoPeoplesApprove() {
+        return "peoples/peoplesApprove";
+    }
+
     //获取应用列表数据
     @RequestMapping("queryAppInfoListData")
     @ResponseBody
@@ -50,7 +61,7 @@ public class AppInfoController extends BaseController {
                 appInfo.setCreator(getShiroUser().id);
             }
             PageHelper.startPage(appInfo.getPageNum(), appInfo.getPageSize());
-            List<AppInfo> appInfos = appInfoService.getList(appInfo);
+            List<AppInfo> appInfos = appInfoService.getAppInfoList(appInfo);
             PageInfo<AppInfo> appInfoPage = new PageInfo<AppInfo>(appInfos);
             rest.setData(appInfos).setTotal(appInfoPage.getTotal()).setPage(appInfoPage.getLastPage());
         } catch (ValueRuntimeException e) {
@@ -59,6 +70,18 @@ public class AppInfoController extends BaseController {
         rest.setCode(code);
         rest.setMessage(messageCodeUtil.getMessage(code));
         return rest;
+    }
+
+    @PostMapping(value = "saveAppInfo")
+    @ResponseBody
+    public RestResponse saveAppInfo(@Valid AppInfo appInfo) {
+        int code = CodeUtil.BASE_SUCCESS;
+        try {
+            appInfoService.saveAppInfo(getShiroUser().id, appInfo);
+        } catch (ValueRuntimeException e) {
+            code = (Integer) e.getValue();
+        }
+        return RestResponse.res(code, messageCodeUtil.getMessage(code));
     }
 
     //统计应用数量

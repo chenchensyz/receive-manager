@@ -90,6 +90,15 @@ serviceRegister.prototype = {
                 demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
             }
         });
+
+       var option = '<option value="" >请选择...</option>';
+        $.getJSON(getRootPath() + "/api/dictionary.json", function (data) {
+            $.each(data.data, function (i, ele) {
+                option += "<option value='" + ele.id + "'>" + ele.item + "</option>";
+            })
+            $(".sourceType").append(option);
+            that.layForm.render('select');
+        });
     },
 
     getContentType: function (method, contentType) {
