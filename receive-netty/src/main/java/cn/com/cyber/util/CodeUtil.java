@@ -26,8 +26,8 @@ public class CodeUtil {
     //接口响应时间设置
     public static final String REQUEST_MAXTIME = "request_maxtime";  //最大超时时间
     public static final String REQUEST_SLEEPTIME = "request_sleeptime";  //扫描响应结果间隔时间
-    public static final String PLATFORM_REQUSET_URL = "platform_requset_url";
 
+    public static final String PLATFORM_URL = "platform_url";
     public static final String PROJECT_ENVIRONMENT = "project_environment";
     public static final String SOCKET_URL = "socket_url";
     public static final String SOCKET_SERVER_PORT = "socket_server_port";

@@ -71,7 +71,7 @@ public class RedirectController extends BaseController {
                 jsonObject = JSONObject.parseObject(jsonData);
             }
             //发送请求
-            String url = messageCodeUtil.getMessage(CodeUtil.PLATFORM_REQUSET_URL);
+            String url = env.getProperty(CodeUtil.PLATFORM_URL);
             //测试用
             if (serviceUrl != null && "getTest".equals(serviceUrl)) {
                 url += "/getTest";
