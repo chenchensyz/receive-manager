@@ -135,7 +135,7 @@ appServiceList.prototype = {
         });
 
         that.layTable.on('checkbox(appServiceTable)', function (obj) {
-            var source = sessionStorage.getItem("source")
+            var source = localStorage.getItem("source")
             if (source == 0) {
                 var checkStatus = that.layTable.checkStatus('appServiceTable'); //appServiceTable 即为 id 对应的值
                 if (checkStatus.data.length > 0) {

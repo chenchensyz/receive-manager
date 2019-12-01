@@ -79,10 +79,10 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean getShiroFilterFactoryBean() {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(getDefaultWebSecurityManager());
-        shiroFilterFactoryBean.setLoginUrl("/login/toLogin");
+//        shiroFilterFactoryBean.setLoginUrl("/login/toLogin");
         shiroFilterFactoryBean.setSuccessUrl("/index");
         filterChainDefinitionMap.put("/login/**", "anon");
-        filterChainDefinitionMap.put("/regiest/**", "anon");
+        filterChainDefinitionMap.put("/register/**", "anon");
         filterChainDefinitionMap.put("/redirect/**", "anon");
         filterChainDefinitionMap.put("/file/**", "anon");
         filterChainDefinitionMap.put("/redirect_wh/**", "anon");

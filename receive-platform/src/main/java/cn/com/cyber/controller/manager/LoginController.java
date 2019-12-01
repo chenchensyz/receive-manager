@@ -17,12 +17,14 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +34,22 @@ public class LoginController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
+    @Autowired
+    private Environment environment;
+
+    //初始化
+    @RequestMapping(value = "config")
+    @ResponseBody
+    public RestResponse config() {
+        String title = null;
+        try {
+            byte[] bytes = environment.getProperty(CodeUtil.PLATFORM_TITLE).getBytes("ISO-8859-1");
+            title= new String(bytes,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return RestResponse.success().setData(title);
+    }
 
     //跳转登录页
     @RequestMapping("toLogin")

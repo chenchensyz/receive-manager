@@ -1,29 +1,15 @@
 $(function () {
     $.ajaxSetup({
-        error: function(jqXHR, textStatus, errorMsg){  // 出错时默认的处理函数
-            // jqXHR 是经过jQuery封装的XMLHttpRequest对象
-            // textStatus 可能为： null、"timeout"、"error"、"abort"或"parsererror"
-            // errorMsg 可能为： "Not Found"、"Internal Server Error"等
-            console.log(jqXHR)
-            switch (jqXHR.status){
-                case(500):
-                    alert("服务器系统内部错误");
-                    break;
-                case(401):
-                    alert("未登录");
-                    break;
-                case(403):
-                    alert("当前用户没有权限");
-                    break;
-                case(408):
-                    alert("请求超时");
-                    break;
-                default:
-                    alert("未知错误");
+        complete: function (XMLHttpRequest, textStatus) {
+            //通过XMLHttpRequest取得响应头，sessionstatus，
+            if (XMLHttpRequest.status == 401) {
+                //如果超时就处理 ，指定要跳转的页面(比如登陆页)
+                window.location.replace(getRootPath() + "/login/authLogin");
             }
         }
     });
 });
+
 function getRootPath() {
     //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
     var curWwwPath = window.document.location.href;

@@ -9,6 +9,8 @@
         <result column="response_time" property="responseTime" jdbcType="TIMESTAMP"/>
         <result column="response_code" property="responseCode" jdbcType="INTEGER"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="app_name" property="appName" jdbcType="VARCHAR"/>
+        <result column="service_name" property="serviceName" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, app_key, service_key, request_time, response_time, response_code, remark
@@ -64,25 +66,34 @@
             <if test="companyId != null">
                 ai.company_id= #{companyId}
             </if>
+            <if test="appName != null and appName !=''" >
+                <bind name="appNameSec" value=" '%' + appName + '%' "/>
+                and ai.name like #{appNameSec}
+            </if>
+            <if test="serviceName != null and serviceName !=''">
+                <bind name="serviceNameSec" value=" '%' + serviceName + '%' "/>
+                and ais.service_name like #{serviceNameSec}
+            </if>
             <if test="appKey != null and appKey !=''">
                 and rl.app_key = #{appKey,jdbcType=VARCHAR}
             </if>
             <if test="serviceKey != null and serviceKey !=''">
                 and rl.service_key = #{serviceKey,jdbcType=VARCHAR}
             </if>
-            <if test="requestTime != null">
-                and rl.request_time = #{requestTime,jdbcType=TIMESTAMP}
+            <if test="beginTime != null and beginTime != ''">
+                and rl.request_time &gt;= to_date(#{beginTime},'yyyy-MM-dd hh24:mi:ss')
             </if>
-            <if test="responseTime != null">
-                and rl.response_time = #{responseTime,jdbcType=TIMESTAMP}
+            <if test="endTime != null and endTime != ''">
+                and rl.request_time &lt;= to_date(#{endTime},'yyyy-MM-dd hh24:mi:ss')
             </if>
             <if test="responseCode != null">
                 and rl.response_code = #{responseCode,jdbcType=INTEGER}
             </if>
         </where>
     </sql>
+
     <select id="getReceiveLogList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.ReceiveLog">
-        SELECT rl.*, ais.url_suffix url
+        SELECT rl.*, ai.name app_name, ais.service_name, ais.url_suffix url
         FROM se_receive_log rl
         LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
         LEFT JOIN td_company tc on tc.id = ai.company_id
@@ -92,8 +103,12 @@
     </select>
 
     <select id="getReceiveLogCount" resultType="int">
-    select count(id)  from se_receive_log
-  </select>
+        select count(rl.id)  from se_receive_log rl
+        LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
+        LEFT JOIN td_company tc on tc.id = ai.company_id
+        LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
+        <include refid="sql_where"/>
+    </select>
 
     <select id="getReceiveLogRanking" resultType="int" parameterType="map">
         select ifnull(e.receive_num,0) receive_num from

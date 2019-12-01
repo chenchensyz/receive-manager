@@ -34,6 +34,15 @@ serviceRegister.prototype = {
             }]
         });
 
+        that.layForm.verify({
+            contentType: function (value, item) { //value：表单的值、item：表单的DOM对象
+                var method = $('.method').val();
+                if (method == 'POST' && !value) {
+                    return 'POST请求,请选择请求格式';
+                }
+            }
+        });
+
         that.layForm.on('submit(formStep)', function (data) {
             that.layStep.next('#stepForm');
             return false;
@@ -91,7 +100,7 @@ serviceRegister.prototype = {
             }
         });
 
-       var option = '<option value="" >请选择...</option>';
+        var option = '<option value="" >请选择...</option>';
         $.getJSON(getRootPath() + "/api/dictionary.json", function (data) {
             $.each(data.data, function (i, ele) {
                 option += "<option value='" + ele.id + "'>" + ele.item + "</option>";
@@ -154,7 +163,7 @@ serviceRegister.prototype = {
         $('.alertServiceFile').off('click').on('click', function () {
             layer.open({
                 type: 1,
-                title: "批量增加",
+                title: "批量上传",
                 fixed: false,
                 resize: false,
                 shadeClose: true,
@@ -178,7 +187,13 @@ serviceRegister.prototype = {
             , accept: 'file' //普通文件
             , exts: 'xlsx' //只允许上传excel
             , done: function (res) {
-                layer.msg(res.message);
+                if(res.code == 0){
+                    layer.msg(res.message);
+                }else {
+                    layer.alert(res.message, function () {
+                        layer.closeAll();
+                    });
+                }
             }
         });
 

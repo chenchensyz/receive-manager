@@ -134,7 +134,7 @@ public class User extends BaseEntity implements Serializable {
     }
 
     public String getRemark() {
-        return remark;
+        return remark == null ? "" : remark;
     }
 
     public void setRemark(String remark) {

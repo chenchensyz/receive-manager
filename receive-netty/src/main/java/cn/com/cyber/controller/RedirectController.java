@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -54,8 +57,8 @@ public class RedirectController extends BaseController {
     //请求转发-http
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public void service(HttpServletRequest request, HttpServletResponse response,
-                        @RequestBody(required = false) String jsonData) {
+    public void redirect(HttpServletRequest request, HttpServletResponse response,
+                         @RequestBody(required = false) String jsonData) {
         String appKey = request.getHeader("appKey");
         String serviceKey = request.getHeader("serviceKey");
         String serviceUrl = request.getHeader("serviceUrl");
@@ -94,7 +97,6 @@ public class RedirectController extends BaseController {
         LOGGER.info("本次请求结束 result:{}", result);
         setResponseText(response, result);
     }
-
 
     @RequestMapping("/login")
     @ResponseBody

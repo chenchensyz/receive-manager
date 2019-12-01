@@ -47,7 +47,7 @@ index.prototype = {
             console.log("您的浏览器支持WebSocket");
             //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
             //等同于socket = new WebSocket("ws://localhost:8083/checkcentersys/websocket/20");
-            var userId = sessionStorage.getItem('userId');
+            var userId = localStorage.getItem('userId');
             var url = getRootPath() + "/websocket/" + userId;
             socket = new WebSocket(url.replace("http", "ws"));
             //打开事件
@@ -92,7 +92,7 @@ index.prototype = {
             layer.confirm('您确定要退出吗？', {
                 btn: ['确认', '返回'] //按钮
             }, function () {
-                sessionStorage.clear();
+                localStorage.clear();
                 location.href = getRootPath() + "/login/quit";
             }, function () {
                 layer.closeAll();

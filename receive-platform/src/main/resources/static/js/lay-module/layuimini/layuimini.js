@@ -53,10 +53,10 @@ layui.define(["element", "jquery"], function (exports) {
                             layuimini.msg_error('暂无菜单信息');
                         } else {
                             layuimini.initHome(res.data.homeInfo);
-                            layuimini.initLogo(res.logoInfo);
+                            layuimini.initLogo(localStorage.getItem('platform_title'));
                             layuimini.initMenu(res.data);
                             layuimini.initTab();
-                            $('.user-id').text(sessionStorage.getItem("userId"));
+                            $('.user-id').text(localStorage.getItem("userId"));
                         }
                     } else {
                         layuimini.msg_error(res.message);
@@ -90,7 +90,7 @@ layui.define(["element", "jquery"], function (exports) {
             // $('#layuiminiHomeTabId').html('<i class="' + data.icon + '"></i> <span>' + data.title + '</span>');
             // $('#layuiminiHomeTabId').attr('lay-id', data.href);
             // $('#layuiminiHomeTabIframe').html('<iframe width="100%" height="100%" frameborder="0"  src="' + data.href + '"></iframe>');
-            sessionStorage.setItem('layuiminiHomeHref', 'index/home?mpi=m-p-i-0');
+            localStorage.setItem('layuiminiHomeHref', 'index/home?mpi=m-p-i-0');
             $('#layuiminiHomeTabId').html('<span>首页</span>');
             $('#layuiminiHomeTabId').attr('lay-id', 'index/home?mpi=m-p-i-0');
             $('#layuiminiHomeTabIframe').html('<iframe width="100%" height="100%" frameborder="0"  src="index/home?mpi=m-p-i-0"></iframe>');
@@ -117,7 +117,7 @@ layui.define(["element", "jquery"], function (exports) {
          * 初始化背景色
          */
         this.initBgColor = function () {
-            var bgcolorId = sessionStorage.getItem('layuiminiBgcolorId');
+            var bgcolorId = localStorage.getItem('layuiminiBgcolorId');
             if (bgcolorId == null || bgcolorId == undefined || bgcolorId == '') {
                 bgcolorId = layuimini.config('BgColorDefault');
             }
@@ -248,11 +248,11 @@ layui.define(["element", "jquery"], function (exports) {
                         }
                     });
                     var layuiminiHomeTab = $('#layuiminiHomeTab').attr('lay-id'),
-                        layuiminiHomeHref = sessionStorage.getItem('layuiminiHomeHref');
+                        layuiminiHomeHref = localStorage.getItem('layuiminiHomeHref');
 
                     // 非菜单打开的tab窗口
                     if (href == title) {
-                        var layuiminiTabInfo = JSON.parse(sessionStorage.getItem("layuiminiTabInfo"));
+                        var layuiminiTabInfo = JSON.parse(localStorage.getItem("layuiminiTabInfo"));
                         if (layuiminiTabInfo != null) {
                             var check = layuiminiTabInfo[tabId];
                             if (check != undefined || check != null) {
@@ -390,7 +390,7 @@ layui.define(["element", "jquery"], function (exports) {
          */
         this.buildBgColorHtml = function () {
             var html = '';
-            var bgcolorId = sessionStorage.getItem('layuiminiBgcolorId');
+            var bgcolorId = localStorage.getItem('layuiminiBgcolorId');
             if (bgcolorId == null || bgcolorId == undefined || bgcolorId == '') {
                 bgcolorId = 0;
             }
@@ -437,7 +437,7 @@ layui.define(["element", "jquery"], function (exports) {
             }
 
             // 判断sessionStorage是否有
-            var layuiminiTabInfo = JSON.parse(sessionStorage.getItem("layuiminiTabInfo"));
+            var layuiminiTabInfo = JSON.parse(localStorage.getItem("layuiminiTabInfo"));
             if (layuiminiTabInfo == null) {
                 layuiminiTabInfo = {};
             }
@@ -456,12 +456,12 @@ layui.define(["element", "jquery"], function (exports) {
          */
         this.addTab = function (tabId, href, title, addSession) {
             if (addSession == undefined || addSession == true) {
-                var layuiminiTabInfo = JSON.parse(sessionStorage.getItem("layuiminiTabInfo"));
+                var layuiminiTabInfo = JSON.parse(localStorage.getItem("layuiminiTabInfo"));
                 if (layuiminiTabInfo == null) {
                     layuiminiTabInfo = {};
                 }
                 layuiminiTabInfo[tabId] = {href: href, title: title}
-                sessionStorage.setItem("layuiminiTabInfo", JSON.stringify(layuiminiTabInfo));
+                localStorage.setItem("layuiminiTabInfo", JSON.stringify(layuiminiTabInfo));
             }
             element.tabAdd('layuiminiTab', {
                 title: title + '<i data-tab-close="" class="layui-icon layui-unselect layui-tab-close">ဆ</i>' //用于演示
@@ -475,10 +475,10 @@ layui.define(["element", "jquery"], function (exports) {
          * @param tabId
          */
         this.delTab = function (tabId) {
-            var layuiminiTabInfo = JSON.parse(sessionStorage.getItem("layuiminiTabInfo"));
+            var layuiminiTabInfo = JSON.parse(localStorage.getItem("layuiminiTabInfo"));
             if (layuiminiTabInfo != null) {
                 delete layuiminiTabInfo[tabId];
-                sessionStorage.setItem("layuiminiTabInfo", JSON.stringify(layuiminiTabInfo))
+                localStorage.setItem("layuiminiTabInfo", JSON.stringify(layuiminiTabInfo))
             }
             element.tabDelete('layuiminiTab', tabId);
         };
@@ -739,12 +739,12 @@ layui.define(["element", "jquery"], function (exports) {
         // 判断该窗口是否已经打开过
         var checkTab = layuimini.checkTab(tabId, true);
         if (!checkTab) {
-            var layuiminiTabInfo = JSON.parse(sessionStorage.getItem("layuiminiTabInfo"));
+            var layuiminiTabInfo = JSON.parse(localStorage.getItem("layuiminiTabInfo"));
             if (layuiminiTabInfo == null) {
                 layuiminiTabInfo = {};
             }
             layuiminiTabInfo[tabId] = {href: href, title: title}
-            sessionStorage.setItem("layuiminiTabInfo", JSON.stringify(layuiminiTabInfo));
+            localStorage.setItem("layuiminiTabInfo", JSON.stringify(layuiminiTabInfo));
             parent.layui.element.tabAdd('layuiminiTab', {
                 title: title + '<i data-tab-close="" class="layui-icon layui-unselect layui-tab-close">ဆ</i>' //用于演示
                 , content: '<iframe width="100%" height="100%" frameborder="0"  src="' + href + '"></iframe>'
@@ -900,7 +900,7 @@ layui.define(["element", "jquery"], function (exports) {
         var bgcolorId = $(this).attr('data-select-bgcolor');
         $('.layuimini-color .color-content ul .layui-this').attr('class', '');
         $(this).attr('class', 'layui-this');
-        sessionStorage.setItem('layuiminiBgcolorId', bgcolorId);
+        localStorage.setItem('layuiminiBgcolorId', bgcolorId);
         layuimini.initBgColor();
     });
 

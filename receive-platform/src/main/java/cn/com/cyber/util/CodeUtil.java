@@ -46,6 +46,7 @@ public class CodeUtil {
     public static final String REQUEST_MAXTIME = "request_maxtime";  //最大超时时间
     public static final String REQUEST_SLEEPTIME = "request_sleeptime";  //扫描响应结果间隔时间
 
+    public static final String PLATFORM_TITLE = "platform_title";
     public static final String SOCKET_URL = "socket_url";
     public static final String SOCKET_PORT = "socket_port";
     public static final String THREADPOOLSIZE = "threadPoolSize";
@@ -55,7 +56,7 @@ public class CodeUtil {
     public static final String FILE_ROOT_PATH = "file_root_path";
     public static final String DEFAULT_DEPARTMENT = "default_department";  //顶层机构
 
-    public static final String SERVICE_FILE_PATH = "service";  //顶层机构
+    public static final String SERVICE_FILE_PATH = "service";  //接口附件
 
     //pstore用户校验
     public static final String PSTORE_LOGIN_URL = "pstore_login_url";
@@ -99,7 +100,7 @@ public class CodeUtil {
     public static final int APPINFO_REFUSE_SERVICE = 10104; //接口已被禁用
     public static final int CREATE_ERR_FILE = 10105; //创建文件失败
     public static final int APPINFO_ERR_SERVICETYPE = 10106; //接口文件格式错误
-    public static final int APPINFO_ERR_SERVICEKEY = 10107; //请检查内容填写是否正确
+    public static final int APPINFO_ERR_SERVICEKEY = 10107; //请检查内容填写,接口地址以http形式填写
     public static final int APPINFO_ERR_SERVICEREAD = 10108; //读取接口文件失败
     public static final int APPINFO_NULL_SERVICEFILE = 10109; //接口文件不能为空
     public static final int APPSERVICE_ERR_SAVE = 10110; //保存接口失败
@@ -109,6 +110,7 @@ public class CodeUtil {
     public static final int SERVICE_APPLY_ERR_DEL = 10114; //修改旧接口记录失败
     public static final int SERVICE_APPLY_ERR_SAVE = 10115; //接口申请失败
     public static final int SERVICE_APPROVE_ERR_SAVE = 10116; //接口审核失败
+    public static final int SERVICE_METHOD_CONTENTTYPE = 10117; //POST请求,请选择请求格式
 
 
     //编排接口

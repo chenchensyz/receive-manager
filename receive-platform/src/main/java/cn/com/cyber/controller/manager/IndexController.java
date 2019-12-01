@@ -71,7 +71,7 @@ public class IndexController extends BaseController {
             code = (Integer) e.getValue();
         }
         resultMap.put("permissons", permissons);
-        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(resultMap).setAny("logoInfo", "贵阳统一资源服务管理平台");
+        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(resultMap);
     }
 
     //修改密码
@@ -116,5 +116,14 @@ public class IndexController extends BaseController {
     @RequestMapping("/home")
     public String getHome() {
         return "home";
+    }
+
+    //登出
+    @RequestMapping(value = "quit")
+    public String quit() {
+        Subject subject = SecurityUtils.getSubject();
+        subject.getSession().setTimeout(0);
+        subject.logout();
+        return "redirect:/login/toLogin";
     }
 }

@@ -21,7 +21,7 @@ appServiceList.prototype = {
 
     initData: function () {
         var that = this;
-        var source = sessionStorage.getItem("source")
+        var source = localStorage.getItem("source")
         that.tableIns = that.layTable.render({
             id: 'appServiceTable',
             elem: '#appServiceList'

@@ -15,7 +15,23 @@ login.prototype = {
     },
 
     initData: function () {
-        // $('#creater').val('你好');
+        $.ajax({
+            url: getRootPath() + "/login/config",
+            type: 'get',
+            success: function (res) {
+                var title = '统一资源服务管理平台';
+                if (res.code == 0) {
+                    title = res.data;
+                }
+                $('.login_name p').text(title);
+                localStorage.setItem('platform_title', title);
+            },
+            error: function (err) {
+                layer.alert(JSON.stringify(err), function () {
+                    layer.closeAll();
+                });
+            }
+        });
     },
 
     submitValidate: function () {
@@ -38,8 +54,8 @@ login.prototype = {
         this.layForm.on('submit(login-btn)', function (data) {
             $.post(getRootPath() + '/login/login', data.field).then(function (res) {
                 if (res.code == 0) {
-                    sessionStorage.setItem("userId", data.field.userId)
-                    sessionStorage.setItem("source", data.field.source)
+                    localStorage.setItem("userId", data.field.userId)
+                    localStorage.setItem("source", data.field.source)
                     top.location = getRootPath() + '/index';
                 } else {
                     layer.alert(res.message);
