@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,7 +45,9 @@ public class IndexController extends BaseController {
 
     //首页
     @RequestMapping()
-    public String getIndex() {
+    public String getIndex(Model model) {
+        model.addAttribute("userId", getShiroUser().userId);
+        model.addAttribute("source", getShiroUser().source);
         return "index";
     }
 

@@ -1,11 +1,6 @@
 package cn.com.cyber.controller.manager;
 
 import cn.com.cyber.controller.BaseController;
-import cn.com.cyber.model.Developer;
-import cn.com.cyber.model.User;
-import cn.com.cyber.model.UserRole;
-import cn.com.cyber.service.UserRoleService;
-import cn.com.cyber.service.UserService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.EncryptUtils;
 import cn.com.cyber.util.RestResponse;
@@ -19,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,7 +40,7 @@ public class LoginController extends BaseController {
         String title = null;
         try {
             byte[] bytes = environment.getProperty(CodeUtil.PLATFORM_TITLE).getBytes("ISO-8859-1");
-            title= new String(bytes,"UTF-8");
+            title = new String(bytes, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -117,5 +113,50 @@ public class LoginController extends BaseController {
         subject.getSession().setTimeout(0);
         subject.logout();
         return "redirect:/login/toLogin";
+    }
+
+
+    //登录
+    @RequestMapping("redirect")
+    public String redirect(@RequestParam("userId") String userId,
+                           @RequestParam("password") String password,
+                           @RequestParam("source") String source,
+                           HttpServletRequest request, Model model) {
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(password)) {
+            model.addAttribute("err", "请填写完整登录信息");
+            return "redirect:/index";
+        }
+        if ("0".equals(source)) {
+            password = EncryptUtils.MD5Encode(password);
+        }
+        UsernamePasswordToken token = new UsernamePasswordToken(userId, password, source);
+        Subject subject = SecurityUtils.getSubject();
+        String msg = "登录失败";
+        try {
+            subject.login(token);
+            if (subject.isAuthenticated()) {
+                return "redirect:/index";
+            } else {
+                request.getSession().removeAttribute("sessionId");
+                model.addAttribute("err", msg);
+                return "redirect:/index";
+            }
+        } catch (IncorrectCredentialsException e) {
+            msg = "登录密码错误";
+        } catch (ExcessiveAttemptsException e) {
+            msg = "登录失败次数过多";
+        } catch (LockedAccountException e) {
+            msg = "帐号 " + token.getPrincipal() + " 已被锁定";
+        } catch (DisabledAccountException e) {
+            msg = "帐号 " + token.getPrincipal() + " 已被禁用";
+        } catch (ExpiredCredentialsException e) {
+            msg = "帐号 " + token.getPrincipal() + " 已过期";
+        } catch (UnknownAccountException e) {
+            msg = "帐号 " + token.getPrincipal() + " 不存在";
+        } catch (UnauthorizedException e) {
+            msg = "您没有得到相应的授权！" + e.getMessage();
+        }
+        model.addAttribute("err", msg);
+        return "redirect:/index";
     }
 }

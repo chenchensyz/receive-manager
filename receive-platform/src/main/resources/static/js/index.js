@@ -39,6 +39,12 @@ index.prototype = {
         //         });
         //     }
         // }
+        if (!localStorage.getItem('userId')) {
+            localStorage.setItem("userId", $('#userId').val())
+        }
+        if (!localStorage.getItem('source')) {
+            localStorage.setItem("source", $('#source').val())
+        }
 
         var socket;
         if (typeof (WebSocket) == "undefined") {
@@ -59,7 +65,7 @@ index.prototype = {
             socket.onmessage = function (msg) {
                 var content = '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">' +
                     '检测下列服务异常，请检查服务运行！<br>';
-                var data=JSON.parse(msg.data);
+                var data = JSON.parse(msg.data);
                 $.each(data, function (index, item) {
                     content += '<p>' + item + '</p>'
                 });

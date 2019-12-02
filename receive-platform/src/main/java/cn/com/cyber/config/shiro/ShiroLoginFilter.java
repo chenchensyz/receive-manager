@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-@WebFilter(urlPatterns = "/*", filterName = "authenticationFilter")
+//@WebFilter(urlPatterns = "/*", filterName = "authenticationFilter")
 public class ShiroLoginFilter extends FormAuthenticationFilter {
 
     /**
@@ -35,7 +35,7 @@ public class ShiroLoginFilter extends FormAuthenticationFilter {
             restResponse.res(401, "登录认证失效，请重新登录!");
             httpServletResponse.getWriter().write(JSONObject.toJSON(restResponse).toString());
         } else {
-            httpServletResponse.sendRedirect("login/authLogin");
+            httpServletResponse.sendRedirect("login/toLogin");
         }
         return false;
     }
