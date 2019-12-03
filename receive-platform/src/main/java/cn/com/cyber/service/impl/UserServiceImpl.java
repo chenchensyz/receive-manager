@@ -53,4 +53,9 @@ public class UserServiceImpl implements UserService {
     public User getValiedUser(String userName) {
         return userMapper.getValiedUser(userName);
     }
+
+    @Override
+    public int selectAdmin(User user) {
+        return userMapper.selectAdmin(user);
+    }
 }

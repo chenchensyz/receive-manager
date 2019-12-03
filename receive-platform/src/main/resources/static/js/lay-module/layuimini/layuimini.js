@@ -53,7 +53,7 @@ layui.define(["element", "jquery"], function (exports) {
                             layuimini.msg_error('暂无菜单信息');
                         } else {
                             layuimini.initHome(res.data.homeInfo);
-                            layuimini.initLogo(localStorage.getItem('platform_title'));
+                            layuimini.initLogo(res.title);
                             layuimini.initMenu(res.data);
                             layuimini.initTab();
                             $('.user-id').text(localStorage.getItem("userId"));

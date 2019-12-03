@@ -138,4 +138,8 @@
      left join se_user_role sur on tc.id=sur.user_id where tc.username=#{userName}
   </select>
 
+    <select id="selectAdmin" resultType="int" parameterType="cn.com.cyber.model.User">
+        select count(id) from td_admin where username = #{userId} and  password = #{password} and state=1
+    </select>
+
 </mapper>

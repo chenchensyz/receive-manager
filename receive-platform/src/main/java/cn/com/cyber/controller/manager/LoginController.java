@@ -1,6 +1,8 @@
 package cn.com.cyber.controller.manager;
 
 import cn.com.cyber.controller.BaseController;
+import cn.com.cyber.model.User;
+import cn.com.cyber.service.UserService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.EncryptUtils;
 import cn.com.cyber.util.RestResponse;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,17 +34,14 @@ public class LoginController extends BaseController {
     @Autowired
     private Environment environment;
 
+    @Autowired
+    private UserService userService;
+
     //初始化
     @RequestMapping(value = "config")
     @ResponseBody
     public RestResponse config() {
-        String title = null;
-        try {
-            byte[] bytes = environment.getProperty(CodeUtil.PLATFORM_TITLE).getBytes("ISO-8859-1");
-            title = new String(bytes, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String title = getApplication(environment, CodeUtil.PLATFORM_TITLE);
         return RestResponse.success().setData(title);
     }
 
@@ -116,7 +114,7 @@ public class LoginController extends BaseController {
     }
 
 
-    //登录
+    //pstore登录
     @RequestMapping("redirect")
     public String redirect(@RequestParam("userId") String userId,
                            @RequestParam("password") String password,
@@ -127,6 +125,9 @@ public class LoginController extends BaseController {
             return "redirect:/index";
         }
         if ("0".equals(source)) {
+            if (getPstoreUser(userId, password) == 0) {
+                return "redirect:/index";
+            }
             password = EncryptUtils.MD5Encode(password);
         }
         UsernamePasswordToken token = new UsernamePasswordToken(userId, password, source);
@@ -158,5 +159,28 @@ public class LoginController extends BaseController {
         }
         model.addAttribute("err", msg);
         return "redirect:/index";
+    }
+
+    private int getPstoreUser(String userId, String password) {
+        User user = new User();
+        user.setUserId(userId);
+        user.setPassword(password);
+        int i = userService.selectAdmin(user);
+        if (i == 0) {
+            return 0;
+        }
+        User localUser = userService.getByUserId(userId);
+        String newPass = EncryptUtils.MD5Encode(password);
+        int count;
+        if (localUser == null) {
+            user.setRoleId(1);
+            user.setPassword(newPass);
+            user.setNickName("pstore用户");
+            count = userService.insert(user);
+        } else {
+            localUser.setPassword(newPass);
+            count = userService.update(localUser);
+        }
+        return count;
     }
 }

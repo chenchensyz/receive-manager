@@ -23,4 +23,6 @@ public interface UserService {
     User getByUserId(String userId);
 
     User getValiedUser(String userName);
+
+    int selectAdmin(User user);
 }

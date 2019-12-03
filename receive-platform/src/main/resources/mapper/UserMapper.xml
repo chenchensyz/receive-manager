@@ -130,15 +130,19 @@
     <select id="getUserAndRoles" resultMap="BaseResultMap" parameterType="long">
      SELECT u.* , ur.user_id user_id_r, ur.role_id
      FROM se_user u left JOIN se_user_role ur on u.id=ur.user_id WHERE u.id=#{id}
-  </select>
+   </select>
 
     <select id="getByUserId" resultMap="BaseResultMap" parameterType="string">
-    select * from se_user where user_id=#{userId}
-  </select>
+      select * from se_user where user_id=#{userId}
+    </select>
 
     <select id="getValiedUser" resultMap="BaseResultMap" parameterType="string">
-     select tc.id,tc.username , sur.user_id user_id_r, sur.role_id from  se_user tc
-     left join se_user_role sur on tc.id=sur.user_id where tc.username=#{userName}
-  </select>
+      select tc.id,tc.username , sur.user_id user_id_r, sur.role_id from  se_user tc
+      left join se_user_role sur on tc.id=sur.user_id where tc.username=#{userName}
+    </select>
+
+    <select id="selectAdmin" resultType="int" parameterType="cn.com.cyber.model.User">
+        select count(id) from td_admin where username = #{userId} and  password = #{password} and state=1
+    </select>
 
 </mapper>

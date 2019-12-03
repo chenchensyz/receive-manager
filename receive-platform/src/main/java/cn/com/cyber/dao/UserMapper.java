@@ -23,4 +23,6 @@ public interface UserMapper {
 
    List<User> getUserList(User user);
 
+    int selectAdmin(User user);
+
 }

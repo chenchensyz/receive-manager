@@ -20,6 +20,7 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,9 @@ public class IndexController extends BaseController {
 
     @Autowired
     private MessageCodeUtil messageCodeUtil;
+
+    @Autowired
+    private Environment environment;
 
     //首页
     @RequestMapping()
@@ -74,7 +78,8 @@ public class IndexController extends BaseController {
             code = (Integer) e.getValue();
         }
         resultMap.put("permissons", permissons);
-        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(resultMap);
+        String title = getApplication(environment, CodeUtil.PLATFORM_TITLE);
+        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(resultMap).setAny("title", title);
     }
 
     //修改密码

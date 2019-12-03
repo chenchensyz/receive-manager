@@ -11,6 +11,7 @@ import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 import javax.servlet.http.HttpServletResponse;
 import java.beans.BeanInfo;
@@ -36,6 +37,17 @@ public class BaseController {
     public String getUserId() {
         ShiroDbRealm.ShiroUser user = (ShiroDbRealm.ShiroUser) SecurityUtils.getSubject().getPrincipal();
         return user.userId;
+    }
+
+    public String getApplication(Environment environment, String code) {
+        String title = null;
+        try {
+            byte[] bytes = environment.getProperty(code).getBytes("ISO-8859-1");
+            title = new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return title;
     }
 
     //bean转换map
