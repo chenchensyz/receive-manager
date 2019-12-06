@@ -7,6 +7,8 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,13 +17,11 @@ import java.util.List;
 
 /**
  * Created with IntelliJ IDEA
- *
- * @Author yuanhaoyue swithaoy@gmail.com
- * @Description 工具类
- * @Date 2018-06-06
- * @Time 14:07
  */
 public class ExcelUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelUtil.class);
+
     /**
      * 读取 Excel(多个 sheet)
      *
@@ -52,7 +52,7 @@ public class ExcelUtil {
                 try {
                     inputStream.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }
@@ -168,7 +168,7 @@ public class ExcelUtil {
                 try {
                     inputStream.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }

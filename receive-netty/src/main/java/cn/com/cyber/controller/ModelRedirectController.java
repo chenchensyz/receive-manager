@@ -52,7 +52,7 @@ public class ModelRedirectController extends BaseController {
                 response.setStatus((Integer) resultMap.get("code"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
             result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED)));
             return result;
         }

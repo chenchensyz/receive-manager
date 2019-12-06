@@ -60,13 +60,13 @@ public class ConnectThread implements Runnable {
                             WebSocketServer.sendInfo(JSON.toJSONString(errors), user.getUserId());
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        LOGGER.error(e.getMessage(), e);
                     }
                 }
                 Thread.sleep(30 * 60 * 1000);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -89,7 +89,7 @@ public class ConnectThread implements Runnable {
                     connection.disconnect();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
         }
         result.put("code", code);

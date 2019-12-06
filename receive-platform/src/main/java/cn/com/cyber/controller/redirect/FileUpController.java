@@ -107,7 +107,7 @@ public class FileUpController {
                 jedis.hmset(key, map);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
             return RestResponse.failure(e.toString());
         } finally {
             jedis.close();

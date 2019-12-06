@@ -65,7 +65,7 @@ public class WebSocketServer {
             try {
                 item.sendMessage(message);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }

@@ -62,7 +62,7 @@ public class UploadMsgServerHandler extends ChannelInboundHandlerAdapter {
                 jedis.hmset(key, map);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             jedis.close();
         }

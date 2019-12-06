@@ -126,7 +126,7 @@ public class NettyIoHandler extends ChannelInboundHandlerAdapter {
             Environment env = SpringUtil.getBean(Environment.class);
             jedis.setex(messageId, Integer.valueOf(env.getProperty(CodeUtil.CACHE_TIME)), params);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             jedis.close();
         }
@@ -141,7 +141,7 @@ public class NettyIoHandler extends ChannelInboundHandlerAdapter {
             String baseRequestMsg = new String(cacheMsgbytes, cs);
             MyThreadPool.getThreadPool().execute(new WorkerThread(baseRequestMsg));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
 
     }

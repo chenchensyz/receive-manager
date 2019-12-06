@@ -4,9 +4,12 @@ package cn.com.cyber.runnable;
  * 文件传输服务--定时任务
  */
 
+import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.SpringUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -15,6 +18,7 @@ import java.util.Set;
 
 public class SendFileThread implements Runnable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SendFileThread.class);
 
     @Override
     public void run() {
@@ -39,13 +43,13 @@ public class SendFileThread implements Runnable {
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                     continue;
                 }
                 Thread.sleep(300 * 1000);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             jedis.close();
         }

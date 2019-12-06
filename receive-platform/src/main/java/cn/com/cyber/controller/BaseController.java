@@ -10,6 +10,8 @@ import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
@@ -22,6 +24,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class BaseController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 
     @Autowired
     private AppServiceService appServiceService;
@@ -46,6 +50,7 @@ public class BaseController {
             title = new String(bytes, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+//            LOGGER.error(e.getMessage(), e);
         }
         return title;
     }
@@ -73,7 +78,7 @@ public class BaseController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         return map;
     }
@@ -121,7 +126,7 @@ public class BaseController {
             opStream.close();
             inStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -138,7 +143,7 @@ public class BaseController {
             out = response.getWriter();
             out.append(responseObject);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (out != null) {
                 out.close();
@@ -161,7 +166,7 @@ public class BaseController {
             out = response.getWriter();
             out.append(responseJSONObject.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (out != null) {
                 out.close();
@@ -172,14 +177,17 @@ public class BaseController {
     public AppService valiedParams(String appKey, String serviceKey) {
         int msgCode;
         //根据appKey和serviceKey查询appinfo信息
+//        if (StringUtils.isBlank(appKey) || StringUtils.isBlank(serviceKey)) {
+//            throw new ValueRuntimeException(CodeUtil.REQUEST_PARAM_NULL); //请求的参数中缺少查询条件
+//        }
         AppService appService = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
         if (appService == null) {  //应用接口需授权
             appService = appServiceService.getValidAppAndService(appKey, serviceKey);
         }
 
         if (appService == null) {
-            msgCode = CodeUtil.APPSERVICE_ERR_VALID;
-            throw new ValueRuntimeException(msgCode);
+            msgCode = CodeUtil.REQUEST_KEY_FILED;
+//            throw new ValueRuntimeException(msgCode);
         }
 
         if (CodeUtil.APP_STATE_ENABLE != appService.getAppState()) {

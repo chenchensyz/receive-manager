@@ -63,7 +63,7 @@ public class FileUpThread implements Runnable {
             map.put("times", times + 1 + "");
             jedis.hmset(command, map);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             jedis.close();
         }

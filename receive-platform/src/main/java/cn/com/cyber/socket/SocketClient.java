@@ -30,7 +30,7 @@ public class SocketClient {
         } catch (ConnectException e) {
             throw new ValueRuntimeException(CodeUtil.CONNECT_ERR_MOBLIE);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -88,7 +88,7 @@ public class SocketClient {
 //            LOGGER.info("传输数据完毕");
 //            socket.shutdownOutput();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

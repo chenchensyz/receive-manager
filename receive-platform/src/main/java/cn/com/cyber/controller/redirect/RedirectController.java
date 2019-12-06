@@ -86,7 +86,9 @@ public class RedirectController extends BaseController {
             msgCode = (Integer) e.getValue();
             result = JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
+            msgCode = CodeUtil.REQUEST_SERVICE_FILED;
+            result = JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)));
         }
         LOGGER.info("本次请求结束 result:{}", result);
         return result;

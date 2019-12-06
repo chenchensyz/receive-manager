@@ -82,7 +82,7 @@ public class RedirectTcpController extends BaseController{
                 byte[] bytes = Base64.encodeBase64(jsonObject.toString().getBytes(cs));
                 baseParam = new String(bytes, cs);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
             SocketClient.send(baseParam);
             int i = 0;
@@ -117,7 +117,7 @@ public class RedirectTcpController extends BaseController{
             msgCode = (Integer) e.getValue();
             setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (jedis != null) {
                 jedis.close();

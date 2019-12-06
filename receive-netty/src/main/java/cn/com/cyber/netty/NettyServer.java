@@ -51,7 +51,7 @@ public class NettyServer implements Runnable{
             LOGGER.warn("开始监听，端口为：{}", channelFuture.channel().localAddress());
             channelFuture.channel().closeFuture().sync();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

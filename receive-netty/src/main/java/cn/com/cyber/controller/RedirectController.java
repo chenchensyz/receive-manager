@@ -163,7 +163,7 @@ public class RedirectController extends BaseController {
             byte[] bytes = Base64.encodeBase64(jsonObject.toString().getBytes(cs));
             baseParam = new String(bytes, cs);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         SocketClient.send(baseParam);
         LOGGER.info("发送成功:{}");
@@ -180,7 +180,7 @@ public class RedirectController extends BaseController {
 //                LOGGER.info("i:{},cacheable:{}", i, cacheable);
             } while (StringUtils.isBlank(cacheable) && i < maxTime / sleepTime);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             jedis.close();
         }

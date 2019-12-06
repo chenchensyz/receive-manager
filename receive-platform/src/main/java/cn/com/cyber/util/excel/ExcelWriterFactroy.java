@@ -4,16 +4,20 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA
- * @Date 2018-06-07
+ * excel操作
  */
 public class ExcelWriterFactroy extends ExcelWriter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelWriterFactroy.class);
+
     private OutputStream outputStream;
     private int sheetNo = 1;
 
@@ -34,7 +38,7 @@ public class ExcelWriterFactroy extends ExcelWriter {
             try {
                 outputStream.flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
         }
         return this;
@@ -46,7 +50,7 @@ public class ExcelWriterFactroy extends ExcelWriter {
         try {
             outputStream.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 }

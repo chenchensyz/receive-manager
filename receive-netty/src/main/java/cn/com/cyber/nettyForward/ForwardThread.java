@@ -68,7 +68,7 @@ public class ForwardThread implements Runnable {
             String baseResult = new String(baseByte, CodeUtil.cs);
             ctx.writeAndFlush(baseResult);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

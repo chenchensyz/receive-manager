@@ -1,6 +1,8 @@
 package cn.com.cyber.socket;
 
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -10,6 +12,8 @@ import java.net.Socket;
 import java.util.Map;
 
 public class TalkClient {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TalkClient.class);
 
     public static void send(int port, String url, Map<String, String> map) {
         FileInputStream fis = null;
@@ -51,27 +55,27 @@ public class TalkClient {
             dos.write("$_".getBytes("UTF-8"));
             System.out.println("========" + map.get("fileName") + "文件传输成功 ========");
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
             if (dos != null) {
                 try {
                     dos.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
             if (socket == null) {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }

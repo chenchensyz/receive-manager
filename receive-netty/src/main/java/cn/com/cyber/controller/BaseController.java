@@ -5,6 +5,8 @@ import cn.com.cyber.util.SpringUtil;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -13,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 public class BaseController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 
     //将图片输出至网页
     public static void setResponseFile(HttpServletResponse response, byte[] defalutImg,
@@ -81,12 +85,13 @@ public class BaseController {
             opStream.close();
             inStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
     /**
      * 以JSON格式输出
+     *
      * @param response
      */
     protected void responseOutWithJson(HttpServletResponse response, String responseObject) {
@@ -99,7 +104,7 @@ public class BaseController {
             out = response.getWriter();
             out.append(responseJSONObject.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (out != null) {
                 out.close();
@@ -130,7 +135,7 @@ public class BaseController {
             out = response.getWriter();
             out.append(responseObject);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (out != null) {
                 out.close();
@@ -166,7 +171,7 @@ public class BaseController {
                 throw new ValueRuntimeException(CodeUtil.REQUEST_TOKEN_ERR);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
             response.setStatus(401);
             throw new ValueRuntimeException(CodeUtil.USERINFO_ERR_VALIED); //用户登陆失败
         } finally {

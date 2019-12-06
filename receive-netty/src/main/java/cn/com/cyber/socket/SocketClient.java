@@ -26,7 +26,7 @@ public class SocketClient {
             socket = new Socket(url, port);
             socket.setKeepAlive(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -85,7 +85,7 @@ public class SocketClient {
 //            LOGGER.info("传输数据完毕");
 //            socket.shutdownOutput();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
             setNull();
         }
     }

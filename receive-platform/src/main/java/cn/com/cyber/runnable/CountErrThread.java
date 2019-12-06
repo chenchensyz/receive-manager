@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class CountErrThread implements Runnable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CountErrThread.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountErrThread.class);
 
     private ThreadPoolExecutor executor;
     private int seconds;
@@ -25,14 +25,14 @@ public class CountErrThread implements Runnable {
     @Override
     public void run() {
         while (run) {
-            LOG.info(String.format( "[monitor] [%d / %d] Active: %d, Completed: %d, Task: %d, isShutdown: %s, isTerminated: %s",
+            LOGGER.info(String.format( "[monitor] [%d / %d] Active: %d, Completed: %d, Task: %d, isShutdown: %s, isTerminated: %s",
                     this.executor.getPoolSize(), this.executor.getCorePoolSize(), this.executor.getActiveCount(),
                     this.executor.getCompletedTaskCount(), this.executor.getTaskCount(), this.executor.isShutdown(),
                     this.executor.isTerminated()));
             try {
                 Thread.sleep(seconds * 1000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }

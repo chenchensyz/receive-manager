@@ -63,7 +63,7 @@ public class FileUpController extends BaseController {
             try {
                 file.transferTo(dest);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
                 return RestResponse.failure(e.toString());
             }
         }

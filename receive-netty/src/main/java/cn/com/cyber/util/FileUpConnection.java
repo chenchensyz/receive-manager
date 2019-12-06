@@ -116,13 +116,13 @@ public class FileUpConnection {
             }
             conn.disconnect();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (outStream != null) {
                 try {
                     outStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
 
@@ -130,7 +130,7 @@ public class FileUpConnection {
                 try {
                     bufferedReader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }
@@ -273,7 +273,7 @@ public class FileUpConnection {
             Map<String, Object> map = postFileUp(url, requestParamsMap, files);
             System.out.println(map);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

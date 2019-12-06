@@ -63,7 +63,7 @@ public class AuthCheckInterceptor implements HandlerInterceptor {
         try {
             out = response.getWriter();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         out.print(RestResponse.res(code, msg));
         out.flush();

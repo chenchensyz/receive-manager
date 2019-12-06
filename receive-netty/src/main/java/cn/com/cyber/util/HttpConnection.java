@@ -117,7 +117,7 @@ public class HttpConnection {
                     conn.disconnect();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
         }
         map.put("code", code);
@@ -178,13 +178,13 @@ public class HttpConnection {
             }
             data = swapStream.toByteArray();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }

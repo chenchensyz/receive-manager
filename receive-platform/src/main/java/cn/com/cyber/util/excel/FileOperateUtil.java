@@ -2,18 +2,20 @@ package cn.com.cyber.util.excel;
 
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.exception.ValueRuntimeException;
-import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.net.URLEncoder;
-import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.Map;
 
 public class FileOperateUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileOperateUtil.class);
+
 
     public static String uploadFile(Map<String, MultipartFile> fileMap, String filePath) {
         // 保存路径设置
@@ -45,14 +47,14 @@ public class FileOperateUtil {
                 FileCopyUtils.copy(mf.getBytes(), uploadFile);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
             throw new ValueRuntimeException(CodeUtil.BASE_FILE_ERR_UP);
         }
         return multipartFileName;
     }
 
     public static void copyFile(File sourceFile, String targetFilePath) {
-        if(!sourceFile.exists()){
+        if (!sourceFile.exists()) {
             throw new ValueRuntimeException(CodeUtil.BASE_FILE_NULL);
         }
         // 目标文件路径
@@ -67,7 +69,7 @@ public class FileOperateUtil {
         try {
             FileCopyUtils.copy(new FileInputStream(sourceFile), new FileOutputStream(targetFile));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
             throw new ValueRuntimeException(CodeUtil.BASE_FILE_COPY_ERR);
         }
     }

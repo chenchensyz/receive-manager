@@ -65,7 +65,7 @@ public class UploadClientHandler extends ChannelInboundHandlerAdapter {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
             LOGGER.info("发送完毕:{} path:{}", start, path);

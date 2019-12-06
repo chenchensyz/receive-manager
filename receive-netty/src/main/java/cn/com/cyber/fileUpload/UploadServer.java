@@ -42,7 +42,7 @@ public class UploadServer implements Runnable {
             f.channel().closeFuture().sync();
             LOGGER.info("file end");
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
