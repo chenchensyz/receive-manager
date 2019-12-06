@@ -11,9 +11,9 @@ Configuration:
       value: debug
     - name: log.path
 #      value: D://log//logs
-      value: /home/receive-logs
+      value: /software/logs
     - name: project.name
-      value: receive-web
+      value: receive-platform
 
   Appenders:
     Console: #输出到控制台

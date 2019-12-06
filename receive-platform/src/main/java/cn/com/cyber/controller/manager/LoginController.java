@@ -120,6 +120,9 @@ public class LoginController extends BaseController {
                            @RequestParam("password") String password,
                            @RequestParam("source") String source,
                            HttpServletRequest request, Model model) {
+        Subject subject1 = SecurityUtils.getSubject();
+        subject1.getSession().setTimeout(0);
+        subject1.logout();
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(password)) {
             model.addAttribute("err", "请填写完整登录信息");
             return "redirect:/index";

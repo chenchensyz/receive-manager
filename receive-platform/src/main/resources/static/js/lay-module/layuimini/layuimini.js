@@ -56,7 +56,13 @@ layui.define(["element", "jquery"], function (exports) {
                             layuimini.initLogo(res.title);
                             layuimini.initMenu(res.data);
                             layuimini.initTab();
-                            $('.user-id').text(localStorage.getItem("userId"));
+                            $('.user-id').text(res.userId);
+                            if (!localStorage.getItem('userId')) {
+                                localStorage.setItem("userId", res.userId)
+                            }
+                            if (!localStorage.getItem('source')) {
+                                localStorage.setItem("source", res.source)
+                            }
                         }
                     } else {
                         layuimini.msg_error(res.message);

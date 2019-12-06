@@ -79,7 +79,8 @@ public class IndexController extends BaseController {
         }
         resultMap.put("permissons", permissons);
         String title = getApplication(environment, CodeUtil.PLATFORM_TITLE);
-        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(resultMap).setAny("title", title);
+        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(resultMap)
+                .setAny("title", title).setAny("userId", getShiroUser().userId).setAny("source", getShiroUser().source);
     }
 
     //修改密码

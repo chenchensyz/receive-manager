@@ -20,32 +20,6 @@ index.prototype = {
     },
 
     initSse: function () {
-        // if (!!window.EventSource) {
-        //     console.log('支持');
-        //     var source = new EventSource(getRootPath()+"/receiveLog/controlErrListData");//创建一个新的 EventSource对象，
-        //     source.onmessage = function (evt) {
-        //         var data = JSON.parse(evt.data);
-        //         layer.open({
-        //             type: 1
-        //             , offset: 'rb' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
-        //             , id: 'layerDemo' + 'rb' //防止重复弹出
-        //             , content: '<div style="padding: 20px 100px;">' + data[0].serviceName + '</div>'
-        //             , btn: '关闭全部'
-        //             , btnAlign: 'c' //按钮居中
-        //             , shade: 0 //不显示遮罩
-        //             , yes: function () {
-        //                 layer.closeAll();
-        //             }
-        //         });
-        //     }
-        // }
-        if (!localStorage.getItem('userId')) {
-            localStorage.setItem("userId", $('#userId').val())
-        }
-        if (!localStorage.getItem('source')) {
-            localStorage.setItem("source", $('#source').val())
-        }
-
         var socket;
         if (typeof (WebSocket) == "undefined") {
             console.log("您的浏览器不支持WebSocket");

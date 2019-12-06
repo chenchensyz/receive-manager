@@ -11,7 +11,7 @@ Configuration:
       value: debug
     - name: log.path
 #      value: D://log//logs
-      value: /home/receive-logs
+      value: /software/logs
     - name: project.name
       value: receive-netty
 

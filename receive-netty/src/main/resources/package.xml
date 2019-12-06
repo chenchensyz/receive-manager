@@ -14,6 +14,15 @@
         <fileSet>
             <directory>src/main/resources</directory>
             <outputDirectory>/</outputDirectory>
+            <excludes>
+                <exclude>application-dalian.properties</exclude>
+                <exclude>application-dev.properties</exclude>
+                <exclude>application-guiyang.properties</exclude>
+                <exclude>application-inter.properties</exclude>
+                <exclude>application-mobile.properties</exclude>
+                <!--<exclude>application-shandong.properties</exclude>-->
+                <exclude>application-wuhan.properties</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}</directory>
