@@ -2,14 +2,15 @@ package cn.com.cyber.controller.appInfo;
 
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppService;
+import cn.com.cyber.model.CodeInfo;
 import cn.com.cyber.service.AppServiceService;
+import cn.com.cyber.service.CodeInfoService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.RestResponse;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/appService")
@@ -30,6 +30,9 @@ public class AppServiceController extends BaseController {
 
     @Autowired
     private AppServiceService appServiceService;
+
+    @Autowired
+    private CodeInfoService codeInfoService;
 
     @Autowired
     private MessageCodeUtil messageCodeUtil;
@@ -52,6 +55,34 @@ public class AppServiceController extends BaseController {
         PageInfo<AppService> appServicePage = new PageInfo<AppService>(appServices);
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(appServices)
                 .setTotal(appServicePage.getTotal()).setPage(appServicePage.getLastPage());
+    }
+
+    //获取接口配置项
+    @RequestMapping("serviceCodeData")
+    @ResponseBody
+    public RestResponse getServiceCodeData() {
+        int code = CodeUtil.BASE_SUCCESS;
+        RestResponse restResponse = new RestResponse();
+        CodeInfo codeInfo = new CodeInfo();
+        //请求方法
+        codeInfo.setType(CodeUtil.CODE_METHOD);
+        List<CodeInfo> methodList = codeInfoService.getCodeInfoList(codeInfo);
+        //请求方法编码
+        codeInfo.setType(CodeUtil.CODE_CONTENTTYPE);
+        List<CodeInfo> contentTypeList = codeInfoService.getCodeInfoList(codeInfo);
+        //编码规则
+        codeInfo.setType(CodeUtil.CODEINFO_ENCODED);
+        List<CodeInfo> encodedList = codeInfoService.getCodeInfoList(codeInfo);
+        //资源类型
+        codeInfo.setType(CodeUtil.CODEINFO_SERVICETYPE);
+        List<CodeInfo> serviceTypeList = codeInfoService.getCodeInfoList(codeInfo);
+        //返回值
+        restResponse.setCode(code).setMessage(messageCodeUtil.getMessage(code));
+        restResponse.setAny(CodeUtil.CODE_METHOD, methodList);
+        restResponse.setAny(CodeUtil.CODE_CONTENTTYPE, contentTypeList);
+        restResponse.setAny(CodeUtil.CODEINFO_SERVICETYPE, serviceTypeList);
+        restResponse.setAny(CodeUtil.CODEINFO_ENCODED, encodedList);
+        return restResponse;
     }
 
     //跳转接口编辑页面
@@ -85,17 +116,6 @@ public class AppServiceController extends BaseController {
             code = (Integer) e.getValue();
         }
         return RestResponse.res(code, messageCodeUtil.getMessage(code));
-    }
-
-    @RequestMapping(value = "getContentType")
-    @ResponseBody
-    public RestResponse getContentType() {
-        Map<String, Object> map = Maps.newHashMap();
-        String method = messageCodeUtil.getMessage(CodeUtil.CODE_METHOD);
-        map.put("method", method.split(","));
-        String contentType = messageCodeUtil.getMessage(CodeUtil.CODE_CONTENTTYPE);
-        map.put("contentType", contentType.split(","));
-        return RestResponse.success().setData(map);
     }
 
     @RequestMapping("changeAppService")

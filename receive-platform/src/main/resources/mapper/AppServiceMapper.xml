@@ -128,6 +128,12 @@
             <if test="filePath != null">
                 file_path= #{filePath},
             </if>
+            <if test="serviceRule != null">
+                service_rule = #{serviceRule},
+            </if>
+            <if test="sourceType != null">
+                source_type = #{sourceType},
+            </if>
             update_time = sysdate
         </set>
         where id = #{id,jdbcType=BIGINT}

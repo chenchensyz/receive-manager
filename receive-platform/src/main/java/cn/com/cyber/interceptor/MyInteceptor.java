@@ -24,7 +24,6 @@ public class MyInteceptor implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //将所有/static/** 访问都映射到classpath:/static/ 目录下
         String fileRootPath = environment.getProperty(CodeUtil.FILE_ROOT_PATH);
-        System.out.println(fileRootPath);
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/file/**").addResourceLocations("file:" + fileRootPath);
     }

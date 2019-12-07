@@ -107,6 +107,8 @@ appServiceList.prototype = {
                 that.layForm.val("serviceInfoFrom", {
                     "serviceName": data.serviceName
                     , 'urlSuffix': data.urlSuffix
+                    , 'serviceRule': data.serviceRule
+                    , 'sourceType': data.sourceType
                 })
                 layer.open({
                     type: 1,
@@ -237,18 +239,30 @@ appServiceList.prototype = {
 
     getContentType: function () {
         var option = '<option value="" >请选择...</option>';
-        $.get(getRootPath() + '/appService/getContentType', function (res) {
+        $.get(getRootPath() + '/appService/serviceCodeData', function (res) {
             if (res.code == 0) {
-                $.each(res.data.method, function (i, ele) {
-                    option += "<option value='" + ele + "'>" + ele + "</option>";
+                $.each(res.method, function (i, ele) {
+                    option += "<option value='" + ele.code + "'>" + ele.name + "</option>";
                 });
                 $(".param-method").append(option);
 
                 option = '<option value="" >请选择...</option>';
-                $.each(res.data.contentType, function (i, ele) {
-                    option += "<option value='" + ele + "'>" + ele + "</option>";
+                $.each(res.content_type, function (i, ele) {
+                    option += "<option value='" + ele.code + "'>" + ele.name + "</option>";
                 });
                 $(".param-contentType").append(option);
+
+                option = '<option value="" >请选择...</option>'; //编码规则
+                $.each(res.encoded, function (i, ele) {
+                    option += "<option value='" + ele.code + "'>" + ele.name + "</option>";
+                });
+                $(".serviceRule").append(option);
+
+                option = '<option value="" >请选择...</option>'; //资源类型
+                $.each(res.service_type, function (i, ele) {
+                    option += "<option value='" + ele.code + "'>" + ele.name + "</option>";
+                });
+                $(".sourceType").append(option);
                 layui.form.render('select');
             }
         });

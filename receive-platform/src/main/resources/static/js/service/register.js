@@ -99,39 +99,35 @@ serviceRegister.prototype = {
                 demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
             }
         });
-
-        var option = '<option value="" >请选择...</option>';
-        $.getJSON(getRootPath() + "/api/dictionary.json", function (data) {
-            $.each(data.data, function (i, ele) {
-                option += "<option value='" + ele.id + "'>" + ele.item + "</option>";
-            })
-            $(".sourceType").append(option);
-            that.layForm.render('select');
-        });
     },
 
     getContentType: function (method, contentType) {
         var option = '<option value="" >请选择...</option>';
-        $.get(getRootPath() + '/appService/getContentType', function (res) {
+        $.get(getRootPath() + '/appService/serviceCodeData', function (res) {
             if (res.code == 0) {
-                $.each(res.data.method, function (i, ele) {
-                    if (method == ele) {
-                        option += "<option value='" + ele + "' selected=\"selected\">" + ele + "</option>";
-                    } else {
-                        option += "<option value='" + ele + "'>" + ele + "</option>";
-                    }
+                $.each(res.method, function (i, ele) {  //请求方法
+                    option += "<option value='" + ele.code + "'>" + ele.name + "</option>";
                 });
                 $(".method").append(option);
 
-                option = '<option value="" >请选择...</option>';
-                $.each(res.data.contentType, function (i, ele) {
-                    if (contentType == ele) {
-                        option += "<option value='" + ele + "' selected=\"selected\">" + ele + "</option>";
-                    } else {
-                        option += "<option value='" + ele + "'>" + ele + "</option>";
-                    }
+                option = '<option value="" >请选择...</option>'; //请求方法编码
+                $.each(res.content_type, function (i, ele) {
+                    option += "<option value='" + ele.code + "'>" + ele.name + "</option>";
                 });
                 $(".contentType").append(option);
+
+                option = '<option value="" >请选择...</option>'; //编码规则
+                $.each(res.encoded, function (i, ele) {
+                    option += "<option value='" + ele.code + "'>" + ele.name + "</option>";
+                });
+                $(".serviceRule").append(option);
+
+                option = '<option value="" >请选择...</option>'; //资源类型
+                $.each(res.service_type, function (i, ele) {
+                    option += "<option value='" + ele.code + "'>" + ele.name + "</option>";
+                });
+                $(".sourceType").append(option);
+
                 layui.form.render('select');
             }
         });
@@ -187,9 +183,9 @@ serviceRegister.prototype = {
             , accept: 'file' //普通文件
             , exts: 'xlsx' //只允许上传excel
             , done: function (res) {
-                if(res.code == 0){
+                if (res.code == 0) {
                     layer.msg(res.message);
-                }else {
+                } else {
                     layer.alert(res.message, function () {
                         layer.closeAll();
                     });

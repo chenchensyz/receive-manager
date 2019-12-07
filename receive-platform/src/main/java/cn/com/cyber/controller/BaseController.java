@@ -8,6 +8,7 @@ import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -49,8 +50,7 @@ public class BaseController {
             byte[] bytes = environment.getProperty(code).getBytes("ISO-8859-1");
             title = new String(bytes, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-//            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         return title;
     }
@@ -177,9 +177,9 @@ public class BaseController {
     public AppService valiedParams(String appKey, String serviceKey) {
         int msgCode;
         //根据appKey和serviceKey查询appinfo信息
-//        if (StringUtils.isBlank(appKey) || StringUtils.isBlank(serviceKey)) {
-//            throw new ValueRuntimeException(CodeUtil.REQUEST_PARAM_NULL); //请求的参数中缺少查询条件
-//        }
+        if (StringUtils.isBlank(appKey) || StringUtils.isBlank(serviceKey)) {
+            throw new ValueRuntimeException(CodeUtil.REQUEST_PARAM_NULL); //请求的参数中缺少查询条件
+        }
         AppService appService = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
         if (appService == null) {  //应用接口需授权
             appService = appServiceService.getValidAppAndService(appKey, serviceKey);
@@ -187,7 +187,7 @@ public class BaseController {
 
         if (appService == null) {
             msgCode = CodeUtil.REQUEST_KEY_FILED;
-//            throw new ValueRuntimeException(msgCode);
+            throw new ValueRuntimeException(msgCode);
         }
 
         if (CodeUtil.APP_STATE_ENABLE != appService.getAppState()) {

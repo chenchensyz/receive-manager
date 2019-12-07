@@ -14,7 +14,7 @@ public class CodeUtil {
     }
 
     //code_info表类型
-    public static final String CODE_METHOD = "http_method";
+    public static final String CODE_METHOD = "method";
     public static final String CODE_CONTENTTYPE = "content_type";
     public static final String CODE_INSTRUCTIONSPATH = "instructionsPath";
     public static final String CODE_SERVICE_EXCEL = "serviceExcel";
@@ -37,6 +37,10 @@ public class CodeUtil {
     public static final String METHOD_POST = "POST";
     public static final String METHOD_GET = "GET";
     public static final String MODEL_REQUSET_URL = "/netty/modelRedirect";
+
+    //编码表类型
+    public static final String CODEINFO_SERVICETYPE = "service_type";
+    public static final String CODEINFO_ENCODED = "encoded";
 
     public static final String FILE_JEDIS_PREFIX = "file:";  //文件保存到redis前缀
 
@@ -68,7 +72,6 @@ public class CodeUtil {
     public static final String MAPPER_DB = "mapper_db";
     public static final String MAPPER_DB_ORACLE = "oracle";
     public static final String MAPPER_DB_MYSQL = "mysql";
-
 
     //响应状态码
     public static final int BASE_SUCCESS = 0; //请求成功
