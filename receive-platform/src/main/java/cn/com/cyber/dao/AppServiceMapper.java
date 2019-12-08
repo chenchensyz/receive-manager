@@ -1,6 +1,5 @@
 package cn.com.cyber.dao;
 
-import cn.com.cyber.model.AppModel;
 import cn.com.cyber.model.AppService;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,5 +25,7 @@ public interface AppServiceMapper extends BaseDao<AppService> {
     List<AppService> getAppServiceByRecordId(Integer recordId);
 
     List<AppService> getAppValidListData(AppService appService);
+
+    List<AppService> getReceiveServiceRanking();
 
 }

@@ -86,7 +86,15 @@ home.prototype = {
             },
             cols: [[
                 {type: 'numbers', title: '排名'}
-                , {field: 'appName', title: '应用名称'}
+                , {
+                    field: 'serviceName', templet: function (d) {
+                        var span = '<span>' + d.serviceName + '</span>';
+                        if (d.appName) {
+                            span = '<span>' + d.serviceName + '(' + d.appName + ')</span>';
+                        }
+                        return span;
+                    }, title: '服务名称', width: 183
+                }
                 , {field: 'receiveNum', title: '访问量(次)'}
             ]]
         });

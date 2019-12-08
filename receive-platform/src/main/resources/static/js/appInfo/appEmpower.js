@@ -22,12 +22,27 @@ appEmpower.prototype = {
 
     initData: function () {
         var that = this;
-        that.layDtree.render({
+        var DTree = that.layDtree.render({
             elem: "#appEmpower",
             url: getRootPath() + '/appInfo/queryAppList', // 该JSON格式被配置过了
             dataStyle: "layuiStyle",  //使用layui风格的数据格式
             // dataFormat: "list",  //配置data的风格为list
-            response: {statusName: "code", statusCode: 0, rootName: "data", treeId: "id"} // 这里指定了返回的数据格式，组件会根据这些值来替换返回JSON中的指定格式，从而读取信息
+            response: {statusName: "code", statusCode: 0, rootName: "data", treeId: "id"}, // 这里指定了返回的数据格式，组件会根据这些值来替换返回JSON中的指定格式，从而读取信息
+            initLevel: 1,
+            done: function (data, obj) {
+                $("#search_btn").unbind("click");
+                $("#search_btn").click(function () {
+                    var value = $("#searchInput").val();
+                    if (value) {
+                        var flag = DTree.searchNode(value); // 内置方法查找节点
+                        if (!flag) {
+                            layer.msg("该名称节点不存在！", {icon: 5});
+                        }
+                    } else {
+                        DTree.menubarMethod().refreshTree(); // 内置方法刷新树
+                    }
+                });
+            }
         });
         // 点击节点名称获取选中节点值
         that.layDtree.on("node('appEmpower')", function (obj) {

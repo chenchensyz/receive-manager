@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,8 @@ public class LoginController {
 
     //跳转登录页
     @RequestMapping("toLogin")
-    public String toLogin() {
+    public String toLogin(HttpServletResponse response) {
+        response.setStatus(401);
         return "login";
     }
 

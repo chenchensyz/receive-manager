@@ -1,7 +1,7 @@
 package cn.com.cyber.service;
 
 import cn.com.cyber.model.AppInfo;
-import cn.com.cyber.model.AppModel;
+import cn.com.cyber.model.AppService;
 
 import java.util.List;
 import java.util.Map;
@@ -14,4 +14,7 @@ public interface RankingService {
     Map<String,Object> inletCount();
 
     Map<String,Object> receiveLogRanking(String startTime, String endTime, List<String> dateList);
+
+    //统计接口访问排行
+    List<AppService> getReceiveServiceRanking();
 }

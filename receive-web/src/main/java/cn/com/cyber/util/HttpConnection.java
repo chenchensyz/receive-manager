@@ -253,13 +253,7 @@ public class HttpConnection {
     }
 
     public static void main(String[] args) {
-        Date s = getTimesWeekmorning();
-        for (int i = 0; i < 7; i++) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(getTimesWeekmorning());
-            cal.add(Calendar.DAY_OF_WEEK, i);
-            String format = DateUtil.format(cal.getTime(), DateUtil.YMD_DASH);
-            System.out.println(format);
-        }
+        double a=3.6;
+        System.out.println(a-(a+a));
     }
 }

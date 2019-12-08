@@ -123,7 +123,8 @@
         (
         select count(t.id) receive_num, to_char(t.request_time, 'yyyy-MM-dd') dt
         from SE_RECEIVE_LOG t
-        where to_char(t.request_time, 'yyyy-MM-dd') between #{startTime} and #{endTime}
+        where t.request_time
+         between TO_DATE(#{startTime}, 'yyyy-MM-dd') and TO_DATE(#{endTime}, 'yyyy-MM-dd')
         <if test="code == 1">
             and t.response_code = 200
         </if>

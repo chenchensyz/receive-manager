@@ -68,6 +68,8 @@ public class AppService extends BaseEntity {
 
     private String filePath;  //文件路径后缀
 
+    private Integer receiveNum;  //访问量
+
     public Long getId() {
         return id;
     }
@@ -315,5 +317,13 @@ public class AppService extends BaseEntity {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public Integer getReceiveNum() {
+        return receiveNum;
+    }
+
+    public void setReceiveNum(Integer receiveNum) {
+        this.receiveNum = receiveNum;
     }
 }

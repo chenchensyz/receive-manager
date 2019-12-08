@@ -5,7 +5,7 @@ package cn.com.cyber.controller.manager;
  */
 
 import cn.com.cyber.controller.BaseController;
-import cn.com.cyber.model.AppInfo;
+import cn.com.cyber.model.AppService;
 import cn.com.cyber.service.RankingService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.MessageCodeUtil;
@@ -41,7 +41,7 @@ public class RankingController extends BaseController {
     @ResponseBody
     public RestResponse appRanking() {
         int code = CodeUtil.BASE_SUCCESS;
-        List<AppInfo> appRanking = rankingService.getReceiveAppRanking();
+        List<AppService> appRanking = rankingService.getReceiveServiceRanking();
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(appRanking);
     }
 

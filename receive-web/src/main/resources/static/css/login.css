@@ -156,16 +156,17 @@ input[type=submit], input[type=button] {
     line-height: 18px;
 }
 
-.login-btn{
+.login-btn {
     height: 41px;
     line-height: 38px;
     padding: 2px 126px;
 }
 
-.login-operation{
+.login-operation {
     width: 279px;
 }
-.regiest{
+
+.regiest {
     float: right;
 }
 
@@ -173,4 +174,26 @@ input[type=submit], input[type=button] {
     float: left;
     width: 193px;
     margin-right: 10px;
+}
+
+.foot {
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    color: white;
+    font-size: 27px;
+    background-color: #014C7C;
+    height: 36px;
+}
+
+.foot-text {
+    margin-top: 7px;
+    margin-left: 187px;
+}
+
+.foot span {
+    margin-top: 11px;
+    margin-right: 20px;
+    font-size: medium;
 }

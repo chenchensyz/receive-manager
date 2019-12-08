@@ -54,6 +54,12 @@ public class RedirectDLController extends BaseController {
             JSONObject jsonValied = parameter.getJSONObject(0);
             String appKey = jsonValied.getString("appKey");
             String serviceKey = jsonValied.getString("serviceKey");
+            if (StringUtils.isBlank(appKey)) {
+                appKey = jsonValied.getString("appkey");
+            }
+            if (StringUtils.isBlank(serviceKey)) {
+                serviceKey = jsonValied.getString("servicekey");
+            }
 
             String serviceHeader = jsonValied.getString("serviceHeader"); //应用头消息
             String serviceUrl = jsonValied.getString("serviceUrl");

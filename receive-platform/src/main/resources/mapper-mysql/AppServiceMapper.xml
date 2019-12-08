@@ -28,6 +28,7 @@
         <result column="app_name" property="appName"/>
         <result column="app_key" property="appKey"/>
         <result column="approve_app_name" property="approveAppName"/>
+        <result column="receive_num" property="receiveNum"/>
 
         <result column="control_state" property="controlState"/>
         <result column="err_remark" property="errRemark"/>
@@ -179,6 +180,17 @@
         left join td_company tc on ssi.creator=tc.id
         <include refid="sql_where"/>
         order by ssi.create_time desc,ta.id asc
+    </select>
+
+    <select id="getReceiveServiceRanking" resultMap="BaseResultMap">
+        select t.* from (
+        select ssi.id, ssi.service_name, ta.id aid, ta.name app_name, count(srl.id) receive_num
+        from se_service_info ssi
+        left join se_receive_log srl
+        on ssi.service_key = srl.service_key
+        left join td_app ta on ssi.app_id = ta.id
+        group by ssi.id, ssi.service_name,ta.id,ta.name
+        order by receive_num desc) t limit 10
     </select>
 
     <update id="updateControl" parameterType="cn.com.cyber.model.AppService">

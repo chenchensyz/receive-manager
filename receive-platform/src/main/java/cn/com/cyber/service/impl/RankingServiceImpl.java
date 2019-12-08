@@ -4,16 +4,12 @@ import cn.com.cyber.dao.AppInfoMapper;
 import cn.com.cyber.dao.AppServiceMapper;
 import cn.com.cyber.dao.ReceiveLogMapper;
 import cn.com.cyber.model.AppInfo;
-import cn.com.cyber.model.AppModel;
-import cn.com.cyber.service.AppInfoService;
+import cn.com.cyber.model.AppService;
 import cn.com.cyber.service.RankingService;
 import com.google.common.collect.Maps;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,5 +50,10 @@ public class RankingServiceImpl implements RankingService {
         map.put("sucCount", sucCount);
         map.put("errCount", errCount);
         return map;
+    }
+
+    @Override
+    public List<AppService> getReceiveServiceRanking() {
+        return appServiceMapper.getReceiveServiceRanking();
     }
 }

@@ -103,7 +103,7 @@ public class CompanyInfo extends BaseEntity {
     }
 
     public String getCreateTimeStr() {
-        return createTime==null?"":DateUtil.format(createTime,DateUtil.YMD_DASH_WITH_TIME);
+        return createTime == null ? "" : DateUtil.format(createTime, DateUtil.YMD_DASH_WITH_TIME);
     }
 
     public void setCreateTimeStr(String createTimeStr) {
@@ -111,7 +111,7 @@ public class CompanyInfo extends BaseEntity {
     }
 
     public String getUpdateTimeStr() {
-        return updateTime==null?"": DateUtil.format(updateTime,DateUtil.YMD_DASH_WITH_TIME);
+        return updateTime == null ? "" : DateUtil.format(updateTime, DateUtil.YMD_DASH_WITH_TIME);
     }
 
     public void setUpdateTimeStr(String updateTimeStr) {
