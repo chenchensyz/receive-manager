@@ -35,6 +35,8 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">appKey</label>
                             <div class="layui-input-inline">
@@ -64,7 +66,7 @@
 <div id="serviceDialog" class="layer_self_wrap" style="margin-top: 20px;">
     <form id="serviceInfoFrom" class="layui-form layui-form-pane" lay-filter="serviceInfoFrom"
           style="margin-top: 20px;margin-left: 44px;">
-        <input class="param-id"  name="id" type="hidden"/>
+        <input class="param-id" name="id" type="hidden"/>
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">所属应用：</label>
@@ -147,7 +149,9 @@
 
         <div class="layui-form-item  submit-div">
             <div class="layui-input-block">
-                <button class="layui-btn layui-btn-normal submit-apply" lay-submit="" lay-filter="addOrEdit" data-type="0" style="display: none">提交</button>
+                <button class="layui-btn layui-btn-normal submit-apply" lay-submit="" lay-filter="addOrEdit"
+                        data-type="0" style="display: none">提交
+                </button>
                 <button class="layui-btn" lay-submit="" lay-filter="addOrEdit" data-type="1">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary param-reset-btn">重置</button>
             </div>

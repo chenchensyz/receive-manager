@@ -48,11 +48,11 @@ receiveLogList.prototype = {
                 , {
                     field: 'right', align: 'center', templet: function (d) {
                         var span = '<span>请求成功</span>'
-                        if (d.filePath) {
+                        if (d.responseCode != 200) {
                             span = '<a class="layui-btn layui-btn-xs" lay-event="view">查看详情</a>';
                         }
                         return span;
-                    }, title: '操作',width: 124
+                    }, title: '操作', width: 124
                 }
             ]]
             , done: function (res, curr, count) {

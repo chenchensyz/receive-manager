@@ -66,6 +66,7 @@ appServiceList.prototype = {
                         return span;
                     }, title: '附件', align: 'center'
                 }
+                , {field: 'createUser', title: '创建者', align: 'center'}
                 , {field: 'createTimeStr', title: '创建时间', width: 183, align: 'center'}
                 , {
                     field: 'right', templet: function (d) {
@@ -117,7 +118,7 @@ appServiceList.prototype = {
                     resize: false,
                     shadeClose: true,
                     maxmin: true, //开启最大化最小化按钮
-                    area: ['600px', '100%'], //宽高
+                    area: ['600px'], //宽高
                     content: $("#serviceDialog")
                 });
             } else if (obj.event === 'view') {

@@ -24,11 +24,11 @@
     margin-left: 190px !important;
 }
 
-.layui-form-item .layui-input-inline {
-    float: left;
-    width: 432px;
-    margin-right: 11px;
-}
+/*.layui-form-item .layui-input-inline {*/
+    /*float: left;*/
+    /*width: 432px;*/
+    /*margin-right: 11px;*/
+/*}*/
 
 .layui-form-pane .layui-form-label {
     width: 136px !important;

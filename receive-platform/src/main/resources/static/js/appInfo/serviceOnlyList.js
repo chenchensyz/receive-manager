@@ -122,7 +122,7 @@ appServiceList.prototype = {
                     resize: false,
                     shadeClose: true,
                     maxmin: true, //开启最大化最小化按钮
-                    area: ['600px', '100%'], //宽高
+                    area: ['600px'], //宽高
                     content: $("#serviceDialog")
                 });
             } else if (obj.event === 'view') {

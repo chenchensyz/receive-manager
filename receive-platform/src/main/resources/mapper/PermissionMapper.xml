@@ -204,16 +204,16 @@
   <resultMap id="PermModelMap"  type="cn.com.cyber.model.PermModel">
     <result property="id" column="id"/>
     <result property="title" column="name" />
+    <!--<result property="icon" column="icon" />-->
     <collection property="child" ofType="cn.com.cyber.model.PermModel" javaType="list">
       <result property="id" column="sp_id"/>
       <result property="title" column="sp_name" />
       <result property="href" column="url" />
-      <result property="icon" column="icon" />
     </collection>
   </resultMap>
 
   <select id="getPermValidByCode" resultMap="PermModelMap">
-    SELECT  sc.id , sc.name, sp.id sp_id, sp.name sp_name, sp.url  FROM
+    SELECT  sc.id , sc.name, sc.icon, sp.id sp_id, sp.name sp_name, sp.url  FROM
      (select * from se_permission
       WHERE code in
       <foreach collection="codes" item="code" index="index" open="(" close=")" separator=",">

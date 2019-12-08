@@ -24,11 +24,26 @@ appApplyList.prototype = {
 
     initData: function () {
         var that = this;
-        that.layDtree.render({
+        var DTree = that.layDtree.render({
             elem: "#appSelect",
             url: getRootPath() + '/appInfo/queryAppList', // 该JSON格式被配置过了
             dataStyle: "layuiStyle",  //使用layui风格的数据格式
             response: {statusName: "code", statusCode: 0, rootName: "data", treeId: "id"} // 这里指定了返回的数据格式，组件会根据这些值来替换返回JSON中的指定格式，从而读取信息
+            , initLevel: 1
+            , done: function (data, obj) {
+                $("#search_btn").unbind("click");
+                $("#search_btn").click(function () {
+                    var value = $("#searchInput").val();
+                    if (value) {
+                        var flag = DTree.searchNode(value); // 内置方法查找节点
+                        if (!flag) {
+                            layer.msg("该名称节点不存在！", {icon: 5});
+                        }
+                    } else {
+                        DTree.menubarMethod().refreshTree(); // 内置方法刷新树
+                    }
+                });
+            }
         });
         // 点击节点名称获取选中节点值
         that.layDtree.on("node('appSelect')", function (obj) {
@@ -63,7 +78,7 @@ appApplyList.prototype = {
             elem: "#interfaceSelect",
             url: getRootPath() + '/appInfo/appServiceTree',
             initLevel: 1,  // 指定初始展开节点级别
-            type:"all",
+            type: "all",
             checkbarData: "change",
             checkbar: true,
             checkbarType: "no-all",
@@ -83,11 +98,15 @@ appApplyList.prototype = {
             var appKey = $('.appKey').val();
             var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
             if (!appId) {
-                layer.alert('请选择应用后重试', function () {layer.closeAll();});
+                layer.alert('请选择应用后重试', function () {
+                    layer.closeAll();
+                });
                 return false;
             }
             if (params.length == 0) {
-                layer.alert('请选择接口后重试', function () {layer.closeAll();});
+                layer.alert('请选择接口后重试', function () {
+                    layer.closeAll();
+                });
                 return false;
             }
 
