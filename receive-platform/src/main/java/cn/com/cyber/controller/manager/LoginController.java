@@ -68,6 +68,7 @@ public class LoginController extends BaseController {
             return RestResponse.failure("请填写完整登录信息");
         }
         if ("0".equals(source)) {
+            getPstoreUser(userId, password);
             password = EncryptUtils.MD5Encode(password);
         }
         UsernamePasswordToken token = new UsernamePasswordToken(userId, password, source);
@@ -128,9 +129,7 @@ public class LoginController extends BaseController {
             return "redirect:/index";
         }
         if ("0".equals(source)) {
-            if (getPstoreUser(userId, password) == 0) {
-                return "redirect:/index";
-            }
+            getPstoreUser(userId, password);
             password = EncryptUtils.MD5Encode(password);
         }
         UsernamePasswordToken token = new UsernamePasswordToken(userId, password, source);
@@ -164,26 +163,28 @@ public class LoginController extends BaseController {
         return "redirect:/index";
     }
 
-    private int getPstoreUser(String userId, String password) {
+    private void getPstoreUser(String userId, String password) {
         User user = new User();
         user.setUserId(userId);
         user.setPassword(password);
-        int i = userService.selectAdmin(user);
-        if (i == 0) {
-            return 0;
+        try {
+            int i = userService.selectAdmin(user);
+            if (i > 0) {
+                User localUser = userService.getByUserId(userId);
+                String newPass = EncryptUtils.MD5Encode(password);
+                int count;
+                if (localUser == null) {
+                    user.setRoleId(1);
+                    user.setPassword(newPass);
+                    user.setNickName("pstore用户");
+                    count = userService.insert(user);
+                } else {
+                    localUser.setPassword(newPass);
+                    count = userService.update(localUser);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.info("未合并pstore");
         }
-        User localUser = userService.getByUserId(userId);
-        String newPass = EncryptUtils.MD5Encode(password);
-        int count;
-        if (localUser == null) {
-            user.setRoleId(1);
-            user.setPassword(newPass);
-            user.setNickName("pstore用户");
-            count = userService.insert(user);
-        } else {
-            localUser.setPassword(newPass);
-            count = userService.update(localUser);
-        }
-        return count;
     }
 }

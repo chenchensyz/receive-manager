@@ -35,26 +35,26 @@
         <result column="control_time" property="controlTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, service_name, service_key, app_id, url_suffix, method, content_type, state, creator,
-    reviser, create_time, update_time, service_ype, refuse_msg,introduce, remark, approve_app_name,
-    service_rule, source_type, file_path
-  </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        id, service_name, service_key, app_id, url_suffix, method, content_type, state, creator,
+        reviser, create_time, update_time, service_ype, refuse_msg,introduce, remark, approve_app_name,
+        service_rule, source_type, file_path
+    </sql>
+    <select id="getByServiceKey" resultMap="BaseResultMap" parameterType="string">
         select
         <include refid="Base_Column_List"/>
         from se_service_info
-        where id = #{id,jdbcType=BIGINT}
+        where service_key = #{serviceKey}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from se_service_info
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-    <insert id="insertSelective" parameterType="cn.com.cyber.model.AppService">
+        delete from se_service_info
+        where id = #{id,jdbcType=BIGINT}
+     </delete>
+    <insert id="insertService" parameterType="cn.com.cyber.model.AppService">
         <selectKey keyProperty="id" order="BEFORE" resultType="long">
             SELECT SEQ_SE_SERVICE_INFO.NEXTVAL AS VALUE FROM DUAL
         </selectKey>
         insert into se_service_info
-        (id, service_name, service_key, url_suffix, method, service_rule, source_type,
+        (id, service_name, service_key, url_suffix, method,
         <if test="appId != null">
             app_id,
         </if>
@@ -73,8 +73,14 @@
         <if test="filePath != null">
             file_path,
         </if>
+        <if test="serviceRule != null">
+            service_rule,
+        </if>
+        <if test="sourceType != null">
+            source_type,
+        </if>
         state, creator, create_time)
-        VALUES(#{id},#{serviceName},#{serviceKey},#{urlSuffix},#{method}, #{serviceRule},#{sourceType},
+        VALUES(#{id},#{serviceName},#{serviceKey},#{urlSuffix},#{method},
         <if test="appId != null">
             #{appId},
         </if>
@@ -93,10 +99,16 @@
         <if test="filePath != null">
             #{filePath},
         </if>
+        <if test="serviceRule != null">
+           #{serviceRule},
+        </if>
+        <if test="sourceType != null">
+           #{sourceType},
+        </if>
         0,#{creator},sysdate)
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="cn.com.cyber.model.AppService">
+    <update id="updateService" parameterType="cn.com.cyber.model.AppService">
         update se_service_info
         <set>
             <if test="serviceName != null">
@@ -180,7 +192,7 @@
         </where>
     </sql>
 
-    <select id="getList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppService">
+    <select id="getServiceList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.AppService">
         select ssi.*,ta.name app_name,tc.name cname, ta.app_uuid app_key from se_service_info ssi
         left join td_app ta on ssi.app_id=ta.id
         left join td_company tc on ssi.creator=tc.id

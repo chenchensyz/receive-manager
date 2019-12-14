@@ -4,11 +4,9 @@ package cn.com.cyber.controller.redirect;
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.ReceiveLog;
+import cn.com.cyber.service.AppServiceService;
 import cn.com.cyber.service.ReceiveLogService;
-import cn.com.cyber.util.CodeUtil;
-import cn.com.cyber.util.HttpConnection;
-import cn.com.cyber.util.MessageCodeUtil;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.*;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -40,6 +38,9 @@ public class RedirectController extends BaseController {
     @Autowired
     private ReceiveLogService receiveLogService;
 
+    @Autowired
+    private AppServiceService appServiceService;
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public String redirect(HttpServletRequest request, HttpServletResponse response, @RequestBody(required = false) String jsonData) {
@@ -51,7 +52,7 @@ public class RedirectController extends BaseController {
         String result = "";
         try {
             //appKey,serviceKey
-            AppService appService = valiedParams(appKey, serviceKey);
+            AppService appService = validParams(appKey, serviceKey);
             //appKey,serviceKey写入日志
             receiveLog.setAppKey(appKey);
             receiveLog.setServiceKey(serviceKey);
@@ -66,17 +67,18 @@ public class RedirectController extends BaseController {
             }
             //发送请求
             LOGGER.info("params:{}", params);
-            Map<String, Object> resultMap = HttpConnection.requestNewParams(params, appService.getMethod(), appService.getContentType(), appService.getUrlSuffix(), serviceHeader);
+            ResultData resultData = HttpConnection.requestNewParams(params, appService.getMethod(), appService.getContentType(), appService.getUrlSuffix(), serviceHeader);
             receiveLog.setResponseTime(new Date());
-            if (resultMap.get("code") != null) {
-                if (CodeUtil.HTTP_OK != (Integer) resultMap.get("code")) {
-                    receiveLog.setRemark(resultMap.get("result").toString());
-                }
-                result = resultMap.get("result").toString();
-                receiveLog.setResponseCode((Integer) resultMap.get("code"));
+            if (resultData != null && resultData.getCode() != null) {
+                //日志
+                receiveLog.setParams(params);
+                receiveLog.setRemark(resultData.getResult());
+                receiveLog.setResponseCode(resultData.getCode());
+                //返回值
+                result = resultData.getResult();
             }
             receiveLogService.saveReceiveLog(receiveLog); //保存日志
-            response.setStatus((Integer) resultMap.get("code"));
+            response.setStatus(resultData.getCode());
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();
             result = JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)));
@@ -87,6 +89,18 @@ public class RedirectController extends BaseController {
         }
         LOGGER.info("本次请求结束 result:{}", result);
         return result;
+    }
+
+    //校验appkey和servicekey是否正确
+    @RequestMapping("/validAppAndService")
+    @ResponseBody
+    public RestResponse validAppAndService(String appKey, String serviceKey) {
+        int code = CodeUtil.BASE_SUCCESS;
+        AppService service = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
+        if (service == null) {
+            code = CodeUtil.REQUEST_KEY_FILED;
+        }
+        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(service.getUrlSuffix());
     }
 
     @RequestMapping("/getTest")

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AppServiceService {
 
-    AppService getById(Long id);
+    AppService getByServiceKey(String serviceKey);
 
     List<AppService> getList(AppService appService);
 

@@ -174,15 +174,21 @@ public class BaseController {
         }
     }
 
-    public AppService valiedParams(String appKey, String serviceKey) {
+    public AppService validParams(String appKey, String serviceKey) {
         int msgCode;
         //根据appKey和serviceKey查询appinfo信息
         if (StringUtils.isBlank(appKey) || StringUtils.isBlank(serviceKey)) {
             throw new ValueRuntimeException(CodeUtil.REQUEST_PARAM_NULL); //请求的参数中缺少查询条件
         }
-        AppService appService = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
-        if (appService == null) {  //应用接口需授权
-            appService = appServiceService.getValidAppAndService(appKey, serviceKey);
+
+        AppService appService;
+        if (appKey.equals(serviceKey)) { //独立接口
+            appService = appServiceService.getByServiceKey(serviceKey);
+        } else { //应用接口
+            appService = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
+            if (appService == null) {  //应用接口需授权
+                appService = appServiceService.getValidAppAndService(appKey, serviceKey);
+            }
         }
 
         if (appService == null) {

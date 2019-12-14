@@ -4,7 +4,6 @@ import cn.com.cyber.dao.AppServiceMapper;
 import cn.com.cyber.dao.ReceiveLogMapper;
 import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.ReceiveLog;
-import cn.com.cyber.service.AppServiceService;
 import cn.com.cyber.service.ReceiveLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +32,6 @@ public class ReceiveLogServiceImpl implements ReceiveLogService {
 
     @Override
     public List<AppService> getControlListData(AppService appService) {
-        return appServiceMapper.getList(appService);
+        return appServiceMapper.getServiceList(appService);
     }
 }

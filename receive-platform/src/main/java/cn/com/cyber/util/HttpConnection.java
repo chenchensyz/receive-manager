@@ -32,8 +32,8 @@ public class HttpConnection {
         return uuidStr;
     }
 
-    public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType, Map<String, String> serviceHeader) {
-        Map<String, Object> map = Maps.newHashMap();
+    public static ResultData httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType, Map<String, String> serviceHeader) {
+        ResultData resultData=new ResultData();
         String result = null;
         HttpURLConnection conn = null;
         OutputStream outputStream = null;
@@ -117,12 +117,12 @@ public class HttpConnection {
                 LOGGER.error(e.getMessage(), e);
             }
         }
-        map.put("code", code);
-        map.put("result", result);
-        return map;
+        resultData.setCode(code);
+        resultData.setResult(result);
+        return resultData;
     }
 
-    public static Map<String, Object> requestNewParams(String params, String method, String contentType, String requestUrl, Map<String, String> serviceHeader) throws UnsupportedEncodingException {
+    public static ResultData requestNewParams(String params, String method, String contentType, String requestUrl, Map<String, String> serviceHeader) throws UnsupportedEncodingException {
         String newParam = "";
         if (StringUtils.isNotBlank(params)) {
             JSONObject dataParams = JSONObject.parseObject(params);
@@ -171,8 +171,8 @@ public class HttpConnection {
         }
         LOGGER.info("newParam:{}", newParam);
         LOGGER.info("method:{},ContentType:{},url:{}", method, contentType, requestUrl);
-        Map<String, Object> resultMap = httpRequest(requestUrl, method, contentType, newParam, null, serviceHeader);
-        return resultMap;
+        ResultData resultData = httpRequest(requestUrl, method, contentType, newParam, null, serviceHeader);
+        return resultData;
     }
 
     public static String newParams(Map<String, Object> paramMap, String method, String contentType, String

@@ -785,13 +785,7 @@ layui.define(["element", "jquery"], function (exports) {
      */
     $('body').on('click', '[data-download]', function () {
         var loading = layer.load(0, {shade: false, time: 2 * 1000});
-        $.get(getRootPath() + "/index/downLoadText", function (res) {
-            if (res.code == 0) {
-                location.href = res.data;
-            } else {
-                layuimini.msg_error(res.message);
-            }
-        });
+        location.href = getRootPath() + '/file/file-model/' + localStorage.getItem('platform_title') + '说明文档(app调用版).docx';
         layer.close(loading);
     });
 

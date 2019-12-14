@@ -127,6 +127,7 @@
   </update>
   <sql id="sql_where" >
     <where >
+      and state = 1
       <if test="id != null" >
          and id = #{id,jdbcType=BIGINT}
       </if>
@@ -141,9 +142,6 @@
       </if>
       <if test="url != null and url !=''" >
          and url = #{url,jdbcType=VARCHAR}
-      </if>
-      <if test="state != null" >
-         and state = #{state,jdbcType=INTEGER}
       </if>
       <if test="type != null" >
          and type = #{type,jdbcType=INTEGER}
@@ -198,6 +196,7 @@
     <foreach collection="codes" item="code" index="index" open="(" close=")" separator=",">
       #{code}
     </foreach>
+    and state = 1
     order by sp.id
   </select>
 

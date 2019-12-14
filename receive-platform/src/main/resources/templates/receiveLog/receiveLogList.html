@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::commonHeader('日志列表')"></head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/appServiceList.css}">
+</head>
 
 <body>
 <div class="layuimini-container">
@@ -13,7 +16,8 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">服务名称</label>
                             <div class="layui-input-inline">
-                                <input id="serviceName" name="serviceName" autocomplete="off" class="layui-input" type="text"/>
+                                <input id="serviceName" name="serviceName" autocomplete="off" class="layui-input"
+                                       type="text"/>
                             </div>
 
                             <label class="layui-form-label">调用应用</label>
@@ -25,7 +29,8 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">serviceKey</label>
                             <div class="layui-input-inline">
-                                <input id="serviceKey" name="serviceKey" autocomplete="off" class="layui-input" type="text"/>
+                                <input id="serviceKey" name="serviceKey" autocomplete="off" class="layui-input"
+                                       type="text"/>
                             </div>
 
                             <label class="layui-form-label">appKey</label>
@@ -37,12 +42,13 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">开始时间</label>
                             <div class="layui-input-inline">
-                                <input type="text" class="layui-input" autocomplete="off" id="beginTime" name="beginTime" >
+                                <input type="text" class="layui-input" autocomplete="off" id="beginTime"
+                                       name="beginTime">
                             </div>
 
                             <label class="layui-form-label">截止时间</label>
                             <div class="layui-input-inline">
-                                <input type="text" class="layui-input" autocomplete="off" id="endTime" name="endTime" >
+                                <input type="text" class="layui-input" autocomplete="off" id="endTime" name="endTime">
                             </div>
                         </div>
 
@@ -59,6 +65,31 @@
             <table id="receiveLogList" lay-filter="receiveLogTable"></table>
         </div>
     </div>
+</div>
+
+<div id="logDialog" class="layer_self_wrap" style="margin-top: 20px;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input param-method" disabled>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">请求值</label>
+                <div class="layui-input-inline" contenteditable="true">
+                    <textarea class="layui-textarea param-params" rows="12" disabled></textarea>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">返回值</label>
+                <div class="layui-input-inline">
+                    <textarea class="layui-textarea param-remark" rows="12" disabled></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 
 <div th:include="head :: commonjs"></div>

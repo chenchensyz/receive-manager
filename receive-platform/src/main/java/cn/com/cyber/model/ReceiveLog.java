@@ -19,6 +19,8 @@ public class ReceiveLog extends BaseEntity {
 
     private String remark;
 
+    private String params; //请求参数
+
     private String url;
 
     private String requestTimeStr;
@@ -100,7 +102,7 @@ public class ReceiveLog extends BaseEntity {
     }
 
     public String getRequestTimeStr() {
-        return requestTime==null?null: DateUtil.format(requestTime,DateUtil.YMD_DASH_WITH_TIME);
+        return requestTime == null ? null : DateUtil.format(requestTime, DateUtil.YMD_DASH_WITH_TIME);
     }
 
     public void setRequestTimeStr(String requestTimeStr) {
@@ -108,7 +110,7 @@ public class ReceiveLog extends BaseEntity {
     }
 
     public String getResponseTimeStr() {
-        return responseTime==null?null: DateUtil.format(responseTime,DateUtil.YMD_DASH_WITH_TIME);
+        return responseTime == null ? null : DateUtil.format(responseTime, DateUtil.YMD_DASH_WITH_TIME);
     }
 
     public void setResponseTimeStr(String responseTimeStr) {
@@ -153,5 +155,13 @@ public class ReceiveLog extends BaseEntity {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
     }
 }

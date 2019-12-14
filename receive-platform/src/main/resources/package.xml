@@ -23,8 +23,8 @@
                 <exclude>application-zhejiang.properties</exclude>
                 <exclude>application-dev.properties</exclude>
                 <exclude>application-odev.properties</exclude>
-                <exclude>mapper/**</exclude>
-                <!--<exclude>mapper-mysql/**</exclude>-->
+                <!--<exclude>mapper/**</exclude>-->
+                <exclude>mapper-mysql/**</exclude>
             </excludes>
         </fileSet>
         <fileSet>

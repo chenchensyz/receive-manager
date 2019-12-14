@@ -194,7 +194,7 @@ serviceRegister.prototype = {
         });
 
         $('.uploadMore').off('click').on('click', function () {
-            location.href = getRootPath() + '/file/批量上传接口.xlsx';
+            location.href = getRootPath() + '/file/file-model/批量上传接口.xlsx';
             return false;
         });
     }

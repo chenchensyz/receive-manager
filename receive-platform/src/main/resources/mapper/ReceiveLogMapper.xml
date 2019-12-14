@@ -9,6 +9,7 @@
         <result column="response_time" property="responseTime" jdbcType="TIMESTAMP"/>
         <result column="response_code" property="responseCode" jdbcType="INTEGER"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="params" property="params" jdbcType="VARCHAR"/>
         <result column="app_name" property="appName" jdbcType="VARCHAR"/>
         <result column="service_name" property="serviceName" jdbcType="VARCHAR"/>
     </resultMap>
@@ -33,37 +34,20 @@
         <if test="remark != null">
             ,remark
         </if>
+        <if test="params != null">
+            ,params
+        </if>
         )
         values( #{id},#{appKey},#{serviceKey},#{requestTime},#{responseTime},#{responseCode}
         <if test="remark != null">
             ,#{remark}
         </if>
+        <if test="params != null">
+            ,#{params}
+        </if>
         )
     </insert>
-    <update id="updateReceiveLog" parameterType="cn.com.cyber.model.ReceiveLog">
-        update se_receive_log
-        <set>
-            <if test="appKey != null">
-                app_key = #{appKey,jdbcType=VARCHAR},
-            </if>
-            <if test="serviceKey != null">
-                service_key = #{serviceKey,jdbcType=VARCHAR},
-            </if>
-            <if test="requestTime != null">
-                request_time = #{requestTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="responseTime != null">
-                response_time = #{responseTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="responseCode != null">
-                response_code = #{responseCode,jdbcType=INTEGER},
-            </if>
-            <if test="remark != null">
-                remark = #{remark,jdbcType=VARCHAR},
-            </if>
-        </set>
-        where id = #{id,jdbcType=BIGINT}
-    </update>
+
     <sql id="sql_where">
         <where>
             <if test="companyId != null">

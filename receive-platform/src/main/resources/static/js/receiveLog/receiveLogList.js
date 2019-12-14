@@ -47,10 +47,7 @@ receiveLogList.prototype = {
                 , {field: 'responseCode', title: '响应状态', width: 165, align: 'center'}
                 , {
                     field: 'right', align: 'center', templet: function (d) {
-                        var span = '<span>请求成功</span>'
-                        if (d.responseCode != 200) {
-                            span = '<a class="layui-btn layui-btn-xs" lay-event="view">查看详情</a>';
-                        }
+                        var span = '<a class="layui-btn layui-btn-xs" lay-event="view">查看详情</a>'
                         return span;
                     }, title: '操作', width: 124
                 }
@@ -73,8 +70,21 @@ receiveLogList.prototype = {
         that.layTable.on('tool(receiveLogTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'view') {//编辑
-                layer.alert(data.remark, {
-                    closeBtn: 0
+                // layer.alert(data.remark, {
+                //     closeBtn: 0
+                // });
+                $('.param-method').val(data.url);
+                $('.param-params').val(data.params);
+                $('.param-remark').val(data.remark);
+                layer.open({
+                    type: 1,
+                    title: "详情",
+                    fixed: false,
+                    resize: false,
+                    shadeClose: true,
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['600px'], //宽高
+                    content: $("#logDialog")
                 });
             }
         });

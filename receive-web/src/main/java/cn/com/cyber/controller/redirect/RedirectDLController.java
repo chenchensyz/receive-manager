@@ -5,9 +5,10 @@ package cn.com.cyber.controller.redirect;
 
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppModel;
+import cn.com.cyber.model.ReceiveLog;
+import cn.com.cyber.service.ReceiveLogService;
 import cn.com.cyber.util.*;
 import cn.com.cyber.util.exception.ValueRuntimeException;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.Map;
 
 @Controller
@@ -37,10 +39,16 @@ public class RedirectDLController extends BaseController {
     @Autowired
     private MessageCodeUtil messageCodeUtil;
 
+    @Autowired
+    private ReceiveLogService receiveLogService;
+
     //大连服务
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public String redirect(HttpServletResponse response, @RequestBody String jsonData) {
+        ReceiveLog receiveLog = new ReceiveLog(); //日志
+        receiveLog.setRequestTime(new Date());
+
         LOGGER.error("请求开始:{}", jsonData);
         String result = "";
         int msgCode = CodeUtil.SELECT_SUCCESS;
@@ -65,6 +73,10 @@ public class RedirectDLController extends BaseController {
             String serviceUrl = jsonValied.getString("serviceUrl");
 
             AppModel appModel = valiedParams(appKey, serviceKey); //检验请求参数
+
+            receiveLog.setAppKey(appKey);
+            receiveLog.setServiceKey(serviceKey);
+
             JSONObject jsonParam = new JSONObject();
             jsonParam.put("requestUrl", appModel.getUrlPrefix() + appModel.getUrlSuffix());
             jsonParam.put("method", appModel.getMethod());
@@ -81,10 +93,17 @@ public class RedirectDLController extends BaseController {
                 url += "/getTest";
             }
             Map<String, Object> resultMap = HttpClient.httpRequest(url, CodeUtil.METHOD_POST, CodeUtil.CONTEXT_JSON, jsonParam.toJSONString());
+            receiveLog.setResponseTime(new Date());
             if (resultMap.get("code") != null) {
+                //日志
+                receiveLog.setParams(jsonValied.getString("params"));
+                receiveLog.setResponseCode((Integer) resultMap.get("code"));
+                receiveLog.setRemark(resultMap.get("result").toString());
+                //返回值
                 result = resultMap.get("result").toString();
             }
             response.setStatus((Integer) resultMap.get("code"));
+            receiveLogService.saveReceiveLog(receiveLog); //保存日志
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();
         } catch (Exception e) {

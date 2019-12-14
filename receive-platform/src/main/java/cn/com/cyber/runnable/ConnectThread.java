@@ -34,7 +34,7 @@ public class ConnectThread implements Runnable {
             while (true) {
                 AppService appService = new AppService();
                 appService.setState(1);
-                List<AppService> serviceList = appServiceMapper.getList(appService);
+                List<AppService> serviceList = appServiceMapper.getServiceList(appService);
                 List<String> errors = Lists.newArrayList();
                 if (serviceList != null && serviceList.size() > 0) {
                     for (AppService service : serviceList) {

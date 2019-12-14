@@ -67,6 +67,6 @@
         <mapper resource="mapper-mysql/RoleMapper.xml"/>
         <mapper resource="mapper-mysql/UserMapper.xml"/>
         <mapper resource="mapper-mysql/UserRoleMapper.xml"/>
-        <mapper resource="mapper/CodeInfoMapper.xml"/>
+        <mapper resource="mapper-mysql/CodeInfoMapper.xml"/>
     </mappers>
 </configuration>

@@ -5,7 +5,15 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface AppServiceMapper extends BaseDao<AppService> {
+public interface AppServiceMapper {
+
+    AppService getByServiceKey(String serviceKey);
+
+    List<AppService> getServiceList(AppService appService);
+
+    int insertService(AppService appService);
+
+    int updateService(AppService appService);
 
     int getCountServiceKey(@Param("serviceKey") String serviceKey, @Param("state") Integer state);
 

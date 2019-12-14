@@ -17,7 +17,9 @@ public class ReceiveLog extends BaseEntity {
 
     private Integer responseCode;
 
-    private String remark;
+    private String remark; //返回值
+
+    private String params; //请求参数
 
     private String url;
 
@@ -103,5 +105,13 @@ public class ReceiveLog extends BaseEntity {
 
     public void setResponseTimeStr(String responseTimeStr) {
         this.responseTimeStr = responseTimeStr;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
     }
 }

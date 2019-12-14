@@ -34,18 +34,18 @@ public class AppServiceServiceImpl implements AppServiceService {
     private Environment environment;
 
     @Override
-    public AppService getById(Long id) {
-        return appServiceMapper.selectByPrimaryKey(id);
+    public AppService getByServiceKey(String serviceKey) {
+        return appServiceMapper.getByServiceKey(serviceKey);
     }
 
     @Override
     public List<AppService> getList(AppService appService) {
-        return appServiceMapper.getList(appService);
+        return appServiceMapper.getServiceList(appService);
     }
 
     @Override
     public int insert(AppService appService) {
-        return appServiceMapper.insertSelective(appService);
+        return appServiceMapper.insertService(appService);
     }
 
     @Override
@@ -62,12 +62,12 @@ public class AppServiceServiceImpl implements AppServiceService {
     @Transactional
     public void addOrEditAppService(Long userId, AppService appService) {
         int count;
-        if (appService.getAppId() == null) {  //独立接口
-            appService.setServiceType(1);
-        }
+        //接口类型 0：应用接口  1：独立接口
+        int serviceType = appService.getAppId() == null ? 1 : 0;
+        appService.setServiceType(serviceType);
         if (appService.getId() != null) { //编辑
             appService.setReviser(userId);
-            count = appServiceMapper.updateByPrimaryKeySelective(appService);
+            count = appServiceMapper.updateService(appService);
         } else {
             String uuid;
             long serviceKey;
@@ -77,7 +77,7 @@ public class AppServiceServiceImpl implements AppServiceService {
             } while (serviceKey > 0);
             appService.setServiceKey(CodeUtil.getUUID());
             appService.setCreator(userId);
-            count = appServiceMapper.insertSelective(appService);
+            count = appServiceMapper.insertService(appService);
         }
         if (count == 0) {
             throw new ValueRuntimeException(CodeUtil.APPSERVICE_ERR_SAVE);
@@ -94,9 +94,8 @@ public class AppServiceServiceImpl implements AppServiceService {
         ShiroDbRealm.ShiroUser shiroUser = (ShiroDbRealm.ShiroUser) SecurityUtils.getSubject().getPrincipal();
         for (Object o : datas) {
             ServiceKeyExcel serviceExcel = (ServiceKeyExcel) o;
-            if (StringUtils.isBlank(serviceExcel.getUrlSuffix()) ||
-                    !serviceExcel.getUrlSuffix().startsWith("http")) {
-                throw new ValueRuntimeException(CodeUtil.APPINFO_ERR_SERVICEKEY);
+            if (StringUtils.isBlank(serviceExcel.getUrlSuffix()) || !serviceExcel.getUrlSuffix().startsWith("http")) {
+                continue;
             }
             AppService service = new AppService();
             service.setId(0l);
@@ -104,14 +103,13 @@ public class AppServiceServiceImpl implements AppServiceService {
             service.setUrlSuffix(serviceExcel.getUrlSuffix());
             service.setMethod(serviceExcel.getMethod().toUpperCase());
             service.setContentType(serviceExcel.getContentType());
-            if(service.getMethod().equals(CodeUtil.METHOD_POST) && StringUtils.isBlank(service.getContentType())){
+            if (service.getMethod().equals(CodeUtil.METHOD_POST) && StringUtils.isBlank(service.getContentType())) {
                 throw new ValueRuntimeException(CodeUtil.SERVICE_METHOD_CONTENTTYPE);
             }
-            if (appId == null) {
-                service.setServiceType(1); //接口类型 0：应用接口  1：独立接口
-            } else {
-                service.setServiceType(0);
-            }
+
+            //接口类型 0：应用接口  1：独立接口
+            int serviceType = appId == null ? 1 : 0;
+            service.setServiceType(serviceType);
             service.setAppId(appId);
             service.setCreator(shiroUser.id);
             String uuid;
@@ -121,7 +119,7 @@ public class AppServiceServiceImpl implements AppServiceService {
                 serviceKey = appServiceMapper.getCountServiceKey(uuid, null);
             } while (serviceKey > 0);
             service.setServiceKey(CodeUtil.getUUID());
-            int count = appServiceMapper.insertSelective(service);
+            int count = appServiceMapper.insertService(service);
             if (count == 0) {
                 throw new ValueRuntimeException(CodeUtil.APPSERVICE_ERR_SAVE);
             }
