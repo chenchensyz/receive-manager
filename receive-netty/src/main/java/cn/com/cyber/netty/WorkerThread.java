@@ -1,4 +1,4 @@
-package cn.com.cyber.runnable;
+package cn.com.cyber.netty;
 
 /**
  * 消息处理--线程池
@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -32,6 +33,7 @@ public class WorkerThread implements Runnable {
     @Override
     public void run() {
         JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
+        Environment env = SpringUtil.getBean(Environment.class);
         Jedis jedis = jedisPool.getResource();
         try {
             JSONObject json = JSONObject.parseObject(command);
@@ -50,25 +52,18 @@ public class WorkerThread implements Runnable {
             MessageCodeUtil messageCodeUtil = SpringUtil.getBean(MessageCodeUtil.class);
             String result = JSON.toJSONString(RestResponse.res(1, "请检查应用接口配置是否完整"));
             String params = json.getString("params");
-            String requestUrl = json.getString("requestUrl");
-            String method = json.getString("method");
-            String contentType = json.getString("contentType");
+            String appKey = json.getString("appKey");
+            String serviceKey = json.getString("serviceKey");
+//            String method = json.getString("method");
+//            String contentType = json.getString("contentType");
             String responseType = json.getString("responseType");
 //            String serviceHeader = json.getString("serviceHeader");
 //            LOGGER.info("接收请求json.length:{}", json.toString().length());
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("messageId", messageId);
-            if (StringUtils.isNoneBlank(requestUrl, method)) {
+            if (StringUtils.isNoneBlank(appKey, serviceKey)) {
 //                LOGGER.info("requestUrl:{} , method:{} , contentType:{}", requestUrl, method, contentType);
-                if (StringUtils.isNotBlank(params)) {
-                    String paramsString = params;
-                    params = "";
-                    Map<String, Object> paramMap = (Map<String, Object>) JSONObject.parseObject(paramsString);
-                    params = HttpConnection.newParams(paramMap, method, contentType, requestUrl);
-                }
-
 //                LOGGER.info("requestUrl:{} , method:{} , contentType:{}", requestUrl, method, contentType);
-
                 //-----------------------
                 if (messageId.startsWith("testTime:")) {
                     map = jedis.hgetAll(CodeUtil.TIME_JEDIS_PREFIX + messageId);
@@ -77,9 +72,14 @@ public class WorkerThread implements Runnable {
                     LOGGER.info("移动网发送内网：{}", params);
                 }
                 //--------------------------
-
                 //请求http接口
-                Map<String, Object> resultMap = HttpConnection.httpRequest(requestUrl, method, contentType, params, responseType, null);
+                String url = env.getProperty(CodeUtil.PLATFORM_URL);
+                Map<String, String> paramHeader = Maps.newHashMap();
+                paramHeader.put("appKey", appKey);
+                paramHeader.put("serviceKey", serviceKey);
+                JSONObject jsonParams = new JSONObject();
+                jsonParams.put("params", params);
+                ResultData resultData = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonParams.toString(), responseType, paramHeader);
 
                 //-----------------------
                 if (messageId.startsWith("testTime:")) {
@@ -88,11 +88,11 @@ public class WorkerThread implements Runnable {
                     jedis.hmset(CodeUtil.TIME_JEDIS_PREFIX + messageId, map);
                 }
                 //--------------------------
-
-                if (resultMap.get("code") != null && CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
-                    result = resultMap.get("result").toString();
+                LOGGER.info("移动网发送内网：{}", params);
+                if (resultData.getCode() != null && CodeUtil.HTTP_OK == resultData.getCode()) {
+                    result = resultData.getResult();
                 } else {
-                    result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED) + resultMap.get("error")));
+                    result = JSON.toJSONString(RestResponse.res(CodeUtil.REQUEST_USE_FILED, messageCodeUtil.getMessage(CodeUtil.REQUEST_USE_FILED) + resultData.getResult()));
                     //---------------------
                     if (messageId.startsWith("testTime:")) {
                         map = jedis.hgetAll(CodeUtil.TIME_JEDIS_PREFIX + messageId);

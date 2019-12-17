@@ -11,19 +11,20 @@ import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -94,13 +95,52 @@ public class RedirectController extends BaseController {
     //校验appkey和servicekey是否正确
     @RequestMapping("/validAppAndService")
     @ResponseBody
-    public RestResponse validAppAndService(String appKey, String serviceKey) {
+    public RestResponse validAppAndService(@RequestBody String jsonData) {
         int code = CodeUtil.BASE_SUCCESS;
+        JSONObject jsonObject = JSONObject.parseObject(jsonData);
+        String appKey = jsonObject.getString("appKey");
+        String serviceKey = jsonObject.getString("serviceKey");
         AppService service = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
         if (service == null) {
             code = CodeUtil.REQUEST_KEY_FILED;
         }
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(service.getUrlSuffix());
+    }
+
+    @RequestMapping("fileUp")
+    @ResponseBody
+    public RestResponse multifileUpload(HttpServletRequest request,
+                                        @RequestParam("appKey") String appKey,
+                                        @RequestParam("serviceKey") String serviceKey,
+                                        @RequestParam("introduction") String introduction,long size) {
+        int msgCode = CodeUtil.BASE_FILE_ERR_UP;
+
+        AppService service = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
+        if (service == null) {
+            msgCode = CodeUtil.REQUEST_KEY_FILED;
+            return RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode));
+        }
+
+        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+
+        for (MultipartFile file : files) {
+            Map<String, MultipartFile> fileMap = Maps.newHashMap();
+
+            Map<String, String> requestParamsMap = Maps.newHashMap();
+            requestParamsMap.put("introduction", introduction);
+            requestParamsMap.put("size", size + "");
+
+            fileMap.put(file.getOriginalFilename(), file);
+            ResultData resultData = FileUpConnection.postFileUp(service.getUrlSuffix(), requestParamsMap, fileMap);
+            if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
+                JSONObject object = JSONObject.parseObject(resultData.getResult());
+                LOGGER.info("请求内网返回值,object:{}", object);
+                if (object != null && object.get("success") != null && (Boolean) object.get("success")) {
+                    msgCode = CodeUtil.BASE_SUCCESS;
+                }
+            }
+        }
+        return RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode));
     }
 
     @RequestMapping("/getTest")

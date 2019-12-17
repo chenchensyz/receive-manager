@@ -50,7 +50,7 @@ public class AppServiceServiceImpl implements AppServiceService {
 
     @Override
     public int getCountServiceKey(String serviceKey) {
-        return appServiceMapper.getCountServiceKey(serviceKey, null);
+        return appServiceMapper.getCountServiceKey(serviceKey, null, null);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class AppServiceServiceImpl implements AppServiceService {
             long serviceKey;
             do {
                 uuid = CodeUtil.getUUID();
-                serviceKey = appServiceMapper.getCountServiceKey(uuid, null);
+                serviceKey = appServiceMapper.getCountServiceKey(uuid, null, null);
             } while (serviceKey > 0);
             appService.setServiceKey(CodeUtil.getUUID());
             appService.setCreator(userId);
@@ -116,7 +116,7 @@ public class AppServiceServiceImpl implements AppServiceService {
             long serviceKey;
             do {
                 uuid = CodeUtil.getUUID();
-                serviceKey = appServiceMapper.getCountServiceKey(uuid, null);
+                serviceKey = appServiceMapper.getCountServiceKey(uuid, null, null);
             } while (serviceKey > 0);
             service.setServiceKey(CodeUtil.getUUID());
             int count = appServiceMapper.insertService(service);

@@ -106,6 +106,7 @@ peoples.prototype = {
 
         that.layForm.on('submit(searchSubmit)', function (data) {
             //重新加载table
+            that.pageCurr = 1;
             that.load(data);
             return false;
         });
@@ -149,6 +150,7 @@ peoples.prototype = {
     },
 
     load: function (obj) {
+        debugger
         var that = this;
         //重新加载table
         that.tableIns.reload({

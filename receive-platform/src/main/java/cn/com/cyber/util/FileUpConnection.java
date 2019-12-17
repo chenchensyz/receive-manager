@@ -2,6 +2,7 @@ package cn.com.cyber.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -26,7 +27,7 @@ public class FileUpConnection {
      * @throws IOException
      */
     public static ResultData postFileUp(String actionUrl, Map<String, String> params,
-                                        Map<String, File> files) {
+                                        Map<String, MultipartFile> files) {
         LOGGER.info("进入连接:{}", actionUrl);
         StringBuilder sb2 = new StringBuilder();
         String BOUNDARY = java.util.UUID.randomUUID().toString();
@@ -69,7 +70,7 @@ public class FileUpConnection {
             outStream.write(sb.toString().getBytes());
             // 发送文件数据
             if (files != null) {
-                for (Map.Entry<String, File> file : files.entrySet()) {
+                for (Map.Entry<String, MultipartFile> file : files.entrySet()) {
                     StringBuilder sb1 = new StringBuilder();
                     sb1.append(PREFIX);
                     sb1.append(BOUNDARY);
@@ -82,7 +83,7 @@ public class FileUpConnection {
                     sb1.append(LINEND);
                     outStream.write(sb1.toString().getBytes());
 
-                    InputStream is = new FileInputStream(file.getValue());
+                    InputStream is = file.getValue().getInputStream();
                     byte[] buffer = new byte[1024];
                     int len = 0;
                     while ((len = is.read(buffer)) != -1) {
@@ -267,8 +268,8 @@ public class FileUpConnection {
             Map<String, File> files = new HashMap<String, File>();
             File file = new File("D:" + File.separator + "path" + File.separator + "douban-master.zip");
             files.put(file.getName(), file);
-            ResultData resultData = postFileUp(url, requestParamsMap, files);
-            System.out.println(resultData);
+//            ResultData resultData = postFileUp(url, requestParamsMap, files);
+//            System.out.println(resultData);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }

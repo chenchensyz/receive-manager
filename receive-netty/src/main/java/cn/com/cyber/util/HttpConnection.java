@@ -1,10 +1,7 @@
 package cn.com.cyber.util;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -33,9 +30,9 @@ public class HttpConnection {
         return uuidStr;
     }
 
-    public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType, Map<String, String> serviceHeader) {
-        Map<String, Object> map = Maps.newHashMap();
-        String result = null;
+    public static ResultData httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType, Map<String, String> paramHeader) {
+        ResultData resultData = new ResultData();
+        String result;
         HttpURLConnection conn = null;
         OutputStream outputStream = null;
         InputStream inputStream = null;
@@ -58,8 +55,8 @@ public class HttpConnection {
             if (StringUtils.isNotBlank(contentType)) {
                 conn.setRequestProperty("Content-type", contentType);
             }
-            if (serviceHeader != null && !serviceHeader.isEmpty()) {  //传输头消息
-                for (Map.Entry<String, String> entry : serviceHeader.entrySet()) {
+            if (paramHeader != null && !paramHeader.isEmpty()) {  //传输头消息
+                for (Map.Entry<String, String> entry : paramHeader.entrySet()) {
                     conn.setRequestProperty(entry.getKey(), entry.getValue());
                 }
             }
@@ -120,9 +117,9 @@ public class HttpConnection {
                 LOGGER.error(e.getMessage(), e);
             }
         }
-        map.put("code", code);
-        map.put("result", result);
-        return map;
+        resultData.setCode(code);
+        resultData.setResult(result);
+        return resultData;
     }
 
     public static String newParams(Map<String, Object> paramMap, String method, String contentType, String requestUrl) throws UnsupportedEncodingException {
@@ -193,7 +190,7 @@ public class HttpConnection {
         return encode;
     }
 
-    public static Map<String, Object> requestNewParams(String params, String method, String contentType, String requestUrl, Map<String, String> serviceHeader) throws UnsupportedEncodingException {
+    public static ResultData requestNewParams(String params, String method, String contentType, String requestUrl, String responseType, Map<String, String> paramHeader) throws UnsupportedEncodingException {
         String newParam = "";
         if (StringUtils.isNotBlank(params)) {
             JSONObject dataParams = JSONObject.parseObject(params);
@@ -242,7 +239,7 @@ public class HttpConnection {
         }
         LOGGER.info("newParam:{}", newParam);
         LOGGER.info("method:{},ContentType:{},url:{}", method, contentType, requestUrl);
-        Map<String, Object> resultMap = httpRequest(requestUrl, method, contentType, newParam, null, serviceHeader);
-        return resultMap;
+        ResultData resultData = httpRequest(requestUrl, method, contentType, newParam, responseType, paramHeader);
+        return resultData;
     }
 }

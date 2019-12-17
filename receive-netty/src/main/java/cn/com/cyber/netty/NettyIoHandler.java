@@ -1,7 +1,6 @@
 package cn.com.cyber.netty;
 
 import cn.com.cyber.runnable.MyThreadPool;
-import cn.com.cyber.runnable.WorkerThread;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.DateUtil;
 import cn.com.cyber.util.SpringUtil;

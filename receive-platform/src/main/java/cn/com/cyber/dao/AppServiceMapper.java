@@ -15,7 +15,7 @@ public interface AppServiceMapper {
 
     int updateService(AppService appService);
 
-    int getCountServiceKey(@Param("serviceKey") String serviceKey, @Param("state") Integer state);
+    int getCountServiceKey(@Param("serviceKey") String serviceKey, @Param("state") Integer state, @Param("creator") Long creator);
 
     AppService getEditByServiceId(long serviceId);
 
@@ -34,6 +34,6 @@ public interface AppServiceMapper {
 
     List<AppService> getAppValidListData(AppService appService);
 
-    List<AppService> getReceiveServiceRanking();
+    List<AppService> getReceiveServiceRanking(@Param("creator") Long creator);
 
 }

@@ -3,8 +3,10 @@ package cn.com.cyber.runnable;
 /**
  * 文件传输服务--转发内网
  */
+
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.FileUpConnection;
+import cn.com.cyber.util.ResultData;
 import cn.com.cyber.util.SpringUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
@@ -46,10 +48,9 @@ public class FileUpThread implements Runnable {
             requestParamsMap.put("size", map.get("fileSize"));
 
             fileMap.put(file.getName(), file);
-            Map<String, Object> resultMap = FileUpConnection.postFileUp(url, requestParamsMap, fileMap);
-            if (StringUtils.isNotBlank(resultMap.get("code").toString())
-                    && CodeUtil.HTTP_OK == Integer.valueOf(resultMap.get("code").toString())) {
-                JSONObject object = JSONObject.parseObject(resultMap.get("result").toString());
+            ResultData resultData = FileUpConnection.postFileUp(url, requestParamsMap, fileMap);
+            if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
+                JSONObject object = JSONObject.parseObject(resultData.getResult());
                 LOGGER.info("请求内网返回值uuid:{},object:{}", map.get("uuid"), object);
                 if (object != null && object.get("success") != null && (Boolean) object.get("success")) {
                     state = "2";

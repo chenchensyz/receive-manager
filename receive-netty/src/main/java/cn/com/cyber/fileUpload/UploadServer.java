@@ -22,7 +22,7 @@ public class UploadServer implements Runnable {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, 1024).childHandler(new ChannelInitializer<Channel>() {
+            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, Integer.MAX_VALUE).childHandler(new ChannelInitializer<Channel>() {
 
                 @Override
                 protected void initChannel(Channel ch) {

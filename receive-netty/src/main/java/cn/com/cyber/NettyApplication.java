@@ -3,7 +3,8 @@ package cn.com.cyber;
 import cn.com.cyber.fileUpload.UploadServer;
 import cn.com.cyber.netty.NettyServer;
 import cn.com.cyber.runnable.MyThreadPool;
-import cn.com.cyber.runnable.SendFileThread;
+import cn.com.cyber.runnable.SendInterFileThread;
+import cn.com.cyber.runnable.SendMobileFileThread;
 import cn.com.cyber.socket.SocketClient;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.SpringUtil;
@@ -32,7 +33,9 @@ public class NettyApplication {
                 MyThreadPool.getThreadPool().execute(new UploadServer());
                 //发送文件
                 if ("mobile".equals(env.getProperty(CodeUtil.PROJECT_ENVIRONMENT))) {
-                    MyThreadPool.getThreadPool().execute(new SendFileThread());
+                    MyThreadPool.getThreadPool().execute(new SendMobileFileThread());
+                } else {
+                    MyThreadPool.getThreadPool().execute(new SendInterFileThread());
                 }
             }
             //启动Socket

@@ -43,6 +43,7 @@ public class UploadMsgServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
         Jedis jedis = jedisPool.getResource();
+        jedis.select(CodeUtil.JEDIS_APPVALID_INDEX); //2号
         ByteBuf buf = (ByteBuf) msg;
         LOGGER.info("读取数据 buf.readableBytes():{}", buf.readableBytes());
         byte[] req = new byte[buf.readableBytes()];
@@ -54,9 +55,8 @@ public class UploadMsgServerHandler extends ChannelInboundHandlerAdapter {
             String baseRequestMsg = new String(bodybytes, CodeUtil.cs);
             JSONObject object = JSONObject.parseObject(baseRequestMsg);
             LOGGER.info("接受状态返回：{}", object);
-            if (object != null && object.get("success") != null
-                    && (Boolean) object.get("success")) {
-                String key = CodeUtil.FILE_JEDIS_PREFIX + object.get("uuid");
+            if (object != null && object.get("success") != null && (Boolean) object.get("success")) {
+                String key = CodeUtil.JEDIS_FILE_PREFIX + object.get("uuid");
                 Map<String, String> map = jedis.hgetAll(key);
                 map.put("state", object.get("state").toString());
                 jedis.hmset(key, map);

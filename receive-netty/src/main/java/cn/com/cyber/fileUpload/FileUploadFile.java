@@ -12,7 +12,8 @@ public class FileUploadFile implements Serializable {
     private String fileName;// 文件名
     private int fileSize;// 读取大小
     private String introduction;// 描述信息
-    private String upUrl;// 文件上传地址
+    private String appKey;// appKey
+    private String serviceKey;// serviceKey
     private String uuid;// 描述信息
     private byte[] bytes;// 文件字节码
     private int startPos;// 读取开始位置
@@ -78,12 +79,20 @@ public class FileUploadFile implements Serializable {
         this.uuid = uuid;
     }
 
-    public String getUpUrl() {
-        return upUrl;
+    public String getAppKey() {
+        return appKey;
     }
 
-    public void setUpUrl(String upUrl) {
-        this.upUrl = upUrl;
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
+    }
+
+    public String getServiceKey() {
+        return serviceKey;
+    }
+
+    public void setServiceKey(String serviceKey) {
+        this.serviceKey = serviceKey;
     }
 
     public int getStartPos() {

@@ -41,7 +41,11 @@ public class RankingController extends BaseController {
     @ResponseBody
     public RestResponse appRanking() {
         int code = CodeUtil.BASE_SUCCESS;
-        List<AppService> appRanking = rankingService.getReceiveServiceRanking();
+        Long creator = null;
+        if (getShiroUser().source == 1) {
+            creator = getShiroUser().id;
+        }
+        List<AppService> appRanking = rankingService.getReceiveServiceRanking(creator);
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(appRanking);
     }
 
@@ -50,7 +54,11 @@ public class RankingController extends BaseController {
     @ResponseBody
     public RestResponse inlet() {
         int code = CodeUtil.BASE_SUCCESS;
-        Map<String, Object> map = rankingService.inletCount();
+        Long creator = null;
+        if (getShiroUser().source == 1) {
+            creator = getShiroUser().id;
+        }
+        Map<String, Object> map = rankingService.inletCount(creator);
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(map);
     }
 
@@ -63,7 +71,11 @@ public class RankingController extends BaseController {
         String startTime = jsonObject.getString("startTime");
         String endTime = jsonObject.getString("endTime");
         JSONArray dateList = jsonObject.getJSONArray("dateList");
-        Map<String, Object> map = rankingService.receiveLogRanking(startTime, endTime, dateList.toJavaList(String.class));
+        Long creator = null;
+        if (getShiroUser().source == 1) {
+            creator = getShiroUser().id;
+        }
+        Map<String, Object> map = rankingService.receiveLogRanking(creator,startTime, endTime, dateList.toJavaList(String.class));
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(map);
     }
 }

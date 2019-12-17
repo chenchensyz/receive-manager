@@ -31,7 +31,7 @@
 
     <insert id="insertAppInfo" parameterType="cn.com.cyber.model.AppInfo">
         insert into td_app
-        (iapp_uuid, name, status, company_id
+        (app_uuid, name, status, company_id
         <if test="description != null">
             ,description
         </if>

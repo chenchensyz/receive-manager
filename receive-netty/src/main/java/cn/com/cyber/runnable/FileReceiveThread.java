@@ -1,8 +1,9 @@
 package cn.com.cyber.runnable;
 
 /**
- * 文件传输服务--接收互联网文件
+ * 文件传输服务--移动信息网接收互联网文件
  */
+
 import cn.com.cyber.fileUpload.FileUploadFile;
 import cn.com.cyber.socket.TalkClient;
 import cn.com.cyber.util.CodeUtil;
@@ -41,6 +42,7 @@ public class FileReceiveThread implements Runnable {
     public void run() {
         JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
         Jedis jedis = jedisPool.getResource();
+        jedis.select(CodeUtil.JEDIS_APPVALID_INDEX); //2号
         try {
             byte[] bytes = fileUploadFile.getBytes();
             String fileName = fileUploadFile.getFileName();//文件名
@@ -58,10 +60,11 @@ public class FileReceiveThread implements Runnable {
                 map.put("fileSize", fileUploadFile.getFileSize() + "");
                 map.put("introduction", fileUploadFile.getIntroduction());
                 map.put("uuid", fileUploadFile.getUuid());
-                map.put("upUrl", fileUploadFile.getUpUrl());
+                map.put("appKey", fileUploadFile.getAppKey());
+                map.put("serviceKey", fileUploadFile.getServiceKey());
                 map.put("state", "0");
                 map.put("times", "0");
-                String key = CodeUtil.FILE_JEDIS_PREFIX + fileUploadFile.getUuid();
+                String key = CodeUtil.JEDIS_FILE_PREFIX + fileUploadFile.getUuid();
 
                 jedis.hmset(key, map);
                 jedis.expire(key, 604800);
@@ -78,6 +81,7 @@ public class FileReceiveThread implements Runnable {
 //                LOGGER.info("url:{},port:{}", codeEnv.getSocket_url(), codeEnv.getFile_sever_port());
                 byte[] baseByte = Base64.encodeBase64(param.toString().getBytes(CodeUtil.cs));
                 String baseParam = new String(baseByte, CodeUtil.cs);
+                //返回互联网成功
                 int port = Integer.valueOf(env.getProperty(CodeUtil.FILE_SEVER_PORT));
                 String url = env.getProperty(CodeUtil.SOCKET_URL);
                 TalkClient.send(url, port, baseParam);

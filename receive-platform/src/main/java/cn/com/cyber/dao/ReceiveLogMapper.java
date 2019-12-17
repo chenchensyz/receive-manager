@@ -11,9 +11,9 @@ public interface ReceiveLogMapper {
 
     List<ReceiveLog> getReceiveLogList(ReceiveLog receiveLog);
 
-    int getReceiveLogCount();
+    int getReceiveLogCount(@Param("creator") Long creator);
 
-    List<Integer> getReceiveLogRanking(@Param("startTime") String startTime,
+    List<Integer> getReceiveLogRanking(@Param("creator") Long creator, @Param("startTime") String startTime,
                                        @Param("endTime") String endTime,
                                        @Param("dateList") List<String> dateList,
                                        @Param("code") Integer code);

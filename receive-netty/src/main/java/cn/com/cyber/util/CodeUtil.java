@@ -17,7 +17,14 @@ public class CodeUtil {
     public static final String RESPONSE_TEXT_TYPE = "text";
 
     public static final String FILE_UPLOAD_PATH = "D:\\source\\";  //文件保存位置
-    public static final String FILE_JEDIS_PREFIX = "file:";  //保存到redis前缀
+    public static final String JEDIS_FILE_PREFIX = "file:";  //保存到redis前缀
+    public static final int JEDIS_APPVALID_INDEX = 2;  //验证保存2号库
+    public static final String JEDIS_APPVALID_CODE = "vc:";  //验证保存2号库
+
+    //pstore用户校验
+    public static final String PSTORE_LOGIN_URL = "pstore_login_url";
+    public static final int PSTORE_LOGIN_REDIS_INDEX = 1; //redis保存1号库
+    public static final String PSTORE_LOGIN_REDIS_PREFIX = "u:";
 
     public static final String TIME_JEDIS_PREFIX = "time:";  //测试请求时间保存
 
@@ -25,6 +32,7 @@ public class CodeUtil {
 
     //接口响应时间设置
     public static final String REQUEST_MAXTIME = "request_maxtime";  //最大超时时间
+    public static final String REQUEST_FILE_MAXTIME = "request_file_maxtime";  //文件最大超时时间
     public static final String REQUEST_SLEEPTIME = "request_sleeptime";  //扫描响应结果间隔时间
 
     public static final String PLATFORM_URL = "platform_url";
@@ -38,11 +46,10 @@ public class CodeUtil {
     public static final String CACHE_TIME = "cache_time";
     public static final String SOCKET_OPEN = "socket_open";
     public static final String VALID_TOKEN = "valid_token";
+    public static final String PLATFORM_APP_VALID_URL = "/validAppAndService";
+    public static final String PLATFORM_FILEUP_URL = "/fileUp";
 
-    //pstore用户校验
-    public static final String PSTORE_LOGIN_URL = "pstore_login_url";
-    public static final int PSTORE_LOGIN_REDIS_INDEX = 1; //redis保存1号库
-    public static final String PSTORE_LOGIN_REDIS_PREFIX = "u:";
+
 
     public static final int USERINFO_ERR_CONNECT = 20104; //连接用户查询服务器失败
     public static final int USERINFO_ERR_VALIED = 20105; //用户校验失败，请确认用户信息是否正确

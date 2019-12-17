@@ -15,16 +15,9 @@
             <directory>src/main/resources</directory>
             <outputDirectory>/</outputDirectory>
             <excludes>
-                <exclude>application-dalian.properties</exclude>
-                <exclude>application-guiyang.properties</exclude>
-                <!--<exclude>application-shandong.properties</exclude>-->
-                <exclude>application-shandongms.properties</exclude>
-                <exclude>application-wuhan.properties</exclude>
-                <exclude>application-zhejiang.properties</exclude>
-                <exclude>application-dev.properties</exclude>
-                <exclude>application-odev.properties</exclude>
-                <!--<exclude>mapper/**</exclude>-->
-                <exclude>mapper-mysql/**</exclude>
+                <exclude>application-*.properties</exclude>
+                <exclude>mapper/**</exclude>
+                <!--<exclude>mapper-mysql/**</exclude>-->
             </excludes>
         </fileSet>
         <fileSet>

@@ -16,15 +16,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,6 +62,12 @@ public class RedirectController extends BaseController {
                          @RequestBody(required = false) String jsonData) {
         String appKey = request.getHeader("appKey");
         String serviceKey = request.getHeader("serviceKey");
+        if (StringUtils.isBlank(appKey)) {
+            appKey = request.getHeader("appkey");
+        }
+        if (StringUtils.isBlank(serviceKey)) {
+            serviceKey = request.getHeader("servicekey");
+        }
         String serviceUrl = request.getHeader("serviceUrl");
         int msgCode;
         String result = "";
@@ -82,12 +89,12 @@ public class RedirectController extends BaseController {
             Map<String, String> paramHeader = Maps.newHashMap();
             paramHeader.put("appKey", appKey);
             paramHeader.put("serviceKey", serviceKey);
-            Map<String, Object> resultMap = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonObject.toString(), null, paramHeader);
-            if (resultMap.get("code") != null) {
-                result = resultMap.get("result").toString();
-                if (CodeUtil.HTTP_OK != (Integer) resultMap.get("code")) { //组装错误返回
+            ResultData resultData = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonObject.toString(), null, paramHeader);
+            if (resultData.getCode() != null) {
+                result = resultData.getResult();
+                if (CodeUtil.HTTP_OK != resultData.getCode()) { //组装错误返回
                     msgCode = CodeUtil.REQUEST_USE_FILED;
-                    result = JSON.toJSONString(RestResponse.res(msgCode, errorMsg(messageCodeUtil.getMessage(msgCode), resultMap.get("code").toString(), result)));
+                    result = JSON.toJSONString(RestResponse.res(msgCode, errorMsg(messageCodeUtil.getMessage(msgCode), resultData.getCode().toString(), result)));
                 }
             }
         } catch (ValueRuntimeException e) {
@@ -111,10 +118,10 @@ public class RedirectController extends BaseController {
             url.append("?username=" + username);
             String passwordParam = EncryptUtils.MD5Encode(username + password + "*!!");
             url.append("&password=" + passwordParam);
-            Map<String, Object> resultMap = HttpConnection.httpRequest(url.toString(), CodeUtil.RESPONSE_GET, null, null,
+            ResultData resultData = HttpConnection.httpRequest(url.toString(), CodeUtil.RESPONSE_GET, null, null,
                     null, null);
-            if (resultMap.get("code") != null && CodeUtil.HTTP_OK == (Integer) resultMap.get("code")) {
-                JSONObject jsonObject = JSONObject.parseObject(resultMap.get("result").toString());
+            if (resultData.getCode() != null && CodeUtil.HTTP_OK == resultData.getCode()) {
+                JSONObject jsonObject = JSONObject.parseObject(resultData.getResult());
                 Integer ret = jsonObject.getInteger("ret");
                 if (ret == 0) {
                     rest.setData(createToken(username));
@@ -217,5 +224,41 @@ public class RedirectController extends BaseController {
             maps.add(map);
         }
         return RestResponse.success().setData(maps).setTotal(Long.valueOf(maps.size())).setPage(1);
+    }
+
+
+    //模拟mulitpartfile接收上传
+    @RequestMapping("fileUp")
+    @ResponseBody
+    public RestResponse multifileUpload(HttpServletRequest request,
+                                        @RequestParam("introduction") String introduction,
+                                        @RequestParam("size") long size) {
+        int msgCode = CodeUtil.BASE_SUCCESS;
+        //根据appKey和serviceKey查询appinfo信息
+        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+
+        for (MultipartFile file : files) {
+            Map<String, MultipartFile> fileMap = Maps.newHashMap();
+
+            Map<String, String> requestParamsMap = Maps.newHashMap();
+            requestParamsMap.put("introduction", introduction);
+            requestParamsMap.put("size", size + "");
+            String fileName = file.getOriginalFilename();
+
+            String suffix = fileName.substring(fileName.lastIndexOf("."));
+            String filePath = "D:\\source\\success\\" + suffix;
+            File dest = new File(filePath);
+            if (!dest.getParentFile().exists()) { //判断文件父目录是否存在
+                dest.getParentFile().mkdir();
+            }
+
+            try {
+                file.transferTo(dest);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)).setData("你好");
     }
 }

@@ -11,10 +11,10 @@ public interface RankingService {
     //统计排行
     List<AppInfo> getReceiveAppRanking();
 
-    Map<String,Object> inletCount();
+    Map<String,Object> inletCount(Long creator);
 
-    Map<String,Object> receiveLogRanking(String startTime, String endTime, List<String> dateList);
+    Map<String,Object> receiveLogRanking(Long creator,String startTime, String endTime, List<String> dateList);
 
     //统计接口访问排行
-    List<AppService> getReceiveServiceRanking();
+    List<AppService> getReceiveServiceRanking(Long creator);
 }

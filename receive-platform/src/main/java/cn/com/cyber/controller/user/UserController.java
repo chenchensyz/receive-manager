@@ -48,7 +48,6 @@ public class UserController extends BaseController {
 
     /**
      * 获取用户表数据
-     *
      * @return
      */
     @RequestMapping("/queryUserListData")
@@ -64,7 +63,6 @@ public class UserController extends BaseController {
 
     /**
      * 跳转用户新增/编辑页面
-     *
      * @return
      */
     @RequestMapping("getUserInfo")
@@ -76,7 +74,6 @@ public class UserController extends BaseController {
 
     /**
      * 获取用户编辑数据
-     *
      * @return
      */
     @RequestMapping("getUserInfoData")
@@ -94,7 +91,6 @@ public class UserController extends BaseController {
 
     /**
      * 新增编辑用户
-     *
      * @return
      */
     @RequestMapping("addOrEditUser")

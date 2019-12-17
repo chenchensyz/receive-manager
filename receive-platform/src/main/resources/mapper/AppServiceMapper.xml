@@ -200,13 +200,18 @@
         order by ssi.create_time desc,ta.id asc
     </select>
 
-    <select id="getReceiveServiceRanking" resultMap="BaseResultMap">
+    <select id="getReceiveServiceRanking" resultMap="BaseResultMap" parameterType="long">
         select * from (
         select ssi.id, ssi.service_name, ta.id aid, ta.name app_name, count(srl.id) receive_num
         from se_service_info ssi
         left join se_receive_log srl
         on ssi.service_key = srl.service_key
         left join td_app ta on ssi.app_id = ta.id
+        <where>
+            <if test="creator != null">
+                and ssi.creator = #{creator}
+            </if>
+        </where>
         group by ssi.id, ssi.service_name,ta.id,ta.name
         order by receive_num desc)  where ROWNUM &lt;=10
     </select>
@@ -228,11 +233,14 @@
     <select id="getCountServiceKey" resultType="int" parameterType="map">
         SELECT count(id) FROM se_service_info
         <where>
-            <if test="serviceKey">
+            <if test="serviceKey != null">
                 and service_key=#{serviceKey}
             </if>
-            <if test="state">
+            <if test="state != null">
                 and state = #{state}
+            </if>
+            <if test="creator != null">
+                and creator=#{creator}
             </if>
         </where>
     </select>

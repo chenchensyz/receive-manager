@@ -1,9 +1,6 @@
 package cn.com.cyber.controller;
 
-import cn.com.cyber.util.CodeUtil;
-import cn.com.cyber.util.HttpConnection;
-import cn.com.cyber.util.MessageCodeUtil;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -45,11 +42,11 @@ public class ModelRedirectController extends BaseController {
         String result = "";
         try {
             if (StringUtils.isNoneBlank(requestUrl, method)) {
-                Map<String, Object> resultMap = HttpConnection.requestNewParams(params, method, contentType, requestUrl, serviceHeader);
-                if (resultMap.get("code") != null) {
-                    result = resultMap.get("result").toString();
+                ResultData resultData = HttpConnection.requestNewParams(params, method, contentType, requestUrl, null, serviceHeader);
+                if (resultData != null) {
+                    result = resultData.getResult();
                 }
-                response.setStatus((Integer) resultMap.get("code"));
+                response.setStatus(resultData.getCode());
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

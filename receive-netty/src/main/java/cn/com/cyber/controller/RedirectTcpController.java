@@ -58,6 +58,12 @@ public class RedirectTcpController extends BaseController{
         String messageId = projectPort + ":" + HttpConnection.getUUID();
         String appKey = request.getHeader("appKey");
         String serviceKey = request.getHeader("serviceKey");
+        if (StringUtils.isBlank(appKey)) {
+            appKey = request.getHeader("appkey");
+        }
+        if (StringUtils.isBlank(serviceKey)) {
+            serviceKey = request.getHeader("servicekey");
+        }
         String responseType = request.getHeader("responseType");
         int msgCode;
         Jedis jedis = null;

@@ -86,12 +86,16 @@
         order by rl.response_time desc
     </select>
 
-    <select id="getReceiveLogCount" resultType="int">
+    <select id="getReceiveLogCount" resultType="int" parameterType="long">
         select count(rl.id) from se_receive_log rl
         LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
         LEFT JOIN td_company tc on tc.id = ai.company_id
         LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
-        <include refid="sql_where"/>
+        <where>
+            <if test="creator != null">
+                and ais.creator = #{creator}
+            </if>
+        </where>
     </select>
 
     <select id="getReceiveLogRanking" resultType="int" parameterType="map">
@@ -105,9 +109,12 @@
         (
         SELECT count(slo.id) receive_num,slo.dt from (
         select t.id ,STR_TO_DATE(t.request_time, '%Y-%m-%d') dt
-        from SE_RECEIVE_LOG t
+        from SE_RECEIVE_LOG t left join se_service_info ssi on t.service_key = ssi.service_key
         where t.request_time
         between STR_TO_DATE(#{startTime}, '%Y-%m-%d') and STR_TO_DATE(#{endTime}, '%Y-%m-%d')+1
+        <if test="creator != null">
+            and ssi.creator = #{creator}
+        </if>
         <if test="code == 1">
             and t.response_code = 200
         </if>

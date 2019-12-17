@@ -80,11 +80,11 @@ public class RedirectDLController extends BaseController {
             Map<String, String> paramHeader = Maps.newHashMap();
             paramHeader.put("appKey", appKey);
             paramHeader.put("serviceKey", serviceKey);
-            Map<String, Object> resultMap = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonParam.toString(), null, paramHeader);
-            if (resultMap.get("code") != null) {
-                result = resultMap.get("result").toString();
+            ResultData resultData = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonParam.toString(), null, paramHeader);
+            if (resultData.getCode() != null) {
+                result = resultData.getResult();
             }
-            response.setStatus((Integer) resultMap.get("code"));
+            response.setStatus(resultData.getCode());
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();
         } catch (Exception e) {
