@@ -11,7 +11,7 @@ public class RestResponse extends HashMap<String, Object> {
     }
     public static RestResponse success(String message){
         RestResponse restResponse = new RestResponse();
-        restResponse.setSuccess(true);
+        restResponse.setCode(0);
         restResponse.setMessage(message);
         return restResponse;
     }

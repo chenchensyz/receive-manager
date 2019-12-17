@@ -1,7 +1,7 @@
 package cn.com.cyber.runnable;
 
 /**
- * 文件传输服务--转发内网
+ * 文件传输服务--转发内网线程（暂无使用）
  */
 
 import cn.com.cyber.util.CodeUtil;
@@ -24,6 +24,8 @@ public class FileUpThread implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUpThread.class);
 
+    private static final String PLATFROM_URL = "http://56.3.0.79:8081/platform/redirect/fileUp";
+
     private Charset cs = Charset.forName("UTF-8");
 
     private String command;
@@ -37,7 +39,6 @@ public class FileUpThread implements Runnable {
         JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
         Jedis jedis = jedisPool.getResource();
         Map<String, String> map = jedis.hgetAll(command);
-        String url = map.get("upUrl");
         String state = "1";
         try {
             Map<String, File> fileMap = new HashMap<String, File>();
@@ -46,14 +47,16 @@ public class FileUpThread implements Runnable {
             Map<String, String> requestParamsMap = new HashMap<String, String>();
             requestParamsMap.put("introduction", map.get("introduction"));
             requestParamsMap.put("size", map.get("fileSize"));
+            requestParamsMap.put("appKey", map.get("appKey"));
+            requestParamsMap.put("serviceKey", map.get("serviceKey"));
 
             fileMap.put(file.getName(), file);
-            ResultData resultData = FileUpConnection.postFileUp(url, requestParamsMap, fileMap);
+            ResultData resultData = FileUpConnection.postFileUp(PLATFROM_URL, requestParamsMap, fileMap);
             if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
                 JSONObject object = JSONObject.parseObject(resultData.getResult());
                 LOGGER.info("请求内网返回值uuid:{},object:{}", map.get("uuid"), object);
-                if (object != null && object.get("success") != null && (Boolean) object.get("success")) {
-                    state = "2";
+                if (object != null && CodeUtil.BASE_SUCCESS == object.getInteger("code")) {
+                    state = "2"; //上传成功
                 }
             }
             map.put("state", state);

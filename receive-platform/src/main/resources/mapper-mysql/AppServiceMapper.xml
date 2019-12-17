@@ -51,7 +51,7 @@
     </delete>
     <insert id="insertService" parameterType="cn.com.cyber.model.AppService">
         insert into se_service_info
-        (service_name, service_key, url_suffix, method, service_rule, source_type,
+        (service_name, service_key, url_suffix, method,
         <if test="appId != null">
             app_id,
         </if>
@@ -77,7 +77,7 @@
             source_type,
         </if>
         state, creator, create_time)
-        VALUES(#{serviceName},#{serviceKey},#{urlSuffix},#{method}, #{serviceRule},#{sourceType},
+        VALUES(#{serviceName},#{serviceKey},#{urlSuffix},#{method},
         <if test="appId != null">
             #{appId},
         </if>

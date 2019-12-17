@@ -36,8 +36,7 @@ public class ReceiveLogController extends BaseController {
         }
         List<ReceiveLog> receiveLogList = receiveLogService.getReceiveLogList(receiveLog);
         PageInfo<ReceiveLog> receiveLogPage = new PageInfo<ReceiveLog>(receiveLogList);
-        return RestResponse.success().setData(receiveLogList).setTotal(receiveLogPage.getTotal()).
-                setPage(receiveLogPage.getLastPage());
+        return RestResponse.success().setData(receiveLogList).setTotal(receiveLogPage.getTotal()).setPage(receiveLogPage.getLastPage());
     }
 
     //服务监控列表

@@ -169,8 +169,8 @@ public class HttpConnection {
                 }
             }
         }
-        LOGGER.info("newParam:{}", newParam);
-        LOGGER.info("method:{},ContentType:{},url:{}", method, contentType, requestUrl);
+//        LOGGER.info("newParam:{}", newParam);
+//        LOGGER.info("method:{},ContentType:{},url:{}", method, contentType, requestUrl);
         ResultData resultData = httpRequest(requestUrl, method, contentType, newParam, null, serviceHeader);
         return resultData;
     }

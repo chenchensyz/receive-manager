@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,9 +24,12 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/redirect")
@@ -41,6 +45,9 @@ public class RedirectController extends BaseController {
 
     @Autowired
     private AppServiceService appServiceService;
+
+    @Autowired
+    private Environment env;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
@@ -67,7 +74,7 @@ public class RedirectController extends BaseController {
                 });
             }
             //发送请求
-            LOGGER.info("params:{}", params);
+//            LOGGER.info("params:{}", params);
             ResultData resultData = HttpConnection.requestNewParams(params, appService.getMethod(), appService.getContentType(), appService.getUrlSuffix(), serviceHeader);
             receiveLog.setResponseTime(new Date());
             if (resultData != null && resultData.getCode() != null) {
@@ -88,7 +95,7 @@ public class RedirectController extends BaseController {
             msgCode = CodeUtil.REQUEST_SERVICE_FILED;
             result = JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)));
         }
-        LOGGER.info("本次请求结束 result:{}", result);
+//        LOGGER.info("本次请求结束 result:{}", result);
         return result;
     }
 
@@ -112,7 +119,8 @@ public class RedirectController extends BaseController {
     public RestResponse multifileUpload(HttpServletRequest request,
                                         @RequestParam("appKey") String appKey,
                                         @RequestParam("serviceKey") String serviceKey,
-                                        @RequestParam("introduction") String introduction,long size) {
+                                        @RequestParam("introduction") String introduction, long size) {
+        LOGGER.info("文件传输，接收appkey:{},appkey:{},introduction:{}", appKey, serviceKey, introduction);
         int msgCode = CodeUtil.BASE_FILE_ERR_UP;
 
         AppService service = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
@@ -124,20 +132,34 @@ public class RedirectController extends BaseController {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
 
         for (MultipartFile file : files) {
-            Map<String, MultipartFile> fileMap = Maps.newHashMap();
+            String fileName = file.getOriginalFilename();
+            String suffix = fileName.substring(fileName.lastIndexOf("."));
+            String uuid = UUID.randomUUID().toString();
+            String filePath = env.getProperty(CodeUtil.FILE_SAVE_PATH) + File.separator + uuid + suffix;
+            File dest = new File(filePath);
+            if (!dest.getParentFile().exists()) { //判断文件父目录是否存在
+                dest.getParentFile().mkdir();
+            }
 
-            Map<String, String> requestParamsMap = Maps.newHashMap();
-            requestParamsMap.put("introduction", introduction);
-            requestParamsMap.put("size", size + "");
+            try {
+                file.transferTo(dest);
 
-            fileMap.put(file.getOriginalFilename(), file);
-            ResultData resultData = FileUpConnection.postFileUp(service.getUrlSuffix(), requestParamsMap, fileMap);
-            if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
-                JSONObject object = JSONObject.parseObject(resultData.getResult());
-                LOGGER.info("请求内网返回值,object:{}", object);
-                if (object != null && object.get("success") != null && (Boolean) object.get("success")) {
+                Map<String, MultipartFile> fileMap = Maps.newHashMap();
+                Map<String, String> requestParamsMap = Maps.newHashMap();
+                requestParamsMap.put("introduction", introduction);
+                requestParamsMap.put("size", size + "");
+
+                fileMap.put(file.getOriginalFilename(), file);
+                ResultData resultData = FileUpConnection.postFileUp(service.getUrlSuffix(), requestParamsMap, fileMap);
+                if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
+                    JSONObject object = JSONObject.parseObject(resultData.getResult());
+                    LOGGER.info("请求内网返回值,object:{}", object);
+//                    if (object != null && object.get("success") != null && (Boolean) object.get("success")) {
                     msgCode = CodeUtil.BASE_SUCCESS;
+//                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode));

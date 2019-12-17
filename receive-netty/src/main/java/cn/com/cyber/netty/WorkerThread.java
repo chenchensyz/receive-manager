@@ -79,6 +79,7 @@ public class WorkerThread implements Runnable {
                 paramHeader.put("serviceKey", serviceKey);
                 JSONObject jsonParams = new JSONObject();
                 jsonParams.put("params", params);
+                LOGGER.info("移动网发送内网appKey:{},serviceKey:{},jsonParams:{}", appKey, serviceKey, jsonParams);
                 ResultData resultData = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonParams.toString(), responseType, paramHeader);
 
                 //-----------------------
@@ -88,7 +89,6 @@ public class WorkerThread implements Runnable {
                     jedis.hmset(CodeUtil.TIME_JEDIS_PREFIX + messageId, map);
                 }
                 //--------------------------
-                LOGGER.info("移动网发送内网：{}", params);
                 if (resultData.getCode() != null && CodeUtil.HTTP_OK == resultData.getCode()) {
                     result = resultData.getResult();
                 } else {

@@ -47,7 +47,7 @@ public class CodeUtil {
     public static final String SOCKET_OPEN = "socket_open";
     public static final String VALID_TOKEN = "valid_token";
     public static final String PLATFORM_APP_VALID_URL = "/validAppAndService";
-    public static final String PLATFORM_FILEUP_URL = "/fileUp";
+    public static final String PLATFORM_FILEUP_URL = "http://56.3.0.79:8081/platform/redirect/fileUp";
 
 
 

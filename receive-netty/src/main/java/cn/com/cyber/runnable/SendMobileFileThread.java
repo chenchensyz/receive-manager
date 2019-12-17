@@ -12,7 +12,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -30,7 +29,6 @@ public class SendMobileFileThread implements Runnable {
         JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
         Jedis jedis = jedisPool.getResource();
         jedis.select(CodeUtil.JEDIS_APPVALID_INDEX); //2号
-        Environment env = SpringUtil.getBean(Environment.class);
         try {
             while (true) {
                 try {
@@ -47,7 +45,7 @@ public class SendMobileFileThread implements Runnable {
 //                                    jedis.hmset(key, map);
 //                                }
 //                            }
-                            mobileFileUp(env, jedis, key);
+                            mobileFileUp(jedis, key);
                         }
                     }
                 } catch (Exception e) {
@@ -63,7 +61,7 @@ public class SendMobileFileThread implements Runnable {
         }
     }
 
-    private void mobileFileUp(Environment env, Jedis jedis, String key) {
+    private void mobileFileUp(Jedis jedis, String key) {
         Map<String, String> map = jedis.hgetAll(key);
         if (Integer.valueOf(map.get("state")) < 2 && Integer.valueOf(map.get("times")) < 3) {
             if ((StringUtils.isNotBlank(map.get("times")) && Integer.valueOf(map.get("times")) < 3) || StringUtils.isBlank(map.get("times"))) {
@@ -78,8 +76,7 @@ public class SendMobileFileThread implements Runnable {
                 requestParamsMap.put("serviceKey", map.get("serviceKey"));
 
                 fileMap.put(file.getName(), file);
-                String url = env.getProperty(env.getProperty(CodeUtil.PLATFORM_URL) + CodeUtil.PLATFORM_FILEUP_URL);
-                ResultData resultData = FileUpConnection.postFileUp(url, requestParamsMap, fileMap);
+                ResultData resultData = FileUpConnection.postFileUp(CodeUtil.PLATFORM_FILEUP_URL, requestParamsMap, fileMap);
                 if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
                     JSONObject object = JSONObject.parseObject(resultData.getResult());
                     LOGGER.info("请求内网返回值uuid:{},object:{}", map.get("uuid"), object);
