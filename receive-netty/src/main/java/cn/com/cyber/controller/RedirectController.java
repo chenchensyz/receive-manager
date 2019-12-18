@@ -102,7 +102,11 @@ public class RedirectController extends BaseController {
             result = JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)));
         }
         LOGGER.info("本次请求结束 result:{}", result);
-        setResponseText(response, result);
+        if (ifJson(result)) {
+            responseOutWithJson(response, result);   //返回json
+        } else {
+            setResponseText(response, result); //返回text
+        }
     }
 
     @RequestMapping("/login")

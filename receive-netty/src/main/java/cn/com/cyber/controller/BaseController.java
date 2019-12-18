@@ -18,6 +18,17 @@ public class BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 
+    //判断返回值形式是否json
+    protected boolean ifJson(String cacheable) {
+        boolean flag = true;
+        try {
+            JSONObject.parseObject(cacheable);
+        } catch (Exception e) {
+            flag = false;
+        }
+        return flag;
+    }
+
     //将图片输出至网页
     public static void setResponseFile(HttpServletResponse response, byte[] defalutImg,
                                        String contentType) {

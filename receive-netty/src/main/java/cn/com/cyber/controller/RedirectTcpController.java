@@ -35,7 +35,7 @@ import static cn.com.cyber.util.CodeUtil.cs;
 @Controller
 @ConditionalOnExpression("'${redirect_type}'.equals('tcp')")
 @RequestMapping("/redirect")
-public class RedirectTcpController extends BaseController{
+public class RedirectTcpController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedirectController.class);
 
@@ -111,17 +111,21 @@ public class RedirectTcpController extends BaseController{
             if (StringUtils.isNotBlank(responseType) && CodeUtil.RESPONSE_FILE_TYPE.equals(responseType)) {
                 JSONObject result = JSONObject.parseObject(cacheable);
                 if (StringUtils.isBlank(result.getString("responseData"))) {
-                    setResponseText(response, cacheable);  //返回json文本
+                    responseOutWithJson(response, cacheable);  //返回json文本
                 } else {
                     byte[] resultbytes = Base64.decodeBase64(result.getString("responseData").getBytes(cs));
                     setResponseFile(response, resultbytes, result.getString("responseContent")); //输出文件流
                 }
             } else {
-                setResponseText(response, cacheable);
+                if (ifJson(cacheable)) {
+                    responseOutWithJson(response, cacheable);   //返回json
+                } else {
+                    setResponseText(response, cacheable); //返回text
+                }
             }
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();
-            setResponseText(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));
+            responseOutWithJson(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
@@ -130,4 +134,6 @@ public class RedirectTcpController extends BaseController{
             }
         }
     }
+
+
 }
