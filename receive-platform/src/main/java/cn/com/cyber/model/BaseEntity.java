@@ -12,8 +12,11 @@ public class BaseEntity {
 	private String column;//排序 字段
 	
 	private String sort;//desc 降序  asc 升序
-	
 
+	@JsonIgnore
+	public int getOffset() {
+		return (this.getPageNum() - 1) * this.getPageSize();
+	}
 
 	@JsonIgnore
 	public int getPageNum() {

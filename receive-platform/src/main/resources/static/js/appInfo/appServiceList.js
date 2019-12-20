@@ -24,14 +24,13 @@ appServiceList.prototype = {
 
     initData: function () {
         var that = this;
-        var source = localStorage.getItem("source")
         that.tableIns = that.layTable.render({
             id: 'appServiceTable',
             elem: '#appServiceList'
             , url: getRootPath() + '/appService/queryAppServiceListData'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
-            , where: {'state': 1, 'serviceType': 0}
+            , where: {'state': $('.state').val()}
             , page: true,
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
@@ -45,7 +44,15 @@ appServiceList.prototype = {
             , cols: [[
                 {type: 'checkbox'}
                 , {field: 'serviceName', title: '接口名称', width: 222}
-                , {field: 'appName', title: '所属应用', width: 222}
+                , {
+                    field: 'appName', templet: function (d) {
+                        if (d.appName) {
+                            return '<span>' + d.appName + '</span>'
+                        } else {
+                            return '<span>无</span>';
+                        }
+                    }, title: '所属应用'
+                }
                 , {
                     field: 'state', templet: function (d) {
                         if (d.state == 1) {
@@ -71,6 +78,9 @@ appServiceList.prototype = {
                 , {
                     field: 'right', templet: function (d) {
                         var span = ' <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
+                        if (d.state == 1) {
+                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="off">下架</a>';
+                        }
                         if (d.state == 2) {
                             span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="view">理由</a>';
                         }
@@ -96,7 +106,7 @@ appServiceList.prototype = {
                 $('.param-method').val(data.method);
                 $('.param-contentType').val(data.contentType);
                 $('.param-appName').val(!data.appName ? '无' : data.appName);
-                $('.param-appKey').val(data.appKey);
+                $('.param-appKey').val(!data.appKey ? data.serviceKey : data.appName);
                 $('.param-serviceKey').val(data.serviceKey);
                 $('.param-introduce').val(data.introduce);
                 $('.param-id').val(data.id);
@@ -125,10 +135,12 @@ appServiceList.prototype = {
                 layer.alert(data.refuseMsg, {
                     closeBtn: 0
                 });
+            } else if (obj.event === 'off') {
+                that.delAppService(obj, obj.data.id, 2);
             } else if (obj.event === 'del') {
                 that.delAppService(obj, obj.data.id, -1);
             } else if (obj.event === 'down') {
-                $(this).attr('href',getRootPath()+'/file/service'+data.filePath);
+                $(this).attr('href', getRootPath() + '/file/service' + data.filePath);
             }
         });
 

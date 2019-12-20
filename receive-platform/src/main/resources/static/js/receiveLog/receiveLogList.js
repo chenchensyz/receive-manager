@@ -41,7 +41,15 @@ receiveLogList.prototype = {
             , cols: [[
                 {type: 'numbers'}
                 , {field: 'serviceName', title: '服务名称'}
-                , {field: 'appName', title: '调用应用'}
+                , {
+                    field: 'appName', templet: function (d) {
+                        if (d.appName) {
+                            return '<span>' + d.appName + '</span>'
+                        } else {
+                            return '<span>无</span>';
+                        }
+                    }, title: '调用应用'
+                }
                 , {field: 'requestTimeStr', title: '请求时间'}
                 , {field: 'responseTimeStr', title: '响应时间'}
                 , {field: 'responseCode', title: '响应状态', width: 165, align: 'center'}

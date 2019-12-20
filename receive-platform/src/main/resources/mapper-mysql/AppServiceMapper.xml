@@ -35,14 +35,12 @@
         <result column="control_time" property="controlTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, service_name, service_key, app_id, url_suffix, method, content_type, state, creator,
-    reviser, create_time, update_time, service_ype, refuse_msg,introduce, remark, approve_app_name,
-    service_rule, source_type, file_path
+        id, service_name, service_key, app_id, url_suffix, method, content_type, state, creator,
+        reviser, create_time, update_time, service_ype, refuse_msg,introduce, remark, approve_app_name,
+        service_rule, source_type, file_path
   </sql>
     <select id="getByServiceKey" resultMap="BaseResultMap" parameterType="string">
-        select
-        <include refid="Base_Column_List"/>
-        from se_service_info
+        select * from se_service_info
         where service_key = #{serviceKey}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -247,7 +245,11 @@
    </select>
 
     <update id="updateMoreAppService" parameterType="map">
-        update se_service_info set state = #{state} WHERE id in
+        update se_service_info set state = #{state}
+        <if test="refuseMsg != null">
+            ,refuse_msg = #{refuseMsg}
+        </if>
+        WHERE id in
         <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
             #{id}
         </foreach>

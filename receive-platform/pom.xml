@@ -51,8 +51,8 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-            <!--<version>8.0.17</version>-->
+            <!--<scope>runtime</scope>-->
+            <version>8.0.17</version>
         </dependency>
 
         <!-- mybatis 包 -->
@@ -187,6 +187,7 @@
 
     <build>
         <finalName>receive-platform</finalName>
+        <!--<finalName>receive-msjw</finalName>-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

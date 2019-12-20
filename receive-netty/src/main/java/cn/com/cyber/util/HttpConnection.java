@@ -122,46 +122,6 @@ public class HttpConnection {
         return resultData;
     }
 
-    public static String newParams(Map<String, Object> paramMap, String method, String contentType, String requestUrl) throws UnsupportedEncodingException {
-        String newParam = "";
-        if (CodeUtil.RESPONSE_POST.equals(method)) {
-            if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
-                newParam = JSONObject.toJSON(paramMap).toString();
-            } else {
-                int i = 1;
-                for (String key : paramMap.keySet()) {
-                    String value = paramMap.get(key).toString();
-                    newParam += key + "=" + URLEncoder.encode(value, "UTF-8");
-                    if (i < paramMap.size()) {
-                        newParam += "&";
-                    }
-                    i++;
-                }
-            }
-        } else if (CodeUtil.RESPONSE_GET.equals(method)) {
-            if (requestUrl.contains("{")) { //拼在地址栏
-                for (String key : paramMap.keySet()) {
-                    String value = paramMap.get(key).toString();
-                    String replace = requestUrl.replace("{" + key + "}", value);
-                    requestUrl = replace;
-                }
-            } else {
-                requestUrl = requestUrl + "?";
-                int i = 1;
-                for (String key : paramMap.keySet()) {
-                    String value = paramMap.get(key).toString();
-                    requestUrl += key + "=" + URLEncoder.encode(value, "UTF-8");
-                    if (i < paramMap.size()) {
-                        requestUrl += "&";
-                    }
-                    i++;
-                }
-            }
-        }
-        return newParam;
-    }
-
-
     public static String getBase64FromInputStream(InputStream in) {
         // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
         byte[] data = null;
@@ -188,58 +148,5 @@ public class HttpConnection {
 
         String encode = new String(Base64.encodeBase64(data), CodeUtil.cs);
         return encode;
-    }
-
-    public static ResultData requestNewParams(String params, String method, String contentType, String requestUrl, String responseType, Map<String, String> paramHeader) throws UnsupportedEncodingException {
-        String newParam = "";
-        if (StringUtils.isNotBlank(params)) {
-            JSONObject dataParams = JSONObject.parseObject(params);
-            JSONObject jsonParams = new JSONObject();
-
-            boolean getFlag = true;
-            if (requestUrl.contains("{")) { //拼在地址栏
-                for (String key : dataParams.keySet()) {
-                    Object value = dataParams.get(key);
-                    if (!requestUrl.contains("{" + key + "}")) {
-                        jsonParams.put(key, value);
-                    }
-                    String replace = requestUrl.replace("{" + key + "}", value.toString());
-                    requestUrl = replace;
-                    getFlag = false;
-                }
-            } else {
-                jsonParams = dataParams;
-            }
-            if (CodeUtil.RESPONSE_POST.equals(method)) {
-                if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
-                    newParam = jsonParams.toJSONString();
-                } else {
-                    int i = 1;
-                    for (String key : jsonParams.keySet()) {
-                        String value = jsonParams.get(key).toString();
-                        newParam += key + "=" + URLEncoder.encode(value, "UTF-8");
-                        if (i < jsonParams.size()) {
-                            newParam += "&";
-                        }
-                        i++;
-                    }
-                }
-            } else if (CodeUtil.RESPONSE_GET.equals(method) && getFlag) {//地址栏未变化
-                requestUrl = requestUrl + "?";
-                int i = 1;
-                for (String key : jsonParams.keySet()) {
-                    String value = jsonParams.get(key).toString();
-                    requestUrl += key + "=" + URLEncoder.encode(value, "UTF-8");
-                    if (i < jsonParams.size()) {
-                        requestUrl += "&";
-                    }
-                    i++;
-                }
-            }
-        }
-//        LOGGER.info("newParam:{}", newParam);
-//        LOGGER.info("method:{},ContentType:{},url:{}", method, contentType, requestUrl);
-        ResultData resultData = httpRequest(requestUrl, method, contentType, newParam, responseType, paramHeader);
-        return resultData;
     }
 }

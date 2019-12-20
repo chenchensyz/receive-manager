@@ -27,7 +27,7 @@ public class ReceiveLog extends BaseEntity {
 
     private String responseTimeStr;
 
-    private Integer companyId;    //用户、公司id
+    private Integer creator;    //用户id
 
     private String appName;
 
@@ -117,12 +117,12 @@ public class ReceiveLog extends BaseEntity {
         this.responseTimeStr = responseTimeStr;
     }
 
-    public Integer getCompanyId() {
-        return companyId;
+    public Integer getCreator() {
+        return creator;
     }
 
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
+    public void setCreator(Integer creator) {
+        this.creator = creator;
     }
 
     public String getAppName() {

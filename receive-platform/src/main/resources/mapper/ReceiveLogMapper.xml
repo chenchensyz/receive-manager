@@ -50,8 +50,8 @@
 
     <sql id="sql_where">
         <where>
-            <if test="companyId != null">
-                ai.company_id= #{companyId}
+            <if test="creator != null">
+                ais.creator= #{creator}
             </if>
             <if test="appName != null and appName !=''" >
                 <bind name="appNameSec" value=" '%' + appName + '%' "/>
@@ -79,14 +79,32 @@
         </where>
     </sql>
 
+    <select id="getReceiveLogListCount" resultType="int" parameterType="cn.com.cyber.model.ReceiveLog">
+        select count(rl.id) from se_receive_log rl
+        LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
+        LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
+        LEFT JOIN td_company tc on tc.id = ai.company_id
+        <include refid="sql_where"/>
+    </select>
+
     <select id="getReceiveLogList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.ReceiveLog">
         SELECT rl.*, ai.name app_name, ais.service_name, ais.url_suffix url
         FROM se_receive_log rl
         LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
-        LEFT JOIN td_company tc on tc.id = ai.company_id
         LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
-        <include refid="sql_where"/>
-        order by rl.response_time desc
+        where rl.id in(
+            select t2.id from (
+              SELECT * FROM (
+               SELECT ROWNUM AS rowno, t1.id from (
+                    SELECT rl.id FROM se_receive_log rl
+                        LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
+                        LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
+                        LEFT JOIN td_company tc ON tc.id = ais.creator
+                        <include refid="sql_where"/>
+                        ORDER BY rl.response_time DESC
+            ) t1 where ROWNUM &lt;= #{pageSize}) met WHERE met.rowno &gt; #{pageNum} ) t2
+        )
+        ORDER BY rl.response_time DESC
     </select>
 
     <select id="getReceiveLogCount" resultType="int"  parameterType="long">
@@ -111,8 +129,7 @@
         (
         select count(t.id) receive_num, to_char(t.request_time, 'yyyy-MM-dd') dt
         from SE_RECEIVE_LOG t left join se_service_info ssi on t.service_key = ssi.service_key
-        where t.request_time
-         between TO_DATE(#{startTime}, 'yyyy-MM-dd') and TO_DATE(#{endTime}, 'yyyy-MM-dd')
+        where to_char(t.request_time, 'yyyy-MM-dd') between #{startTime} and  #{endTime}
         <if test="creator != null">
             and ssi.creator = #{creator}
         </if>

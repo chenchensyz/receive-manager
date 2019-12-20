@@ -47,8 +47,8 @@
 
     <sql id="sql_where">
         <where>
-            <if test="companyId != null">
-                ai.company_id= #{companyId}
+            <if test="creator != null">
+                and ais.creator = #{creator}
             </if>
             <if test="appName != null and appName !=''">
                 <bind name="appNameSec" value=" '%' + appName + '%' "/>
@@ -65,26 +65,43 @@
                 and rl.service_key = #{serviceKey,jdbcType=VARCHAR}
             </if>
             <if test="beginTime != null and beginTime != ''">
-                and rl.request_time &gt;= to_date(#{beginTime},'yyyy-MM-dd hh24:mi:ss')
+                and rl.request_time &gt;= #{beginTime}
             </if>
             <if test="endTime != null and endTime != ''">
-                and rl.request_time &lt;= to_date(#{endTime},'yyyy-MM-dd hh24:mi:ss')
+                and rl.request_time &lt;= #{endTime}
             </if>
             <if test="responseCode != null">
-                and rl.response_code = #{responseCode,jdbcType=INTEGER}
+                and rl.response_code = #{responseCode}
             </if>
         </where>
     </sql>
+
+    <select id="getReceiveLogListCount" resultType="int" parameterType="cn.com.cyber.model.ReceiveLog">
+        select count(rl.id) from se_receive_log rl
+        LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
+        LEFT JOIN td_company tc on tc.id = ai.company_id
+        LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
+        <include refid="sql_where"/>
+    </select>
 
     <select id="getReceiveLogList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.ReceiveLog">
         SELECT rl.*, ai.name app_name, ais.service_name, ais.url_suffix url
         FROM se_receive_log rl
         LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
-        LEFT JOIN td_company tc on tc.id = ai.company_id
         LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
-        <include refid="sql_where"/>
-        order by rl.response_time desc
+        where rl.id in(
+            select t.id from (
+                SELECT rl.id FROM se_receive_log rl
+                LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
+                LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
+                LEFT JOIN td_company tc ON tc.id = ais.creator
+                <include refid="sql_where"/>
+                ORDER BY rl.response_time DESC LIMIT #{pageNum},#{pageSize}
+            ) t
+        )
+        ORDER BY rl.response_time DESC
     </select>
+
 
     <select id="getReceiveLogCount" resultType="int" parameterType="long">
         select count(rl.id) from se_receive_log rl

@@ -40,9 +40,7 @@
         service_rule, source_type, file_path
     </sql>
     <select id="getByServiceKey" resultMap="BaseResultMap" parameterType="string">
-        select
-        <include refid="Base_Column_List"/>
-        from se_service_info
+        select * from se_service_info
         where service_key = #{serviceKey}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -253,7 +251,11 @@
    </select>
 
     <update id="updateMoreAppService" parameterType="map">
-        update se_service_info set state = #{state} WHERE id in
+        update se_service_info set state = #{state}
+        <if test="refuseMsg != null">
+            ,refuse_msg = #{refuseMsg}
+        </if>
+        WHERE id in
         <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
             #{id}
         </foreach>

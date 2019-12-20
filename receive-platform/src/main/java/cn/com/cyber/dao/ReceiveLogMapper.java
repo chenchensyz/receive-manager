@@ -9,6 +9,8 @@ public interface ReceiveLogMapper {
 
     int insertReceiveLog(ReceiveLog receiveLog);
 
+    int getReceiveLogListCount(ReceiveLog receiveLog);
+
     List<ReceiveLog> getReceiveLogList(ReceiveLog receiveLog);
 
     int getReceiveLogCount(@Param("creator") Long creator);

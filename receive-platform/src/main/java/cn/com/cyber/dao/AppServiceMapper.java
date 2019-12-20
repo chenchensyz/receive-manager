@@ -19,7 +19,7 @@ public interface AppServiceMapper {
 
     AppService getEditByServiceId(long serviceId);
 
-    int updateMoreAppService(@Param("ids") List<Integer> ids, @Param("state") Integer state);
+    int updateMoreAppService(@Param("ids") List<Integer> ids, @Param("state") Integer state, @Param("refuseMsg") String refuseMsg);
 
     int deleteMoreAppService(List<Integer> ids);
 

@@ -93,6 +93,8 @@ public class CodeUtil {
     public static final int BASE_FILE_ONLY_UP = 99115;    //只能上传单个文件
     public static final int BASE_FILE_NULL = 99116;       //文件不存在
     public static final int BASE_FILE_COPY_ERR = 99117;       //文件拷贝失败
+    public static final int REQUEST_KEY_NOT_ONLY= 99118;    //当前接口不是独立接口，请填写正确的appKey
+
 
 
     //管理平台状态码

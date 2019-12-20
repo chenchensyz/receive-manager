@@ -29,7 +29,7 @@ appServiceList.prototype = {
             , url: getRootPath() + '/appService/queryAppServiceListData'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
-            , where: {'state': 1}
+            , where: {'state': $('.state').val()}
             , page: true,
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
@@ -76,6 +76,9 @@ appServiceList.prototype = {
                 , {
                     field: 'right', align: 'center', templet: function (d) {
                         var span = ' <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
+                        if (d.state == 1) {
+                            span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="off">下架</a>';
+                        }
                         if (d.state == 2) {
                             span += '<a class="layui-btn layui-btn-warm layui-btn-xs opt-btn" lay-event="view">理由</a>';
                         }
@@ -98,7 +101,7 @@ appServiceList.prototype = {
             var data = obj.data;
             if (obj.event === 'edit') {//编辑
                 $('.param-method').val(data.method);
-                $('.param-appKey').val(data.appKey);
+                $('.param-appKey').val(!data.appKey ? data.serviceKey : data.appName);
                 $('.param-serviceKey').val(data.serviceKey);
                 $('.param-contentType').val(data.contentType);
                 $('.param-appName').val(!data.appName ? '无' : data.appName);
@@ -129,10 +132,12 @@ appServiceList.prototype = {
                 layer.alert(data.refuseMsg, {
                     closeBtn: 0
                 });
-            } else if (obj.event === 'del') {
+            } else if (obj.event === 'off') {
+                that.delAppService(obj, obj.data.id, 2);
+            }  else if (obj.event === 'del') {
                 that.delAppService(obj, obj.data.id, -1);
             } else if (obj.event === 'down') {
-                $(this).attr('href',getRootPath()+'/file/service'+data.filePath);
+                $(this).attr('href', getRootPath() + '/file/service' + data.filePath);
             }
         });
 

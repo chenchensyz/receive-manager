@@ -46,9 +46,6 @@ public class RedirectController extends BaseController {
     @Autowired
     private AppServiceService appServiceService;
 
-    @Autowired
-    private Environment env;
-
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public String redirect(HttpServletRequest request, HttpServletResponse response, @RequestBody(required = false) String jsonData) {
@@ -132,17 +129,17 @@ public class RedirectController extends BaseController {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
 
         for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
-            String suffix = fileName.substring(fileName.lastIndexOf("."));
-            String uuid = UUID.randomUUID().toString();
-            String filePath = env.getProperty(CodeUtil.FILE_SAVE_PATH) + File.separator + uuid + suffix;
-            File dest = new File(filePath);
-            if (!dest.getParentFile().exists()) { //判断文件父目录是否存在
-                dest.getParentFile().mkdir();
-            }
+//            String fileName = file.getOriginalFilename();
+//            String suffix = fileName.substring(fileName.lastIndexOf("."));
+//            String uuid = UUID.randomUUID().toString();
+//            String filePath = env.getProperty(CodeUtil.FILE_SAVE_PATH) + File.separator + uuid + suffix;
+//            File dest = new File(filePath);
+//            if (!dest.getParentFile().exists()) { //判断文件父目录是否存在
+//                dest.getParentFile().mkdir();
+//            }
 
             try {
-                file.transferTo(dest);
+//                file.transferTo(dest);
 
                 Map<String, MultipartFile> fileMap = Maps.newHashMap();
                 Map<String, String> requestParamsMap = Maps.newHashMap();
@@ -158,7 +155,7 @@ public class RedirectController extends BaseController {
                     msgCode = CodeUtil.BASE_SUCCESS;
 //                    }
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

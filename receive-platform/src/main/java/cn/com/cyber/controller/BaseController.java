@@ -184,6 +184,9 @@ public class BaseController {
         AppService appService;
         if (appKey.equals(serviceKey)) { //独立接口
             appService = appServiceService.getByServiceKey(serviceKey);
+            if (appService.getServiceType() != 1) {  //不是独立接口
+                throw new ValueRuntimeException(CodeUtil.REQUEST_KEY_NOT_ONLY);
+            }
         } else { //应用接口
             appService = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
             if (appService == null) {  //应用接口需授权
@@ -192,17 +195,14 @@ public class BaseController {
         }
 
         if (appService == null) {
-            msgCode = CodeUtil.REQUEST_KEY_FILED;
-            throw new ValueRuntimeException(msgCode);
+            throw new ValueRuntimeException(CodeUtil.REQUEST_KEY_FILED);
         }
 
-        if (CodeUtil.APP_STATE_ENABLE != appService.getAppState()) {
-            msgCode = CodeUtil.APPINFO_ERR_UNENABLE;
-            throw new ValueRuntimeException(msgCode);
+        if (appService.getAppState() != null && CodeUtil.APP_STATE_ENABLE != appService.getAppState()) {
+            throw new ValueRuntimeException(CodeUtil.APPINFO_ERR_UNENABLE);
         }
         if (CodeUtil.APP_STATE_ENABLE != appService.getState()) {
-            msgCode = CodeUtil.APPINFO_REFUSE_SERVICE;
-            throw new ValueRuntimeException(msgCode);
+            throw new ValueRuntimeException(CodeUtil.APPINFO_REFUSE_SERVICE);
         }
         return appService;
     }
