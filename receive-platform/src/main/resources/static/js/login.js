@@ -22,6 +22,7 @@ login.prototype = {
                 var title = '统一资源服务管理平台';
                 if (res.code == 0) {
                     title = res.data;
+                    localStorage.setItem('upUrl', res.upUrl);
                 }
                 $('.login_name p').text(title);
                 localStorage.setItem('platform_title', title);

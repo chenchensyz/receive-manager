@@ -16,8 +16,8 @@
             <outputDirectory>/</outputDirectory>
             <excludes>
                 <exclude>application-*.properties</exclude>
-                <exclude>mapper/**</exclude>
-                <!--<exclude>mapper-mysql/**</exclude>-->
+                <!--<exclude>mapper/**</exclude>-->
+                <exclude>mapper-mysql/**</exclude>
             </excludes>
         </fileSet>
         <fileSet>

@@ -146,13 +146,14 @@ public class AppServiceController extends BaseController {
         return RestResponse.res(code, messageCodeUtil.getMessage(code));
     }
 
+    //上传文件
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     @ResponseBody
-    public RestResponse uploadFile(HttpServletRequest request, String pathSuffix) {
+    public RestResponse uploadFile(HttpServletRequest request, String pathSuffix, Long serviceId) {
         int code = CodeUtil.BASE_SUCCESS;
         RestResponse rest = new RestResponse();
         try {
-            String filePath = appServiceService.uploadFile(request, pathSuffix);
+            String filePath = appServiceService.uploadFile(request, pathSuffix, serviceId);
             rest.setData(filePath);
         } catch (ValueRuntimeException e) {
             code = (Integer) e.getValue();

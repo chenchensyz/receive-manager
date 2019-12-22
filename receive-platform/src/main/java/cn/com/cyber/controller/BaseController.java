@@ -184,7 +184,7 @@ public class BaseController {
         AppService appService;
         if (appKey.equals(serviceKey)) { //独立接口
             appService = appServiceService.getByServiceKey(serviceKey);
-            if (appService.getServiceType() != 1) {  //不是独立接口
+            if (appService != null && appService.getServiceType() != 1) {  //不是独立接口
                 throw new ValueRuntimeException(CodeUtil.REQUEST_KEY_NOT_ONLY);
             }
         } else { //应用接口

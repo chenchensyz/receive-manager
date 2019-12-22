@@ -8,7 +8,7 @@ function appServiceList() {
     layui.use(['table', 'form', 'upload'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
-        that.upload = layui.upload;
+        that.layUpload = layui.upload;
         that.init();
     });
 }
@@ -65,9 +65,9 @@ appServiceList.prototype = {
                 }
                 , {
                     field: 'filePath', templet: function (d) {
-                        var span = ' <span>无</span>';
+                        var span = '<a class="layui-btn layui-btn-primary layui-btn-xs"  lay-event="up"> 上传</a>'
                         if (d.filePath) {
-                            span = '<a class="layui-btn layui-btn-normal layui-btn-xs"  lay-event="down">下载</a>';
+                            span += '<a class="layui-btn layui-btn-normal layui-btn-xs"  lay-event="down">下载</a>';
                         }
                         return span;
                     }, title: '附件', align: 'center'
@@ -101,7 +101,7 @@ appServiceList.prototype = {
             var data = obj.data;
             if (obj.event === 'edit') {//编辑
                 $('.param-method').val(data.method);
-                $('.param-appKey').val(!data.appKey ? data.serviceKey : data.appName);
+                $('.param-appKey').val(!data.appKey ? data.serviceKey : data.appKey);
                 $('.param-serviceKey').val(data.serviceKey);
                 $('.param-contentType').val(data.contentType);
                 $('.param-appName').val(!data.appName ? '无' : data.appName);
@@ -134,10 +134,22 @@ appServiceList.prototype = {
                 });
             } else if (obj.event === 'off') {
                 that.delAppService(obj, obj.data.id, 2);
-            }  else if (obj.event === 'del') {
+            } else if (obj.event === 'del') {
                 that.delAppService(obj, obj.data.id, -1);
+            } else if (obj.event === 'up') {
+                that.upFile.reload({
+                    data: {'serviceId': obj.data.id}
+                    , done: function (res) {
+                        that.load(obj)
+                    }
+                });
+                $("#upFile").trigger("click");
             } else if (obj.event === 'down') {
-                $(this).attr('href', getRootPath() + '/file/service' + data.filePath);
+                var url = localStorage.getItem('upUrl');
+                if (!url) {
+                    url = getRootPath();
+                }
+                $(this).attr('href', url + '/file/service' + data.filePath);
             }
         });
 
@@ -161,6 +173,15 @@ appServiceList.prototype = {
             //重新加载table
             that.load(data);
             return false;
+        });
+
+        that.upFile = that.layUpload.render({ //允许上传的文件后缀
+            elem: '#upFile'
+            , url: getRootPath() + '/appService/uploadFile'
+            , accept: 'file' //普通文件
+            , done: function (res) {
+                layer.msg(res.message);
+            }
         });
 
     },

@@ -55,11 +55,11 @@ public class CodeUtil {
     public static final String SOCKET_PORT = "socket_port";
     public static final String THREADPOOLSIZE = "threadPoolSize";
     public static final String FILE_SEVER_PORT = "file_sever_port";
-    public static final String FILE_SAVE_PATH = "file_save_path";
     public static final String SOCKET_OPEN = "socket_open";
     public static final String FILE_ROOT_PATH = "file_root_path";
     public static final String DEFAULT_DEPARTMENT = "default_department";  //顶层机构
 
+    public static final String UP_FILE_PATH = "upload";  //接口附件
     public static final String SERVICE_FILE_PATH = "service";  //接口附件
 
     //pstore用户校验

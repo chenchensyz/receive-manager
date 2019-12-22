@@ -24,7 +24,7 @@ public interface AppServiceService {
     void uploadMoreService(MultipartFile file, Long appId);
 
     //上传文件
-    String uploadFile(HttpServletRequest request, String pathSuffix);
+    String uploadFile(HttpServletRequest request, String pathSuffix, Long serviceId);
 
     void changeAppService(String appServiceIds, int state, Long updateUserId);
 

@@ -127,9 +127,9 @@ public class AppServiceServiceImpl implements AppServiceService {
     }
 
     @Override
-    public String uploadFile(HttpServletRequest request, String pathSuffix) {
-        String filePath = environment.getProperty(CodeUtil.FILE_SAVE_PATH) + CodeUtil.SERVICE_FILE_PATH + File.separator;
-        if (StringUtils.isNotBlank(pathSuffix)) {
+    public String uploadFile(HttpServletRequest request, String pathSuffix, Long serviceId) {
+        String filePath = environment.getProperty(CodeUtil.FILE_ROOT_PATH) + CodeUtil.SERVICE_FILE_PATH + File.separator;
+        if (StringUtils.isNotBlank(pathSuffix)) {  //注册接口，上传文件未提交，重新上传，删除源文件
             File sourceFile = new File(filePath + pathSuffix);  // 源文件
             FileOperateUtil.delFile(sourceFile.getParentFile()); //删除源文件目录
         }
@@ -143,6 +143,12 @@ public class AppServiceServiceImpl implements AppServiceService {
         long currentTime = System.currentTimeMillis();
         String meeting = FileOperateUtil.uploadFile(fileMap, filePath + currentTime); //保存文件
         String resultPath = File.separator + currentTime + File.separator + meeting; //返回终端格式
+        if (serviceId != null) {   //替换文件
+            AppService service = new AppService();
+            service.setId(serviceId);
+            service.setFilePath(resultPath);
+            appServiceMapper.updateService(service);
+        }
         return resultPath;
     }
 
