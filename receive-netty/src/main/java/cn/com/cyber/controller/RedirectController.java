@@ -24,8 +24,8 @@ import redis.clients.jedis.JedisPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -235,29 +235,31 @@ public class RedirectController extends BaseController {
     @RequestMapping("fileUp")
     @ResponseBody
     public RestResponse multifileUpload(HttpServletRequest request,
-                                        @RequestParam("introduction") String introduction,
-                                        @RequestParam("size") long size) {
+                                        @RequestParam("appKey") String appKey,
+                                        @RequestParam("serviceKey") String serviceKey,
+                                        @RequestParam("introduction") String introduction, long size) {
         int msgCode = CodeUtil.BASE_SUCCESS;
         //根据appKey和serviceKey查询appinfo信息
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
 
         for (MultipartFile file : files) {
-            Map<String, MultipartFile> fileMap = Maps.newHashMap();
+            Map<String, InputStream> fileMap = Maps.newHashMap();
 
             Map<String, String> requestParamsMap = Maps.newHashMap();
+            requestParamsMap.put("appKey", appKey);
+            requestParamsMap.put("serviceKey", appKey);
             requestParamsMap.put("introduction", introduction);
             requestParamsMap.put("size", size + "");
-            String fileName = file.getOriginalFilename();
-
-            String suffix = fileName.substring(fileName.lastIndexOf("."));
-            String filePath = "D:\\source\\success\\" + suffix;
-            File dest = new File(filePath);
-            if (!dest.getParentFile().exists()) { //判断文件父目录是否存在
-                dest.getParentFile().mkdir();
-            }
-
             try {
-                file.transferTo(dest);
+                fileMap.put(file.getOriginalFilename(), file.getInputStream());
+                ResultData resultData = FileUpConnection.postFileUp(CodeUtil.PLATFORM_FILEUP_URL, requestParamsMap, fileMap);
+                if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
+                    JSONObject object = JSONObject.parseObject(resultData.getResult());
+                    LOGGER.info("请求内网返回值,object:{}", object);
+//                    if (object != null && object.get("success") != null && (Boolean) object.get("success")) {
+                    msgCode = CodeUtil.BASE_SUCCESS;
+//                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

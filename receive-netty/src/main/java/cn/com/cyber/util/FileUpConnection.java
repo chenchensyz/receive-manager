@@ -1,5 +1,6 @@
 package cn.com.cyber.util;
 
+import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +26,7 @@ public class FileUpConnection {
      * @return
      * @throws IOException
      */
-    public static ResultData postFileUp(String actionUrl, Map<String, String> params,
-                                        Map<String, File> files) {
+    public static ResultData postFileUp(String actionUrl, Map<String, String> params, Map<String, InputStream> files) {
         LOGGER.info("进入连接:{}", actionUrl);
         StringBuilder sb2 = new StringBuilder();
         String BOUNDARY = java.util.UUID.randomUUID().toString();
@@ -55,8 +55,7 @@ public class FileUpConnection {
                 sb.append(PREFIX);
                 sb.append(BOUNDARY);
                 sb.append(LINEND);
-                sb.append("Content-Disposition: form-data; name=\""
-                        + entry.getKey() + "\"" + LINEND);
+                sb.append("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"" + LINEND);
                 sb.append("Content-Type: text/plain; charset=" + CHARSET + LINEND);
                 sb.append("Content-Transfer-Encoding: 8bit" + LINEND);
                 sb.append(LINEND);
@@ -69,20 +68,18 @@ public class FileUpConnection {
             outStream.write(sb.toString().getBytes());
             // 发送文件数据
             if (files != null) {
-                for (Map.Entry<String, File> file : files.entrySet()) {
+                for (Map.Entry<String, InputStream> file : files.entrySet()) {
                     StringBuilder sb1 = new StringBuilder();
                     sb1.append(PREFIX);
                     sb1.append(BOUNDARY);
                     sb1.append(LINEND);
                     // name是post中传参的键 filename是文件的名称
-                    sb1.append("Content-Disposition: form-data; name=\"file\"; filename=\""
-                            + file.getKey() + "\"" + LINEND);
-                    sb1.append("Content-Type: application/octet-stream; charset="
-                            + CHARSET + LINEND);
+                    sb1.append("Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getKey() + "\"" + LINEND);
+                    sb1.append("Content-Type: application/octet-stream; charset=" + CHARSET + LINEND);
                     sb1.append(LINEND);
                     outStream.write(sb1.toString().getBytes());
 
-                    InputStream is = new FileInputStream(file.getValue());
+                    InputStream is = file.getValue();
                     byte[] buffer = new byte[1024];
                     int len = 0;
                     while ((len = is.read(buffer)) != -1) {
@@ -264,10 +261,12 @@ public class FileUpConnection {
             // String a = postFile(Default_Address, requestParamsMap, files);
             // System.out.println(a);
 
-            Map<String, File> files = new HashMap<String, File>();
+            Map<String, InputStream> fileMap = Maps.newHashMap();
+
             File file = new File("D:" + File.separator + "path" + File.separator + "douban-master.zip");
-            files.put(file.getName(), file);
-            ResultData resultData = postFileUp(url, requestParamsMap, files);
+            fileMap.put(file.getName(), new FileInputStream(file));
+
+            ResultData resultData = postFileUp(url, requestParamsMap, fileMap);
             System.out.println(resultData);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

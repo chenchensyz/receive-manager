@@ -117,7 +117,7 @@ public class RedirectController extends BaseController {
                                         @RequestParam("appKey") String appKey,
                                         @RequestParam("serviceKey") String serviceKey,
                                         @RequestParam("introduction") String introduction, long size) {
-        LOGGER.info("文件传输，接收appkey:{},appkey:{},introduction:{}", appKey, serviceKey, introduction);
+        LOGGER.info("文件传输，接收appKey:{},serviceKey:{},introduction:{}", appKey, serviceKey, introduction);
         int msgCode = CodeUtil.BASE_FILE_ERR_UP;
 
         AppService service = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);

@@ -140,18 +140,14 @@ appServiceList.prototype = {
                 that.delAppService(obj, obj.data.id, -1);
             } else if (obj.event === 'up') {
                 that.upFile.reload({
-                    data: {'serviceId':  obj.data.id}
+                    data: {'serviceId': obj.data.id}
                     , done: function (res) {
                         that.load(obj)
                     }
                 });
                 $("#upFile").trigger("click");
             } else if (obj.event === 'down') {
-                var url = localStorage.getItem('upUrl');
-                if (!url) {
-                    url = getRootPath();
-                }
-                $(this).attr('href', url + '/file/service' + data.filePath);
+                $(this).attr('href', getRootPath() + '/file/service' + data.filePath);
             }
         });
 

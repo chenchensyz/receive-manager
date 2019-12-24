@@ -9,6 +9,7 @@ import cn.com.cyber.util.FileUpConnection;
 import cn.com.cyber.util.ResultData;
 import cn.com.cyber.util.SpringUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +44,7 @@ public class FileUpThread implements Runnable {
         Map<String, String> map = jedis.hgetAll(command);
         String state = "1";
         try {
-            Map<String, File> fileMap = new HashMap<String, File>();
+            Map<String, InputStream> fileMap = Maps.newHashMap();
             File file = new File(map.get("filePath"));
 
             Map<String, String> requestParamsMap = new HashMap<String, String>();
@@ -50,7 +53,7 @@ public class FileUpThread implements Runnable {
             requestParamsMap.put("appKey", map.get("appKey"));
             requestParamsMap.put("serviceKey", map.get("serviceKey"));
 
-            fileMap.put(file.getName(), file);
+            fileMap.put(file.getName(), new FileInputStream(file));
             ResultData resultData = FileUpConnection.postFileUp(PLATFROM_URL, requestParamsMap, fileMap);
             if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
                 JSONObject object = JSONObject.parseObject(resultData.getResult());

@@ -9,6 +9,7 @@ import cn.com.cyber.util.FileUpConnection;
 import cn.com.cyber.util.ResultData;
 import cn.com.cyber.util.SpringUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -61,12 +65,12 @@ public class SendMobileFileThread implements Runnable {
         }
     }
 
-    private void mobileFileUp(Jedis jedis, String key) {
+    private void mobileFileUp(Jedis jedis, String key) throws FileNotFoundException {
         Map<String, String> map = jedis.hgetAll(key);
         if (Integer.valueOf(map.get("state")) < 2 && Integer.valueOf(map.get("times")) < 3) {
             if ((StringUtils.isNotBlank(map.get("times")) && Integer.valueOf(map.get("times")) < 3) || StringUtils.isBlank(map.get("times"))) {
                 String state = "1";
-                Map<String, File> fileMap = new HashMap<String, File>();
+                Map<String, InputStream> fileMap = Maps.newHashMap();
                 File file = new File(map.get("filePath"));
 
                 Map<String, String> requestParamsMap = new HashMap<String, String>();
@@ -75,7 +79,7 @@ public class SendMobileFileThread implements Runnable {
                 requestParamsMap.put("appKey", map.get("appKey"));
                 requestParamsMap.put("serviceKey", map.get("serviceKey"));
 
-                fileMap.put(file.getName(), file);
+                fileMap.put(file.getName(), new FileInputStream(file));
                 ResultData resultData = FileUpConnection.postFileUp(CodeUtil.PLATFORM_FILEUP_URL, requestParamsMap, fileMap);
                 if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
                     JSONObject object = JSONObject.parseObject(resultData.getResult());

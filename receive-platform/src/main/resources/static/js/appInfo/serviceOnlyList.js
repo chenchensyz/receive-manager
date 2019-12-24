@@ -145,11 +145,7 @@ appServiceList.prototype = {
                 });
                 $("#upFile").trigger("click");
             } else if (obj.event === 'down') {
-                var url = localStorage.getItem('upUrl');
-                if (!url) {
-                    url = getRootPath();
-                }
-                $(this).attr('href', url + '/file/service' + data.filePath);
+                $(this).attr('href', getRootPath() + '/file/service' + data.filePath);
             }
         });
 
