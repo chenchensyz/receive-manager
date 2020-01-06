@@ -27,8 +27,6 @@ public class FileUpThread implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUpThread.class);
 
-    private static final String PLATFROM_URL = "http://56.3.0.79:8081/platform/redirect/fileUp";
-
     private Charset cs = Charset.forName("UTF-8");
 
     private String command;
@@ -41,6 +39,7 @@ public class FileUpThread implements Runnable {
     public void run() {
         JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
         Jedis jedis = jedisPool.getResource();
+        jedis.select(CodeUtil.JEDIS_APPVALID_INDEX); //2号
         Map<String, String> map = jedis.hgetAll(command);
         String state = "1";
         try {
@@ -54,7 +53,7 @@ public class FileUpThread implements Runnable {
             requestParamsMap.put("serviceKey", map.get("serviceKey"));
 
             fileMap.put(file.getName(), new FileInputStream(file));
-            ResultData resultData = FileUpConnection.postFileUp(PLATFROM_URL, requestParamsMap, fileMap);
+            ResultData resultData = FileUpConnection.postFileUp(CodeUtil.PLATFORM_FILEUP_URL, requestParamsMap, fileMap);
             if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
                 JSONObject object = JSONObject.parseObject(resultData.getResult());
                 LOGGER.info("请求内网返回值uuid:{},object:{}", map.get("uuid"), object);

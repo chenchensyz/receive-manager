@@ -63,7 +63,7 @@ public class UploadServerHandler extends ChannelInboundHandlerAdapter {
                 }
             }
         }
-        LOGGER.info("channelRead读取完毕：{}", ctx.toString());
+//        LOGGER.info("channelRead读取完毕：{}", ctx.toString());
         ReferenceCountUtil.release(msg);
     }
 

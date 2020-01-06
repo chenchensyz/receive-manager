@@ -139,6 +139,7 @@ public class FileUpController extends BaseController {
     @ResponseBody
     public RestResponse repeatSend() {
         Jedis jedis = jedisPool.getResource();
+        jedis.select(CodeUtil.JEDIS_APPVALID_INDEX); //2号
         Set<String> keys = jedis.keys(CodeUtil.JEDIS_FILE_PREFIX + "*");
         if (keys != null && keys.size() > 0) {
             for (String key : keys) {
@@ -164,6 +165,7 @@ public class FileUpController extends BaseController {
     public RestResponse editState() {
         LOGGER.info("更改redis state:{}");
         Jedis jedis = jedisPool.getResource();
+        jedis.select(CodeUtil.JEDIS_APPVALID_INDEX); //2号
         Set<String> keys = jedis.keys(CodeUtil.JEDIS_FILE_PREFIX + "*");
         for (String key : keys) {
             Map<String, String> map = jedis.hgetAll(key);
