@@ -26,8 +26,9 @@
 hs_err_pid*
 
 .idea
-receive-manager.iml
+.iml
 target
 .gitignore
 receive-netty/src/test/
 receive-web/src/test/
+

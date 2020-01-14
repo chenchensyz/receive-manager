@@ -18,8 +18,9 @@ function appApplyList() {
 appApplyList.prototype = {
     init: function () {
         this.initData();
-        this.getAppServiceList();
+        // this.getAppServiceList();
         this.saveAppService();
+        this.ztree();
     },
 
     initData: function () {
@@ -96,7 +97,12 @@ appApplyList.prototype = {
         $(".add-btn").click(function () {
             var appId = $('.appId').val();
             var appKey = $('.appKey').val();
-            var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
+            // var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            var nodes = treeObj.getSelectedNodes();
+            alert(nodes);
+            return false;
+
             if (!appId) {
                 layer.alert('请选择应用后重试', function () {
                     layer.closeAll();
@@ -136,6 +142,54 @@ appApplyList.prototype = {
                 });
             });
         })
+    },
+
+    ztree: function () {
+        var that = this;
+        var zTreeObj;
+        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        var setting = {
+            view: {
+                selectedMulti: true, //设置是否能够同时选中多个节点
+                showIcon: true, //设置是否显示节点图标
+                showLine: true, //设置是否显示节点与节点之间的连线
+                showTitle: true, //设置是否显示节点的title提示信息
+            },
+            check: {
+                enable: true, //设置是否显示checkbox复选框
+                chkStyle: "checkbox",
+                chkboxType: {"Y": "ps", "N": "ps"},
+                nocheckInherit: true
+            },
+            data: {
+                key: {
+                    name: "title"
+                }
+            }
+        };
+        // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+        var zNodes = [
+            {
+                name: "test1", open: true, children: [
+                    {name: "test1_1"}, {name: "test1_2"}]
+            },
+            {
+                name: "test2", open: true, children: [
+                    {name: "test2_1"}, {name: "test2_2"}]
+            }
+        ];
+        $.ajax({
+            url: getRootPath() + '/appInfo/appServiceTree',
+            type: 'get',
+            success: function (res) {
+               that.zTreeObj= $.fn.zTree.init($("#treeDemo"), setting, res.data);
+            },
+            error: function (err) {
+                layer.alert(err.message, function () {
+                    layer.closeAll();
+                });
+            }
+        });
     }
 };
 new appApplyList();
