@@ -6,7 +6,7 @@ import cn.com.cyber.controller.manager.filter.UserInfoFilter;
 import cn.com.cyber.model.Developer;
 import cn.com.cyber.service.DeveloperService;
 import cn.com.cyber.util.MessageCodeUtil;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.common.RestResponse;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;

@@ -6,7 +6,7 @@ import cn.com.cyber.service.PermissionService;
 import cn.com.cyber.service.RoleService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.MessageCodeUtil;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.common.RestResponse;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;

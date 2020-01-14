@@ -3,7 +3,7 @@ package cn.com.cyber.controller.user;
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.Permission;
 import cn.com.cyber.service.PermissionService;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.common.RestResponse;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +57,10 @@ public class PermissionController extends BaseController {
         return "user/permission";
     }
 
+    //获取权限编辑数据
     @RequestMapping("/getPermissionData")
     @ResponseBody
     public RestResponse getPermissionData(@RequestParam("permId") long permId) {
-        LOGGER.info("获取权限编辑数据:{}", permId);
         Permission permission = permissionService.selectBySelf(permId);
         Map map = transBean2Map(permission, Arrays.asList("parentPerm"));
         if (permission.getParentPerm() != null) {
@@ -71,10 +71,10 @@ public class PermissionController extends BaseController {
         return RestResponse.success().setData(map);
     }
 
+    //新增或编辑权限
     @RequestMapping("addOrEditPermission")
     @ResponseBody
     public RestResponse addOrEditPermission(Permission sysPermission) {
-        LOGGER.info("新增或编辑权限:{}", sysPermission.getId());
         int count = 0;
         if (sysPermission.getId() > 0) {
             sysPermission.setUpdateTime(new Date());
@@ -102,10 +102,10 @@ public class PermissionController extends BaseController {
         return RestResponse.success();
     }
 
+    //获取权限编辑数据
     @RequestMapping("/getAddCilidPerm")
     @ResponseBody
     public RestResponse getAddCilidPerm(@RequestParam("permId") long permId) {
-        LOGGER.info("获取权限编辑数据:{}", permId);
         Permission permission = permissionService.getById(permId);
         if (permission == null) {
             return RestResponse.failure("获取权限失败");
@@ -113,11 +113,11 @@ public class PermissionController extends BaseController {
         return RestResponse.success().setData(permission);
     }
 
+    //删除权限
     @RequestMapping("/delPermission")
     @ResponseBody
     public RestResponse delPermission(@RequestParam("permId") long permId,
                                       @RequestParam("parentId") long parentId) {
-        LOGGER.info("删除权限:{}", permId);
         long del = permissionService.delPermission(permId, parentId);
         if (permissionService.getById(parentId) == null) {
             permissionService.delPermission(permId, 1);

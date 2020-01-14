@@ -30,10 +30,10 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/redirect")
-public class RedirectController extends BaseController {
+@RequestMapping("/api/redirect")
+public class RedirectApiController extends BaseController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RedirectController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RedirectApiController.class);
 
     @Autowired
     private MessageCodeUtil messageCodeUtil;

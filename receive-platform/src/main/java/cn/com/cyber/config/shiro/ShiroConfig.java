@@ -85,16 +85,13 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/register/**", "anon");
         filterChainDefinitionMap.put("/redirect/**", "anon");
         filterChainDefinitionMap.put("/file/**", "anon");
-        filterChainDefinitionMap.put("/redirect_wh/**", "anon");
-        filterChainDefinitionMap.put("/redirect_dl/**", "anon");
         filterChainDefinitionMap.put("/webSocket/**", "anon");
+        filterChainDefinitionMap.put("/api/**", "anon");
 
         filterChainDefinitionMap.put("/images/**", "anon");//img
         filterChainDefinitionMap.put("/css/**", "anon");//css
         filterChainDefinitionMap.put("/js/**", "anon");//js
         filterChainDefinitionMap.put("/lib/**", "anon");//layui
-        filterChainDefinitionMap.put("/echarts/**", "anon");//echarts
-        filterChainDefinitionMap.put("/dtree/**", "anon");//dtree
         filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;

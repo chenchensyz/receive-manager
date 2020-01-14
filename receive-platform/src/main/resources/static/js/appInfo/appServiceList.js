@@ -99,6 +99,9 @@ appServiceList.prototype = {
 
         //监听工具条
         that.layTable.on('tool(appServiceTable)', function (obj) {
+            $('.close-btn').off('click').on('click', function () {
+                layer.closeAll();
+            });
             var data = obj.data;
             if (obj.event === 'edit') {//编辑
                 // location.href = getRootPath() + '/appService/getAppService?appId=' + obj.data.appId + '&appServiceId=' + data.id;

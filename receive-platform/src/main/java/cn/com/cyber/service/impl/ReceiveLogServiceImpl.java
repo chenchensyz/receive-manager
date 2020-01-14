@@ -6,7 +6,7 @@ import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.ReceiveLog;
 import cn.com.cyber.service.ReceiveLogService;
 import cn.com.cyber.util.CodeUtil;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.common.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;

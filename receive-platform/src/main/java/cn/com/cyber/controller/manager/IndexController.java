@@ -2,15 +2,13 @@ package cn.com.cyber.controller.manager;
 
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.PermModel;
-import cn.com.cyber.model.Permission;
 import cn.com.cyber.model.User;
-import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.service.PermissionService;
 import cn.com.cyber.service.UserService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.EncryptUtils;
 import cn.com.cyber.util.MessageCodeUtil;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.common.RestResponse;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

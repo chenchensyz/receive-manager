@@ -2,7 +2,7 @@ package cn.com.cyber.service;
 
 import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.ReceiveLog;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.common.RestResponse;
 
 import java.util.List;
 

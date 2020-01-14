@@ -1,6 +1,7 @@
 package cn.com.cyber.interceptor;
 
 import cn.com.cyber.util.CodeUtil;
+import cn.com.cyber.util.MessageCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -15,9 +16,13 @@ public class MyInteceptor implements WebMvcConfigurer {
     @Autowired
     private Environment environment;
 
+    @Autowired
+    private MessageCodeUtil messageCodeUtil;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthCheckInterceptor()).addPathPatterns("/apisd");
+        //api后台接口拦截器
+        registry.addInterceptor(new ApiInterceptor()).addPathPatterns("/api/**");
     }
 
     @Override

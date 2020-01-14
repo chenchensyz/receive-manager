@@ -10,7 +10,7 @@ import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.service.AppServiceService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.MessageCodeUtil;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.common.RestResponse;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

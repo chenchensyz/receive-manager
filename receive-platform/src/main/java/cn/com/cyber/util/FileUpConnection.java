@@ -1,5 +1,6 @@
 package cn.com.cyber.util;
 
+import cn.com.cyber.util.common.ResultData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;

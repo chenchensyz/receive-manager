@@ -13,6 +13,12 @@ public class CodeUtil {
         return uuidStr;
     }
 
+
+
+    //api验证
+    public static final String REDIS_PREFIX = "session:";    //token保存
+    public static final int REDIS_EXPIRE_TIME = 60 * 30;  //30分
+
     //code_info表类型
     public static final String CODE_METHOD = "method";
     public static final String CODE_CONTENTTYPE = "content_type";
@@ -73,6 +79,7 @@ public class CodeUtil {
     public static final String MAPPER_DB_ORACLE = "oracle";
     public static final String MAPPER_DB_MYSQL = "mysql";
 
+
     //响应状态码
     public static final int BASE_SUCCESS = 0; //请求成功
     public static final int BASE_VALED = 401; //登陆信息失效，请重新登陆
@@ -94,6 +101,8 @@ public class CodeUtil {
     public static final int BASE_FILE_NULL = 99116;       //文件不存在
     public static final int BASE_FILE_COPY_ERR = 99117;       //文件拷贝失败
     public static final int REQUEST_KEY_NOT_ONLY= 99118;    //当前接口不是独立接口，请填写正确的appKey
+    public static final int REQUEST_TOKEN_USER_FILED = 99119; //用户验证失败
+
 
 
 
@@ -131,6 +140,7 @@ public class CodeUtil {
     public static final int USERINFO_ERR_DEL = 20103; //删除用户失败
     public static final int USERINFO_ERR_CONNECT = 20104; //连接用户查询服务器失败
     public static final int USERINFO_ERR_VALIED = 20105; //用户校验失败，请确认用户信息是否正确
+    public static final int USERINFO_ERR_LOGIN = 20106; //用户登陆失败
     //公司
     public static final int COMPANYINFO_ERR_SELECT = 30101; //未查到公司
     public static final int COMPANYINFO_ERR_OPERATION = 30102; //添加或修改公司失败

@@ -103,7 +103,7 @@
         <if test="sourceType != null">
            #{sourceType},
         </if>
-        0,#{creator},sysdate)
+         0,#{creator},sysdate)
     </insert>
 
     <update id="updateService" parameterType="cn.com.cyber.model.AppService">

@@ -9,7 +9,7 @@ import cn.com.cyber.model.AppService;
 import cn.com.cyber.service.RankingService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.MessageCodeUtil;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.common.RestResponse;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;

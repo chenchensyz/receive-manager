@@ -54,11 +54,7 @@ public class WorkerThread implements Runnable {
             String params = json.getString("params");
             String appKey = json.getString("appKey");
             String serviceKey = json.getString("serviceKey");
-//            String method = json.getString("method");
-//            String contentType = json.getString("contentType");
             String responseType = json.getString("responseType");
-//            String serviceHeader = json.getString("serviceHeader");
-//            LOGGER.info("接收请求json.length:{}", json.toString().length());
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("messageId", messageId);
             if (StringUtils.isNoneBlank(appKey, serviceKey)) {

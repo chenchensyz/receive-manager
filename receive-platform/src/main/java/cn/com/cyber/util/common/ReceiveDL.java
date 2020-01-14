@@ -1,4 +1,4 @@
-package cn.com.cyber.util;
+package cn.com.cyber.util.common;
 
 import com.google.common.collect.Lists;
 

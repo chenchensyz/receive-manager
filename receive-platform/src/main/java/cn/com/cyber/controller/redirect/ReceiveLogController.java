@@ -4,7 +4,7 @@ import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.ReceiveLog;
 import cn.com.cyber.service.ReceiveLogService;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.common.RestResponse;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;

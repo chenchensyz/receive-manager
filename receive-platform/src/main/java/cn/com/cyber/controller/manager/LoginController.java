@@ -5,7 +5,7 @@ import cn.com.cyber.model.User;
 import cn.com.cyber.service.UserService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.EncryptUtils;
-import cn.com.cyber.util.RestResponse;
+import cn.com.cyber.util.common.RestResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;

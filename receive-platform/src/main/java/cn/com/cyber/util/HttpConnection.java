@@ -1,7 +1,7 @@
 package cn.com.cyber.util;
 
+import cn.com.cyber.util.common.ResultData;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
