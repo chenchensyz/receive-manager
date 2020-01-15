@@ -19,7 +19,7 @@
     </select>
 
     <select id="getUserChecked" resultType="string" parameterType="string">
-        select wm_concat(ssi.id) from SE_APP_USER_SERVICE saus
+        select ssi.service_key from SE_APP_USER_SERVICE saus
         left join td_app ta on saus.app_key=ta.app_uuid
         left join se_service_info ssi on saus.service_key = ssi.service_key
         where saus.user_name= #{userName}

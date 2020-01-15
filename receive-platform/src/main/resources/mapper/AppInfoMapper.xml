@@ -170,7 +170,7 @@
     </select>
 
     <select id="getCheckedService" resultType="string" parameterType="int">
-        select wm_concat(ssi.id) from SE_APP_SERVICE sas
+        select ssi.service_key from SE_APP_SERVICE sas
         left join td_app ai on ai.app_uuid=sas.app_key
         left join se_service_info ssi on sas.service_key = ssi.service_key
         where sas.app_id = #{appId}

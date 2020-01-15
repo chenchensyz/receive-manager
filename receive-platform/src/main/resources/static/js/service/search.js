@@ -6,11 +6,10 @@ function appServiceList() {
     var pageCurr;
     var tableIns;
     var appTree;
-    layui.use(['table', 'form', 'upload', 'dtree'], function () {
+    layui.use(['table', 'form', 'upload'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
         that.upload = layui.upload;
-        that.layDtree = layui.dtree;
         that.init();
     });
 }

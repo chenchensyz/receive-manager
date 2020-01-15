@@ -86,7 +86,7 @@ public class AppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public String getCheckedService(Integer appId) {
+    public List<String> getCheckedService(Integer appId) {
         return appInfoMapper.getCheckedService(appId);
     }
 
@@ -185,7 +185,7 @@ public class AppInfoServiceImpl implements AppInfoService {
             appInfoMapper.deleteAppServiceByAppId(appId);
         } else {
             for (TreeModel model : params) {
-                if (StringUtils.isBlank(model.getParentId()) || "null".equals(model.getParentId())) {
+                if (StringUtils.isBlank(model.getParentId())) {
                     continue;
                 }
                 AppModel appModel = new AppModel();

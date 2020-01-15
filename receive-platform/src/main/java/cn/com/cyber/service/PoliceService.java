@@ -8,7 +8,7 @@ public interface PoliceService {
 
     List<TreeModel> getUserTree(String nodeId);
 
-    String getUserChecked(String userName);
+    List<String> getUserChecked(String userName);
 
     void saveUserService(String userName, List<TreeModel> params, String creator);
 

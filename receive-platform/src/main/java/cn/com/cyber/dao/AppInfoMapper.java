@@ -30,7 +30,7 @@ public interface AppInfoMapper {
 
     List<TreeModel> getAppListTree(@Param("companyId") Long companyId, @Param("state") int state);
 
-    String getCheckedService(Integer appId);
+    List<String> getCheckedService(Integer appId);
 
     List<AppInfo> getReceiveAppRanking();
 

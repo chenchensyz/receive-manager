@@ -61,7 +61,7 @@ public class AppEmpowerController extends BaseController {
     @ResponseBody
     public RestResponse getCheckedService(@RequestParam("appId") Integer appId) {
         int code = CodeUtil.BASE_SUCCESS;
-        String checkedService = appInfoService.getCheckedService(appId);
+        List<String> checkedService = appInfoService.getCheckedService(appId);
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(checkedService);
     }
 

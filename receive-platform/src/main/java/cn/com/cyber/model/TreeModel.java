@@ -1,5 +1,7 @@
 package cn.com.cyber.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
 public class TreeModel {
@@ -39,6 +41,7 @@ public class TreeModel {
         this.parentId = parentId;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<TreeModel> getChildren() {
         return children;
     }

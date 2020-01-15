@@ -40,7 +40,7 @@ public class PoliceServiceImpl implements PoliceService {
     }
 
     @Override
-    public String getUserChecked(String userName) {
+    public List<String>  getUserChecked(String userName) {
         return policeMapper.getUserChecked(userName);
     }
 
@@ -51,11 +51,11 @@ public class PoliceServiceImpl implements PoliceService {
         } else {
             List<AppModel> appModelList = Lists.newArrayList();
             for (TreeModel model : params) {
-                if (StringUtils.isBlank(model.getParentId()) || "null".equals(model.getParentId())) {
+                if (StringUtils.isBlank(model.getParentId())) {
                     continue;
                 }
                 AppModel appModel = new AppModel();
-                appModel.setAppKey(model.getBasicData().replaceAll("\\\"", ""));
+                appModel.setAppKey(StringUtils.isBlank(model.getBasicData()) ? model.getParentId() : model.getBasicData());
                 appModel.setServiceKey(model.getParentId());
                 appModel.setApply(creator);
                 appModel.setUserName(userName);

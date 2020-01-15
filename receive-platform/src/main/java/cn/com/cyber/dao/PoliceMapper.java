@@ -10,7 +10,7 @@ public interface PoliceMapper extends BaseDao<AppInfo> {
 
     List<TreeModel> getUserTree(String nodeId);
 
-    String getUserChecked(String userName);
+    List<String>  getUserChecked(String userName);
 
     int deleteUserServiceByUserName(String userName);
 

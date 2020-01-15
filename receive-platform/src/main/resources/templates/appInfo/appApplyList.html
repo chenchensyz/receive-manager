@@ -24,7 +24,7 @@
                 </div>
                 <div class="layui-card-body">
                     <div style="overflow: auto;">
-                        <ul id="appSelect" class="dtree" style="width: 400px;"></ul>
+                        <ul id="appSelect" class="ztree"></ul>
                     </div>
                 </div>
             </div>
@@ -38,8 +38,7 @@
                     <input type="hidden" class="appId"/>
                     <input type="hidden" class="appKey"/>
                     <div style="overflow: auto;">
-                        <!--<ul id="interfaceSelect" class="dtree" style="width: 400px;"></ul>-->
-                        <ul id="treeDemo" class="ztree"></ul>
+                        <ul id="interfaceSelect" class="ztree"></ul>
                     </div>
                 </div>
             </div>
@@ -51,5 +50,6 @@
 <script th:src="@{/js/appInfo/appApplyList.js}"></script>
 <script th:src="@{/lib/ztree/js/jquery.ztree.core.js}"></script>
 <script th:src="@{/lib/ztree/js/jquery.ztree.excheck.js}"></script>
+<script th:src="@{/lib/ztree/js/jquery.ztree.exhide.js}"></script>
 </body>
 </html>

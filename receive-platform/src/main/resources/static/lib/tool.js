@@ -35,7 +35,6 @@ function queryDateBetween(start, end) {
         startTime.setDate(startTime.getDate() + 1);
         i += 1;
     }
-    console.log(date_all)
     return date_all;
 }
 
