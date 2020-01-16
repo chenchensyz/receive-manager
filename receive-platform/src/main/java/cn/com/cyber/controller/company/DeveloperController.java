@@ -2,17 +2,23 @@ package cn.com.cyber.controller.company;
 
 
 import cn.com.cyber.controller.BaseController;
+import cn.com.cyber.controller.company.filter.ValidListFilter;
 import cn.com.cyber.controller.manager.filter.UserInfoFilter;
 import cn.com.cyber.model.Developer;
+import cn.com.cyber.model.DeveloperValid;
 import cn.com.cyber.service.DeveloperService;
+import cn.com.cyber.service.DeveloperValidService;
+import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.common.RestResponse;
+import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -25,6 +31,9 @@ public class DeveloperController extends BaseController {
 
     @Autowired
     private DeveloperService developerService;
+
+    @Autowired
+    private DeveloperValidService developerValidService;
 
     @Autowired
     private MessageCodeUtil messageCodeUtil;
@@ -42,7 +51,7 @@ public class DeveloperController extends BaseController {
      *
      * @return
      */
-    @RequestMapping("/queryDeveloperListData")
+    @RequestMapping("/list")
     @ResponseBody
     public RestResponse queryUserListData(Developer developer) {
         PageHelper.startPage(developer.getPageNum(), developer.getPageSize());
@@ -51,5 +60,38 @@ public class DeveloperController extends BaseController {
         Object parseUserInfos = filterParam(users, UserInfoFilter.INFO_FILTER);
         return RestResponse.success().setData(parseUserInfos)
                 .setTotal(usersPage.getTotal()).setPage(usersPage.getLastPage());
+    }
+
+    /**
+     * 获取开发者跨区域对应列表
+     */
+    @RequestMapping("/valid/list")
+    @ResponseBody
+    public RestResponse validList(DeveloperValid developerValid) {
+        PageHelper.startPage(developerValid.getPageNum(), developerValid.getPageSize());
+        List<DeveloperValid> validList = developerValidService.getDeveloperValidList(developerValid);
+        PageInfo<DeveloperValid> validPage = new PageInfo<>(validList);
+        Object validListFilter = filterParam(validList, ValidListFilter.INFO_FILTER);
+        return RestResponse.success().setData(validListFilter).setTotal(validPage.getTotal()).setPage(validPage.getLastPage());
+    }
+
+    /**
+     * 开发者跨区域登陆
+     */
+    @RequestMapping("/valid/login")
+    @ResponseBody
+    public RestResponse validLogin(@RequestBody DeveloperValid developerValid) {
+        RestResponse rest = new RestResponse();
+        int code = CodeUtil.BASE_SUCCESS;
+        try {
+            developerValid.setUserId(getShiroUser().userId);
+            DeveloperValid valid = developerValidService.validLogin(developerValid);
+            rest.setData(valid);
+        } catch (ValueRuntimeException e) {
+            code = (Integer) e.getValue();
+        }
+        rest.setCode(code);
+        rest.setMessage(messageCodeUtil.getMessage(code));
+        return rest;
     }
 }

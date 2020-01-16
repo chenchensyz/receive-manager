@@ -63,7 +63,7 @@ public class ConnectThread implements Runnable {
                         LOGGER.error(e.getMessage(), e);
                     }
                 }
-                Thread.sleep(30 * 60 * 1000);
+                Thread.sleep(5 * 60 * 1000);
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

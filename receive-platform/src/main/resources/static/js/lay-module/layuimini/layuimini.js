@@ -781,11 +781,12 @@ layui.define(["element", "jquery"], function (exports) {
     });
 
     /**
-     * 清理
+     * 下载
      */
     $('body').on('click', '[data-download]', function () {
         var loading = layer.load(0, {shade: false, time: 2 * 1000});
-        location.href = getRootPath() + '/file/model/' + localStorage.getItem('platform_title') + '说明文档(app调用版).docx';
+        var url=getRootPath() + '/file/model/' + localStorage.getItem('platform_title') + '说明文档(app调用版).docx';
+        window.open(url);
         layer.close(loading);
     });
 

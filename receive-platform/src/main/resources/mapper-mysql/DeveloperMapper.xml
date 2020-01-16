@@ -40,4 +40,8 @@
     select tc.* ,sur.role_id from td_company tc left join se_user_role sur on tc.id=sur.user_id
      where  tc.username= #{userName}
   </select>
+
+    <select id="getDeveloperByCompanyKey" resultMap="BaseResultMap" parameterType="map" >
+    select tc.id,tc.username from td_company tc  where tc.username= #{userName} and  tc.company_key= #{companyKey}
+  </select>
 </mapper>

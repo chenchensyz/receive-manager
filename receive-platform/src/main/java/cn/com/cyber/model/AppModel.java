@@ -14,6 +14,8 @@ public class AppModel extends BaseEntity {
 
     private String userName;
 
+    private Integer pushArea;
+
     public String getAppKey() {
         return appKey;
     }
@@ -62,4 +64,11 @@ public class AppModel extends BaseEntity {
         this.recordId = recordId;
     }
 
+    public Integer getPushArea() {
+        return pushArea;
+    }
+
+    public void setPushArea(Integer pushArea) {
+        this.pushArea = pushArea;
+    }
 }

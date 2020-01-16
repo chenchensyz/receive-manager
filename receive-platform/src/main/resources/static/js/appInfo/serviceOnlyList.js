@@ -148,7 +148,7 @@ appServiceList.prototype = {
                 });
                 $("#upFile").trigger("click");
             } else if (obj.event === 'down') {
-                $(this).attr('href', getRootPath() + '/file/service' + data.filePath);
+                window.open(getRootPath() + '/file/service' + data.filePath);
             }
         });
 

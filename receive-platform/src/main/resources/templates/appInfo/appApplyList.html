@@ -16,7 +16,8 @@
             <div class="layui-card">
                 <div class="layui-card-header">应用列表
                     <div class="layui-input-inline" style="margin-left: 10px">
-                        <input class="layui-input" id="searchInput" value="" placeholder="输入应用" style=" height: 26px;width: 200px;">
+                        <input class="layui-input" id="searchInput" value="" placeholder="输入应用"
+                               style=" height: 26px;width: 200px;">
                     </div>
                     <div class="layui-input-inline">
                         <button class="layui-btn layui-btn-normal layui-btn-xs" id="search_btn">查询</button>
@@ -32,13 +33,59 @@
         <div class="layui-col-md6">
             <div class="layui-card">
                 <div class="layui-card-header">选择接口(<span style="color: green">选中部份为已授权接口</span>)
-                    <button type="button" class="layui-btn layui-btn-xs add-btn" style="float:right;margin-top: 10px">提交申请</button>
+                    <button type="button" class="layui-btn layui-btn-xs add-btn" style="float:right;margin-top: 10px">
+                        提交申请
+                    </button>
                 </div>
                 <div class="layui-card-body">
                     <input type="hidden" class="appId"/>
                     <input type="hidden" class="appKey"/>
-                    <div style="overflow: auto;">
-                        <ul id="interfaceSelect" class="ztree"></ul>
+                    <input type="hidden" class="pushArea"/>
+                    <div class="layui-tab layui-tab-brief" lay-filter="pushAreaFilter">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">二类区</li>
+                            <li>三类区</li>
+                        </ul>
+                        <div class="layui-tab-content" style="overflow: auto;">
+                            <div class="layui-tab-item layui-show">
+                                <ul id="interfaceSelect" class="ztree"></ul>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div  class="developerValidDiv">
+                                    <fieldset class="layui-elem-field layuimini-search">
+                                        <legend>账号绑定</legend>
+                                        <form class="layui-form" action="">
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">开发者账号</label>
+                                                    <div class="layui-input-inline">
+                                                        <input  autocomplete="off" class="layui-input userName"
+                                                               type="text" style=" height: 26px;margin-top: 6px"/>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">开发者密钥</label>
+                                                    <div class="layui-input-inline">
+                                                        <input  autocomplete="off" class="layui-input companyKey"
+                                                               type="text" style=" height: 26px;margin-top: 6px"/>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <button class="layui-btn layui-btn-xs loginSubmit"  type="button">登陆
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </fieldset>
+                                    <table id="developerValidList" lay-filter="developerValidTable"></table>
+                                </div>
+
+                                <div class="interfaceApiDiv">
+                                    <button class="layui-btn layui-btn-primary layui-btn-xs developer-change"><i class="layui-icon layui-icon-util"></i> 切换</button>
+                                    <ul id="interfaceApiSelect" class="ztree"></ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

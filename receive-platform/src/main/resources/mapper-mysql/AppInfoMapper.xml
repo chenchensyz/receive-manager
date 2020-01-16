@@ -139,7 +139,7 @@
     <select id="getAppServiceTree" resultMap="appTreeMap" parameterType="map">
         select ai.id,ai.name app_name ,ssi.id service_id ,ssi.service_name ,ssi.app_id ,ssi.service_key
         ,app_uuid basicData
-        from td_app ai  join se_service_info ssi on ai.id = ssi.app_id
+        from td_app ai  join se_service_info ssi on ai.id = ssi.app_id and ssi.is_open=0
         where ai.status = 1 and ssi.state = 1
         <if test="companyId != null" >
             and ai.company_id != #{companyId}
@@ -171,18 +171,18 @@
     </select>
 
     <insert id="applyAppServiceMore">
-        INSERT INTO se_app_service_apply(app_key, service_key, app_id, record_id)
+        INSERT INTO se_app_service_apply(app_key, service_key, app_id, record_id, push_area)
         VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.appKey},#{item.serviceKey},#{item.appId},#{item.recordId})
+            (#{item.appKey},#{item.serviceKey},#{item.appId},#{item.recordId},#{item.pushArea})
         </foreach>
     </insert>
 
     <insert id="approveAppServiceMore">
-        INSERT INTO se_app_service(app_key, service_key, app_id, record_id)
+        INSERT INTO se_app_service(app_key, service_key, app_id, record_id, push_area)
         VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.appKey},#{item.serviceKey},#{item.appId}, #{item.recordId})
+            (#{item.appKey},#{item.serviceKey},#{item.appId}, #{item.recordId}, #{item.pushArea} )
         </foreach>
     </insert>
 

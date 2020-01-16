@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.cyber.dao.DeveloperValidMapper">
+    <resultMap id="BaseResultMap" type="cn.com.cyber.model.DeveloperValid">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="company_key" property="companyKey"/>
+        <result column="user_name" property="userName"/>
+        <result column="token" property="token"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, user_id , company_key, user_name, token
+  </sql>
+
+
+    <sql id="sql_where">
+        <where>
+            <if test="id != null" >
+                and id = #{id}
+            </if>
+            <if test="userId != null and userId !=''" >
+                and  user_id= #{userId}
+            </if>
+            <if test="companyKey != null and companyKey !=''" >
+                and  company_key= #{companyKey}
+            </if>
+            <if test="userName != null and userName !=''" >
+                and  user_name= #{userName}
+            </if>
+        </where>
+    </sql>
+
+    <select id="getDeveloperValidList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.DeveloperValid">
+        select * from se_company_valid
+        <include refid="sql_where" />
+    </select>
+
+    <delete id="deleteDeveloperValid" parameterType="int">
+     delete from se_company_valid where id = #{id}
+  </delete>
+
+    <insert id="insertDeveloperValid" parameterType="cn.com.cyber.model.DeveloperValid">
+        <selectKey keyProperty="id" order="BEFORE" resultType="int">
+            SELECT SEQ_SE_COMPANY_VALID.NEXTVAL AS VALUE FROM DUAL
+        </selectKey>
+        insert into se_company_valid (id, user_id , company_key, user_name, token)
+        values (#{id},#{userId},#{companyKey},#{userName},#{token})
+    </insert>
+
+    <update id="updateDeveloperValid" parameterType="cn.com.cyber.model.DeveloperValid">
+        update se_company_valid set token = #{token}  where id = #{id}
+    </update>
+
+</mapper>

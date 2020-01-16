@@ -2,3 +2,6 @@
     height: 650px;
     overflow: auto;
 }
+.interfaceApiDiv{
+    display: none;
+}

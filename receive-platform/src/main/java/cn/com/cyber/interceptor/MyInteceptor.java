@@ -22,7 +22,9 @@ public class MyInteceptor implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //api后台接口拦截器
-        registry.addInterceptor(new ApiInterceptor()).addPathPatterns("/api/**");
+        String webExcludePath = messageCodeUtil.getMessage("interceptor.apiExcludePath");
+        String[] apiExcludeArr = webExcludePath.split(",");
+        registry.addInterceptor(new ApiInterceptor()).addPathPatterns("/api/**").excludePathPatterns(apiExcludeArr);
     }
 
     @Override

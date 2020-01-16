@@ -1,28 +1,25 @@
 package cn.com.cyber.config.shiro;
 
-import cn.com.cyber.model.*;
+import cn.com.cyber.model.Developer;
+import cn.com.cyber.model.PermModel;
+import cn.com.cyber.model.User;
+import cn.com.cyber.model.UserRole;
 import cn.com.cyber.service.DeveloperService;
-import cn.com.cyber.service.PermissionService;
 import cn.com.cyber.service.UserRoleService;
 import cn.com.cyber.service.UserService;
 import cn.com.cyber.util.CodeUtil;
-import cn.com.cyber.util.EncryptUtils;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,7 +64,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
             if (developer.getStatus() == 0) {
                 throw new DisabledAccountException();
             }
-            user.setId(developer.getId());
+            user.setId(developer.getId().longValue());
             user.setUserId(developer.getUserName());
             user.setNickName(developer.getName());
             user.setPassword(developer.getPassword());
@@ -84,10 +81,10 @@ public class ShiroDbRealm extends AuthorizingRealm {
 
 
     private void setUserRole(Developer developer) {
-            UserRole userRole = new UserRole();
-            userRole.setRoleId(developer.getRoleId());
-            userRole.setUserId(developer.getId());
-            userRoleService.insert(userRole);
+        UserRole userRole = new UserRole();
+        userRole.setRoleId(developer.getRoleId());
+        userRole.setUserId(developer.getId().longValue());
+        userRoleService.insert(userRole);
     }
 
     /**

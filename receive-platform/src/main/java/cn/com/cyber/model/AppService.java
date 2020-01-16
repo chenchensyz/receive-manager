@@ -70,6 +70,8 @@ public class AppService extends BaseEntity {
 
     private Integer receiveNum;  //访问量
 
+    private Integer isOpen;  //接口权限 0：公开 1：私有
+
     public Long getId() {
         return id;
     }
@@ -325,5 +327,13 @@ public class AppService extends BaseEntity {
 
     public void setReceiveNum(Integer receiveNum) {
         this.receiveNum = receiveNum;
+    }
+
+    public Integer getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(Integer isOpen) {
+        this.isOpen = isOpen;
     }
 }

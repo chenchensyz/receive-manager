@@ -30,6 +30,8 @@ public class AppServiceRecord extends BaseEntity {
 
     private String approveTimeStr;
 
+    private Integer pushArea;  //接口发布区域
+
     public Integer getId() {
         return id;
     }
@@ -126,4 +128,11 @@ public class AppServiceRecord extends BaseEntity {
         this.userName = userName;
     }
 
+    public Integer getPushArea() {
+        return pushArea;
+    }
+
+    public void setPushArea(Integer pushArea) {
+        this.pushArea = pushArea;
+    }
 }

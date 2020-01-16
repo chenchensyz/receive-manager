@@ -21,6 +21,7 @@ index.prototype = {
 
     initSse: function () {
         var socket;
+        var online;
         if (typeof (WebSocket) == "undefined") {
             console.log("您的浏览器不支持WebSocket");
         } else {
@@ -64,7 +65,6 @@ index.prototype = {
             //发生了错误事件
             socket.onerror = function () {
                 console.log("Socket发生了错误");
-                //此时可以尝试刷新页面
             }
         }
 

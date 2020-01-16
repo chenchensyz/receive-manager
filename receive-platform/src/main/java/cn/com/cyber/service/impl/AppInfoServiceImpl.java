@@ -111,6 +111,7 @@ public class AppInfoServiceImpl implements AppInfoService {
         JSONObject jsonObject = JSONObject.parseObject(param);
         Integer appId = jsonObject.getInteger("appId");
         String appKey = jsonObject.getString("appKey");
+        Integer pushArea = jsonObject.getInteger("pushArea");
         List<TreeModel> params = JSONArray.parseArray(jsonObject.getString("params"), TreeModel.class);
         AppServiceRecord appServiceRecode = new AppServiceRecord();
         if (CodeUtil.MAPPER_DB_ORACLE.equals(environment.getProperty(CodeUtil.MAPPER_DB))) { //oracle数据库
@@ -135,6 +136,7 @@ public class AppInfoServiceImpl implements AppInfoService {
             appModel.setApply(creator);
             appModel.setAppId(appId);
             appModel.setRecordId(appServiceRecode.getId());
+            appModel.setPushArea(pushArea);
             appModelList.add(appModel);
         }
         if (appModelList.isEmpty()) {

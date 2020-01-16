@@ -5,20 +5,33 @@ function appApplyList() {
     var that = this;
     var pageCurr;
     var interfaceTree;
-    layui.use(['table', 'tree', 'form', 'util'], function () {
+    layui.use(['table', 'tree', 'form', 'util', 'element', 'flow'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
         that.layTree = layui.tree;
         that.layUtil = layui.util;
+        that.element = layui.element;
+        that.flow = layui.flow;
         that.init();
     });
 }
 
 appApplyList.prototype = {
     init: function () {
+        this.initTab();
         this.initData();
+        this.developerValid();
         this.getAppServiceList();
         this.saveAppService();
+        this.loginSubmit();
+    },
+
+
+    initTab: function () {
+        var that = this;
+        that.element.on('tab(pushAreaFilter)', function (data) {
+            $('.pushArea').val(data.index);
+        });
     },
 
     initData: function () {
@@ -90,7 +103,9 @@ appApplyList.prototype = {
         var that = this;
         $('.appId').val(treeNode.id);
         $('.appKey').val(treeNode.parentId);
-        $.get(getRootPath() + "/appEmpower/getCheckedService", {'appId': treeNode.id}, function (res) {
+        var pushArea = $('.pushArea').val();
+        var data = {'appId': treeNode.id, 'pushArea': pushArea};
+        $.get(getRootPath() + "/appEmpower/getCheckedService", data, function (res) {
             if (res.code == 0) {
                 var treeObj = $.fn.zTree.getZTreeObj("interfaceSelect");
                 treeObj.checkAllNodes(false);
@@ -114,6 +129,7 @@ appApplyList.prototype = {
 
     getAppServiceList: function () {
         var that = this;
+        var pushArea = $('.pushArea').val();
         var zTreeObj;
         // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
         var setting = {
@@ -137,7 +153,8 @@ appApplyList.prototype = {
         };
         $.ajax({
             url: getRootPath() + '/appInfo/appServiceTree',
-            type: 'get',
+            type: 'POST',
+            data:{'area':0},
             success: function (res) {
                 that.zTreeObj = $.fn.zTree.init($("#interfaceSelect"), setting, res.data);
             },
@@ -154,6 +171,8 @@ appApplyList.prototype = {
         $(".add-btn").click(function () {
             var appId = $('.appId').val();
             var appKey = $('.appKey').val();
+            var pushArea = $('.pushArea').val();
+
             // var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
             var treeObj = $.fn.zTree.getZTreeObj("interfaceSelect"); //ztree的id
             var params = treeObj.getCheckedNodes();
@@ -174,7 +193,7 @@ appApplyList.prototype = {
             layer.confirm('是否确定提交接口申请？', {
                 btn: ['确认', '返回'] //按钮
             }, function () {
-                var data = {'appId': appId, 'appKey': appKey, "params": params};
+                var data = {'appId': appId, 'appKey': appKey, 'pushArea': pushArea, "params": params};
                 $.ajax({
                     url: getRootPath() + "/appValid/apply",
                     type: 'post',
@@ -197,6 +216,124 @@ appApplyList.prototype = {
                 });
             });
         })
+    },
+    developerValid: function () {
+        var that = this;
+        that.tableIns = that.layTable.render({
+            id: 'developerValidTable',
+            elem: '#developerValidList'
+            , size: 'sm' //小尺寸的表格
+            , url: getRootPath() + '/developer/valid/list'
+            , cellMinWidth: 80
+            , page: true,
+            request: {
+                pageName: 'pageNum' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }, response: {
+                statusName: 'code' //数据状态的字段名称，默认：code
+                , statusCode: 0 //成功的状态码，默认：0
+                , countName: 'total' //数据总数的字段名称，默认：count
+                , dataName: 'data' //数据列表的字段名称，默认：data
+            }
+            , cols: [[
+                {type: 'numbers'}
+                , {field: 'userName', title: '开发者账号 ', align: 'center'}
+                , {
+                    field: 'right', align: 'center', templet: function (d) {
+                        var span = ' <a class="layui-btn layui-btn-xs" lay-event="login">登陆</a>';
+                        return span;
+                    }, title: '操作', align: 'center'
+                }
+            ]]
+            , done: function (res, curr, count) {
+                that.pageCurr = curr;
+            }
+        });
+
+        //监听工具条
+        that.layTable.on('tool(developerValidTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'login') {//登陆
+                that.loginValid(data);
+            }
+        });
+    },
+    loginSubmit: function () {
+        var that = this;
+        $('.loginSubmit').off('click').on('click', function () {
+            var data = {'companyKey': $('.companyKey').val(), 'userName': $('.userName').val()};
+            that.loginValid(data);
+        });
+        $('.developer-change').off('click').on('click', function () {
+            $('.interfaceApiDiv').hide();
+            $('.developerValidDiv').show();
+            that.developerValid();
+        });
+    },
+
+    loginValid: function (data) {
+        var that = this;
+        $.ajax({
+            url: getRootPath() + '/developer/valid/login',
+            type: 'post',
+            contentType: 'application/json',
+            "data": JSON.stringify(data),
+            success: function (res) {
+                if (res.code == 0) {
+                    that.getAppApiServiceList(res.data);
+                } else {
+                    layer.alert(res.message, function () {
+                        layer.closeAll();
+                    });
+                }
+            },
+            error: function (err) {
+                layer.alert(err.message, function () {
+                    layer.closeAll();
+                });
+            }
+        });
+    },
+
+    getAppApiServiceList: function (data) {
+        var that = this;
+        var zTreeObj;
+        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        var setting = {
+            check: {
+                enable: true, //设置是否显示checkbox复选框
+                chkStyle: "checkbox",
+                chkboxType: {"Y": "ps", "N": "ps"},
+                nocheckInherit: true
+            },
+            data: {
+                key: {
+                    name: "title"
+                }
+            }
+        };
+        data.area=1;
+        $.ajax({
+            url: getRootPath() + '/appInfo/appServiceTree',
+            type: 'POST',
+            data: data,
+            success: function (res) {
+                if(res.code==0){
+                    that.zTreeObj = $.fn.zTree.init($("#interfaceApiSelect"), setting, res.data);
+                    $('.interfaceApiDiv').show();
+                    $('.developerValidDiv').hide();
+                }else {
+                    layer.alert(res.message, function () {
+                        layer.closeAll();
+                    });
+                }
+            },
+            error: function (err) {
+                layer.alert(err, function () {
+                    layer.closeAll();
+                });
+            }
+        });
     }
 };
 new appApplyList();

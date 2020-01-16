@@ -5,11 +5,10 @@ import cn.com.cyber.util.DateUtil;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 public class Developer extends BaseEntity implements Serializable {
 
-    private Long id;
+    private Integer id;
 
     private String userName;
 
@@ -25,12 +24,14 @@ public class Developer extends BaseEntity implements Serializable {
 
     private String createTimeStr;
 
+    private String companyKey;
 
-    public Long getId() {
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -88,5 +89,13 @@ public class Developer extends BaseEntity implements Serializable {
 
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
+    }
+
+    public String getCompanyKey() {
+        return companyKey;
+    }
+
+    public void setCompanyKey(String companyKey) {
+        this.companyKey = companyKey;
     }
 }

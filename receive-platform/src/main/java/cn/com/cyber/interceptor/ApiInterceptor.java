@@ -1,8 +1,8 @@
 package cn.com.cyber.interceptor;
 
 import cn.com.cyber.util.CodeUtil;
-import cn.com.cyber.util.common.RestResponse;
 import cn.com.cyber.util.SpringUtil;
+import cn.com.cyber.util.common.RestResponse;
 import cn.com.cyber.util.exception.ValueRuntimeException;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -63,6 +63,7 @@ public class ApiInterceptor implements HandlerInterceptor {
 
         JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
         Jedis jedis = jedisPool.getResource();
+        jedis.select(CodeUtil.REDIS_DBINDEX);
         try {
             Map<String, String> tokenMap = jedis.hgetAll(CodeUtil.REDIS_PREFIX + token);
             if (tokenMap.isEmpty()) {
@@ -73,7 +74,6 @@ public class ApiInterceptor implements HandlerInterceptor {
                 writeJsonResult(response, 401, CodeUtil.REQUEST_TOKEN_USER_FILED, messageMap.get(CodeUtil.REQUEST_TOKEN_USER_FILED));
                 return false;
             }
-            jedis.expire(CodeUtil.REDIS_PREFIX + token, CodeUtil.REDIS_EXPIRE_TIME);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ValueRuntimeException(CodeUtil.USERINFO_ERR_LOGIN); //用户登陆失败

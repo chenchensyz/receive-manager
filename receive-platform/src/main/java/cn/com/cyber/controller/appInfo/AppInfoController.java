@@ -2,17 +2,24 @@ package cn.com.cyber.controller.appInfo;
 
 import cn.com.cyber.controller.BaseController;
 import cn.com.cyber.model.AppInfo;
+import cn.com.cyber.model.DeveloperValid;
 import cn.com.cyber.model.TreeModel;
 import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.util.CodeUtil;
+import cn.com.cyber.util.HttpConnection;
 import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.common.RestResponse;
+import cn.com.cyber.util.common.ResultData;
 import cn.com.cyber.util.exception.ValueRuntimeException;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/appInfo")
@@ -30,6 +38,9 @@ public class AppInfoController extends BaseController {
 
     @Autowired
     private AppInfoService appInfoService;
+
+    @Autowired
+    private Environment environment;
 
     @Autowired
     private MessageCodeUtil messageCodeUtil;
@@ -130,14 +141,33 @@ public class AppInfoController extends BaseController {
     //查询用户可见的应用及接口
     @RequestMapping("appServiceTree")
     @ResponseBody
-    public RestResponse getAppServiceTree() {
+    public RestResponse getAppServiceTree(Integer area, DeveloperValid developerValid) {
         int code = CodeUtil.BASE_SUCCESS;
         RestResponse rest = new RestResponse();
         Long companyId = null;
 //        if (getShiroUser().source == 1) {
 //            companyId = getShiroUser().id;
 //        }
-        rest.setData(appInfoService.getAppServiceTree(companyId));
+        if (area == 0) {
+            rest.setData(appInfoService.getAppServiceTree(companyId));
+        } else {
+            Map<String, String> header = Maps.newHashMap();
+            header.put("userId", developerValid.getUserName());
+            header.put("token", developerValid.getToken());
+            String url = environment.getProperty(CodeUtil.DEVELOPER_VALID_URL) + CodeUtil.API_SERVICETREE_URL + "?companyId=" + developerValid.getCompanyId();
+            ResultData resultData = HttpConnection.httpRequest(url, CodeUtil.METHOD_GET, null, null, null, header);
+            if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
+                JSONObject jsonObject = JSONObject.parseObject(resultData.getResult());
+                if (jsonObject.getInteger("code") != 0) {
+                    code = CodeUtil.APPSERVICE_ERR_OPTION;
+                    rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));
+                    return rest;
+                }
+                rest.setData(JSONArray.parseArray(jsonObject.getString("data")));
+            } else {
+                LOGGER.error("resultData:{}", resultData.getResult());
+            }
+        }
         rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));
         return rest;
     }

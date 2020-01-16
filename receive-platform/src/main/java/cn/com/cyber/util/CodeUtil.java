@@ -13,9 +13,8 @@ public class CodeUtil {
         return uuidStr;
     }
 
-
-
     //api验证
+    public static final int REDIS_DBINDEX = 1;    //token保存
     public static final String REDIS_PREFIX = "session:";    //token保存
     public static final int REDIS_EXPIRE_TIME = 60 * 30;  //30分
 
@@ -64,9 +63,15 @@ public class CodeUtil {
     public static final String SOCKET_OPEN = "socket_open";
     public static final String FILE_ROOT_PATH = "file_root_path";
     public static final String DEFAULT_DEPARTMENT = "default_department";  //顶层机构
+    public static final String DEVELOPER_VALID_URL = "developer_valid_url";  //跨区域开发者验证ip
 
     public static final String UP_FILE_PATH = "upload";  //接口附件
     public static final String SERVICE_FILE_PATH = "service";  //接口附件
+
+
+    //跨区域开发者验证
+    public static final String API_VALID_URL = "/api/developer/valid";
+    public static final String API_SERVICETREE_URL = "/api/appInfo/appServiceTree";
 
     //pstore用户校验
     public static final String PSTORE_LOGIN_URL = "pstore_login_url";
@@ -100,10 +105,8 @@ public class CodeUtil {
     public static final int BASE_FILE_ONLY_UP = 99115;    //只能上传单个文件
     public static final int BASE_FILE_NULL = 99116;       //文件不存在
     public static final int BASE_FILE_COPY_ERR = 99117;       //文件拷贝失败
-    public static final int REQUEST_KEY_NOT_ONLY= 99118;    //当前接口不是独立接口，请填写正确的appKey
+    public static final int REQUEST_KEY_NOT_ONLY = 99118;    //当前接口不是独立接口，请填写正确的appKey
     public static final int REQUEST_TOKEN_USER_FILED = 99119; //用户验证失败
-
-
 
 
     //管理平台状态码
@@ -141,6 +144,7 @@ public class CodeUtil {
     public static final int USERINFO_ERR_CONNECT = 20104; //连接用户查询服务器失败
     public static final int USERINFO_ERR_VALIED = 20105; //用户校验失败，请确认用户信息是否正确
     public static final int USERINFO_ERR_LOGIN = 20106; //用户登陆失败
+    public static final int USERINFO_ERR_DEVELOPER_BIND = 20107; //开发者绑定失败
     //公司
     public static final int COMPANYINFO_ERR_SELECT = 30101; //未查到公司
     public static final int COMPANYINFO_ERR_OPERATION = 30102; //添加或修改公司失败

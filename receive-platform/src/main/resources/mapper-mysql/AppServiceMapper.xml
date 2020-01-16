@@ -74,7 +74,7 @@
         <if test="sourceType != null">
             source_type,
         </if>
-        state, creator, create_time)
+        is_open, state, creator, create_time)
         VALUES(#{serviceName},#{serviceKey},#{urlSuffix},#{method},
         <if test="appId != null">
             #{appId},
@@ -100,7 +100,7 @@
         <if test="sourceType != null">
             #{sourceType},
         </if>
-        0,#{creator},sysdate())
+        #{isOpen}, 0,#{creator},sysdate())
     </insert>
 
     <update id="updateService" parameterType="cn.com.cyber.model.AppService">
@@ -141,6 +141,9 @@
             </if>
             <if test="sourceType != null">
                 source_type = #{sourceType},
+            </if>
+            <if test="isOpen != null">
+                is_open = #{isOpen},
             </if>
             update_time = sysdate()
         </set>
