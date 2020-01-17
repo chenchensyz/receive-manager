@@ -30,13 +30,13 @@ public interface AppInfoMapper {
 
     List<TreeModel> getAppListTree(@Param("companyId") Long companyId, @Param("state") int state);
 
-    List<String> getCheckedService(Integer appId);
+    List<String> getCheckedService(@Param("appId") Integer appId, @Param("pushArea") Integer pushArea);
 
     List<AppInfo> getReceiveAppRanking();
 
     int applyAppServiceMore(List<AppModel> appModelList);
 
-    int deleteAppServiceByAppId(Integer appId);
+    int deleteAppServiceByAppId(@Param("appId") Integer appId, @Param("pushArea") Integer pushArea);
 
     int approveAppServiceMore(List<AppModel> appModelList);
 

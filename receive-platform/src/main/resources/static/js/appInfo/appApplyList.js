@@ -104,7 +104,10 @@ appApplyList.prototype = {
         $('.appId').val(treeNode.id);
         $('.appKey').val(treeNode.parentId);
         var pushArea = $('.pushArea').val();
-        $.get(getRootPath() + "/appEmpower/getCheckedService", {'appId': treeNode.id}, function (res) {
+        $.get(getRootPath() + "/appEmpower/getCheckedService", {
+            'appId': treeNode.id,
+            'pushArea': pushArea
+        }, function (res) {
             if (res.code == 0) {
                 var treeObj;
                 if (pushArea == 0) {

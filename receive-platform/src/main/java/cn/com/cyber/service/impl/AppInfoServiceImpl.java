@@ -94,8 +94,8 @@ public class AppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public List<String> getCheckedService(Integer appId) {
-        return appInfoMapper.getCheckedService(appId);
+    public List<String> getCheckedService(Integer appId, Integer pushArea) {
+        return appInfoMapper.getCheckedService(appId, pushArea);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class AppInfoServiceImpl implements AppInfoService {
             return;
         } else if (appServiceRecord.getState() == 1) { //同意
             List<AppModel> applyList = appServiceRecordMapper.getAppServiceApplyList(appServiceRecord.getId());
-            appInfoMapper.deleteAppServiceByAppId(appServiceRecord.getAppId());
+            appInfoMapper.deleteAppServiceByAppId(appServiceRecord.getAppId(), applyList.get(0).getPushArea());
             int save = appInfoMapper.approveAppServiceMore(applyList);
             if (save != applyList.size()) {
                 throw new ValueRuntimeException(CodeUtil.SERVICE_RECORD_ERR_SAVE);
@@ -192,7 +192,7 @@ public class AppInfoServiceImpl implements AppInfoService {
         List<TreeModel> params = JSONArray.parseArray(jsonObject.getString("params"), TreeModel.class);
         List<AppModel> appModelList = Lists.newArrayList();
         if (params.size() == 0) {
-            appInfoMapper.deleteAppServiceByAppId(appId);
+            appInfoMapper.deleteAppServiceByAppId(appId,null);
         } else {
             for (TreeModel model : params) {
                 if (StringUtils.isBlank(model.getParentId())) {
@@ -206,7 +206,7 @@ public class AppInfoServiceImpl implements AppInfoService {
                 appModel.setRecordId(0);
                 appModelList.add(appModel);
             }
-            appInfoMapper.deleteAppServiceByAppId(appId);
+            appInfoMapper.deleteAppServiceByAppId(appId,null);
             int save = appInfoMapper.approveAppServiceMore(appModelList);
             if (save != appModelList.size()) {
                 throw new ValueRuntimeException(CodeUtil.SERVICE_RECORD_ERR_SAVE);

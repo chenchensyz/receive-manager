@@ -177,11 +177,11 @@
         </if>
     </select>
 
-    <select id="getCheckedService" resultType="string" parameterType="int">
+    <select id="getCheckedService" resultType="string" parameterType="map">
         select ssi.service_key from SE_APP_SERVICE sas
         left join td_app ai on ai.app_uuid=sas.app_key
         left join se_service_info ssi on sas.service_key = ssi.service_key
-        where sas.app_id = #{appId}
+        where sas.app_id = #{appId} and sas.push_area = #{pushArea}
     </select>
 
     <insert id="applyAppServiceMore">
@@ -198,8 +198,8 @@
         </foreach>
     </insert>
 
-    <delete id="deleteAppServiceByAppId" parameterType="int">
-        delete from se_app_service where app_id = #{appId}
+    <delete id="deleteAppServiceByAppId" parameterType="map">
+        delete from se_app_service where app_id = #{appId} and push_area = #{pushArea}
     </delete>
 
 </mapper>

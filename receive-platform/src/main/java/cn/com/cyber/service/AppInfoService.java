@@ -18,7 +18,7 @@ public interface AppInfoService {
 
     List<TreeModel> getAppListTree(Long companyId, int state);
 
-    List<String> getCheckedService(Integer appId);
+    List<String> getCheckedService(Integer appId, Integer pushArea);
 
     //接口审核。申请
     void apply(String param, String creator);

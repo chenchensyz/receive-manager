@@ -59,9 +59,9 @@ public class AppEmpowerController extends BaseController {
     //获取选中接口
     @RequestMapping("getCheckedService")
     @ResponseBody
-    public RestResponse getCheckedService(@RequestParam("appId") Integer appId) {
+    public RestResponse getCheckedService(@RequestParam("appId") Integer appId,@RequestParam("pushArea") Integer pushArea) {
         int code = CodeUtil.BASE_SUCCESS;
-        List<String> checkedService = appInfoService.getCheckedService(appId);
+        List<String> checkedService = appInfoService.getCheckedService(appId,pushArea);
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(checkedService);
     }
 

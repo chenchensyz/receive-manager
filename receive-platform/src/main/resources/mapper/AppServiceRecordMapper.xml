@@ -62,6 +62,7 @@
         <result column="app_id" property="appId" />
         <result column="record_id" property="recordId"/>
         <result column="user_name" property="userName"/>
+        <result column="push_area" property="pushArea"/>
     </resultMap>
 
     <select id="getAppServiceApplyList" resultMap="AppModelMap" parameterType="int">

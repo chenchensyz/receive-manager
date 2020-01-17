@@ -1,7 +1,7 @@
 /**
  * 应用管理
  */
-function appServiceList() {
+function appApproveList() {
     var that = this;
     var pageCurr;
     var tableIns;
@@ -13,7 +13,7 @@ function appServiceList() {
     });
 }
 
-appServiceList.prototype = {
+appApproveList.prototype = {
     init: function () {
         this.initData();
         this.checkAppService();
@@ -208,4 +208,4 @@ appServiceList.prototype = {
         });
     }
 };
-new appServiceList();
+new appApproveList();
