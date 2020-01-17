@@ -7,6 +7,7 @@
         <result column="company_key" property="companyKey"/>
         <result column="user_name" property="userName"/>
         <result column="token" property="token"/>
+        <result column="company_id" property="companyId"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -36,18 +37,26 @@
         <include refid="sql_where" />
     </select>
 
+    <select id="getDeveloperValidById" resultMap="BaseResultMap" parameterType="int">
+        select * from se_company_valid where id = #{id}
+    </select>
+
     <delete id="deleteDeveloperValid" parameterType="int">
-     delete from se_company_valid where id = #{id}
-  </delete>
+      delete from se_company_valid where id = #{id}
+    </delete>
 
     <insert id="insertDeveloperValid" parameterType="cn.com.cyber.model.DeveloperValid">
-        insert into se_company_valid (user_id , company_key, user_name, token)
-        values (#{userId},#{companyKey},#{userName},#{token})
+        insert into se_company_valid (user_id , company_key, user_name, token, company_id)
+        values (#{userId},#{companyKey},#{userName},#{token},#{companyId})
     </insert>
 
     <update id="updateDeveloperValid" parameterType="cn.com.cyber.model.DeveloperValid">
         update se_company_valid set token = #{token}  where id = #{id}
     </update>
+
+    <delete id="deleteDeveloperValid" parameterType="int">
+       delete from se_company_valid where id = #{id}
+   </delete>
 
 
 </mapper>

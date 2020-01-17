@@ -3,7 +3,6 @@ package cn.com.cyber.service;
 import cn.com.cyber.model.*;
 
 import java.util.List;
-import java.util.Map;
 
 public interface AppInfoService {
 
@@ -15,7 +14,7 @@ public interface AppInfoService {
 
     int getCountAppInfoByState(Long companyId, int state);
 
-    List<TreeModel> getAppServiceTree(Long companyId);
+    List<TreeModel> getAppServiceTree(String companyIds);
 
     List<TreeModel> getAppListTree(Long companyId, int state);
 

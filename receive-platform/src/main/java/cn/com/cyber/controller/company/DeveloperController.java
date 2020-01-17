@@ -94,4 +94,22 @@ public class DeveloperController extends BaseController {
         rest.setMessage(messageCodeUtil.getMessage(code));
         return rest;
     }
+
+    /**
+     * 开发者跨区域记录删除
+     */
+    @RequestMapping("/valid/delete")
+    @ResponseBody
+    public RestResponse validDelete(Integer id) {
+        RestResponse rest = new RestResponse();
+        int code = CodeUtil.BASE_SUCCESS;
+        try {
+            developerValidService.validDelete(id);
+        } catch (ValueRuntimeException e) {
+            code = (Integer) e.getValue();
+        }
+        rest.setCode(code);
+        rest.setMessage(messageCodeUtil.getMessage(code));
+        return rest;
+    }
 }

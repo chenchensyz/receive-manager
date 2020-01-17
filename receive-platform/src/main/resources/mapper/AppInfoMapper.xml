@@ -145,18 +145,26 @@
     <select id="getAppServiceTree" resultMap="appTreeMap" parameterType="map">
         select ai.id,ai.name app_name ,ssi.id service_id ,ssi.service_name ,ssi.app_id ,ssi.service_key
         ,app_uuid basicData
-        from td_app ai join se_service_info ssi on ai.id = ssi.app_id  and ssi.is_open=0
+        from td_app ai join se_service_info ssi on ai.id = ssi.app_id
         where ai.status = 1 and ssi.state = 1
-        <if test="companyId != null">
-            and ai.company_id != #{companyId}
+        <if test="companyIds != null">
+            and (ssi.creator in
+            <foreach collection="companyIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+            or ssi.is_open=0)
         </if>
     </select>
 
     <select id="getOnlyServiceTree" resultMap="appTreeMap" parameterType="map">
         select ssi.id ,ssi.service_name app_name,ssi.service_key app_uuid
         from se_service_info ssi where ssi.service_type=1 and ssi.state=1
-        <if test="companyId != null">
-            and ssi.creator != #{companyId}
+        <if test="companyIds != null">
+            and (ssi.creator in
+            <foreach collection="companyIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+             or ssi.is_open=0)
         </if>
     </select>
 

@@ -12,4 +12,6 @@ public interface DeveloperValidMapper {
 
     int updateDeveloperValid(DeveloperValid developerValid);
 
+    int deleteDeveloperValid(Integer id);
+
 }

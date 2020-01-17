@@ -104,10 +104,14 @@ appApplyList.prototype = {
         $('.appId').val(treeNode.id);
         $('.appKey').val(treeNode.parentId);
         var pushArea = $('.pushArea').val();
-        var data = {'appId': treeNode.id, 'pushArea': pushArea};
-        $.get(getRootPath() + "/appEmpower/getCheckedService", data, function (res) {
+        $.get(getRootPath() + "/appEmpower/getCheckedService", {'appId': treeNode.id}, function (res) {
             if (res.code == 0) {
-                var treeObj = $.fn.zTree.getZTreeObj("interfaceSelect");
+                var treeObj;
+                if (pushArea == 0) {
+                    treeObj = $.fn.zTree.getZTreeObj("interfaceSelect");
+                } else {
+                    treeObj = $.fn.zTree.getZTreeObj("interfaceApiSelect");
+                }
                 treeObj.checkAllNodes(false);
                 treeObj.expandAll(false);  //收缩节点
                 if (res.data) {
@@ -129,7 +133,6 @@ appApplyList.prototype = {
 
     getAppServiceList: function () {
         var that = this;
-        var pushArea = $('.pushArea').val();
         var zTreeObj;
         // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
         var setting = {
@@ -154,7 +157,7 @@ appApplyList.prototype = {
         $.ajax({
             url: getRootPath() + '/appInfo/appServiceTree',
             type: 'POST',
-            data:{'area':0},
+            data: {'area': 0},
             success: function (res) {
                 that.zTreeObj = $.fn.zTree.init($("#interfaceSelect"), setting, res.data);
             },
@@ -174,7 +177,12 @@ appApplyList.prototype = {
             var pushArea = $('.pushArea').val();
 
             // var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
-            var treeObj = $.fn.zTree.getZTreeObj("interfaceSelect"); //ztree的id
+            var treeObj; //ztree的id
+            if (pushArea == 0) {
+                treeObj = $.fn.zTree.getZTreeObj("interfaceSelect");
+            } else {
+                treeObj = $.fn.zTree.getZTreeObj("interfaceApiSelect");
+            }
             var params = treeObj.getCheckedNodes();
 
             if (!appId) {
@@ -217,6 +225,8 @@ appApplyList.prototype = {
             });
         })
     },
+
+    //开发者绑定关系记录
     developerValid: function () {
         var that = this;
         that.tableIns = that.layTable.render({
@@ -240,7 +250,7 @@ appApplyList.prototype = {
                 , {field: 'userName', title: '开发者账号 ', align: 'center'}
                 , {
                     field: 'right', align: 'center', templet: function (d) {
-                        var span = ' <a class="layui-btn layui-btn-xs" lay-event="login">登陆</a>';
+                        var span = ' <a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="del">删除</a>';
                         return span;
                     }, title: '操作', align: 'center'
                 }
@@ -253,16 +263,58 @@ appApplyList.prototype = {
         //监听工具条
         that.layTable.on('tool(developerValidTable)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'login') {//登陆
-                that.loginValid(data);
+            if (obj.event === 'del') {//登陆
+                that.delValid(data);
             }
         });
     },
+
+    delValid: function (data) {
+        var that = this;
+        var data = {'id': data.id};
+        layer.confirm('您确定要删除吗？', {
+            btn: ['确认', '返回'] //按钮
+        }, function () {
+            $.get(getRootPath() + '/developer/valid/delete', data, function (res) {
+                if (res.code == 0) {
+                    layer.msg(res.message);
+                    that.developerValid();
+                } else {
+                    layer.alert(res.message, function () {
+                        layer.closeAll();
+                    });
+                }
+            });
+        }, function () {
+            layer.closeAll();
+        });
+    },
+
     loginSubmit: function () {
         var that = this;
+        $('.addLogin').off('click').on('click', function () {
+            layer.open({
+                type: 1,
+                title: "账号绑定",
+                fixed: false,
+                resize: false,
+                shadeClose: true,
+                area: ['500px'],
+                maxmin: true, //开启最大化最小化按钮
+                content: $('#loginDialog'),
+                end: function () {
+                    $('#loginDialog').css("display", "none");
+                    $('.companyKey').val('')
+                }
+            });
+        });
         $('.loginSubmit').off('click').on('click', function () {
             var data = {'companyKey': $('.companyKey').val(), 'userName': $('.userName').val()};
             that.loginValid(data);
+        });
+
+        $('.login-developer').off('click').on('click', function () {
+            that.getAppApiServiceList();
         });
         $('.developer-change').off('click').on('click', function () {
             $('.interfaceApiDiv').hide();
@@ -280,11 +332,10 @@ appApplyList.prototype = {
             "data": JSON.stringify(data),
             success: function (res) {
                 if (res.code == 0) {
-                    that.getAppApiServiceList(res.data);
+                    layer.closeAll();
+                    that.getAppApiServiceList();
                 } else {
-                    layer.alert(res.message, function () {
-                        layer.closeAll();
-                    });
+                    layer.alert(res.message);
                 }
             },
             error: function (err) {
@@ -295,7 +346,7 @@ appApplyList.prototype = {
         });
     },
 
-    getAppApiServiceList: function (data) {
+    getAppApiServiceList: function () {
         var that = this;
         var zTreeObj;
         // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
@@ -312,17 +363,17 @@ appApplyList.prototype = {
                 }
             }
         };
-        data.area=1;
         $.ajax({
             url: getRootPath() + '/appInfo/appServiceTree',
             type: 'POST',
-            data: data,
+            data: {'area': 1},
             success: function (res) {
-                if(res.code==0){
+                if (res.code == 0) {
+                    $('.localName').text(res.companyParam);
                     that.zTreeObj = $.fn.zTree.init($("#interfaceApiSelect"), setting, res.data);
                     $('.interfaceApiDiv').show();
                     $('.developerValidDiv').hide();
-                }else {
+                } else {
                     layer.alert(res.message, function () {
                         layer.closeAll();
                     });

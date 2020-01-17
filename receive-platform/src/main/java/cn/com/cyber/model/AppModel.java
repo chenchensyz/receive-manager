@@ -14,7 +14,10 @@ public class AppModel extends BaseEntity {
 
     private String userName;
 
-    private Integer pushArea;
+    private Integer pushArea; //接口发布区域
+
+    private Integer bindId;  //绑定的跨区域开发者id
+
 
     public String getAppKey() {
         return appKey;
@@ -70,5 +73,13 @@ public class AppModel extends BaseEntity {
 
     public void setPushArea(Integer pushArea) {
         this.pushArea = pushArea;
+    }
+
+    public Integer getBindId() {
+        return bindId;
+    }
+
+    public void setBindId(Integer bindId) {
+        this.bindId = bindId;
     }
 }

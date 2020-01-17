@@ -5,6 +5,7 @@ import cn.com.cyber.model.AppInfo;
 import cn.com.cyber.model.DeveloperValid;
 import cn.com.cyber.model.TreeModel;
 import cn.com.cyber.service.AppInfoService;
+import cn.com.cyber.service.DeveloperValidService;
 import cn.com.cyber.util.CodeUtil;
 import cn.com.cyber.util.HttpConnection;
 import cn.com.cyber.util.MessageCodeUtil;
@@ -15,7 +16,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +42,9 @@ public class AppInfoController extends BaseController {
 
     @Autowired
     private AppInfoService appInfoService;
+
+    @Autowired
+    private DeveloperValidService developerValidService;
 
     @Autowired
     private Environment environment;
@@ -141,20 +148,34 @@ public class AppInfoController extends BaseController {
     //查询用户可见的应用及接口
     @RequestMapping("appServiceTree")
     @ResponseBody
-    public RestResponse getAppServiceTree(Integer area, DeveloperValid developerValid) {
+    public RestResponse getAppServiceTree(Integer area) {
         int code = CodeUtil.BASE_SUCCESS;
         RestResponse rest = new RestResponse();
-        Long companyId = null;
+        String companyId = null;
 //        if (getShiroUser().source == 1) {
 //            companyId = getShiroUser().id;
 //        }
         if (area == 0) {
             rest.setData(appInfoService.getAppServiceTree(companyId));
         } else {
+            DeveloperValid developerValid = new DeveloperValid();
+            developerValid.setUserId(getShiroUser().userId);
+            List<DeveloperValid> developerValidList = developerValidService.getDeveloperValidList(developerValid);
+            if (CollectionUtils.isEmpty(developerValidList)) {
+                code = CodeUtil.USERINFO_NULL_DEVELOPER_BIND;
+                rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));
+                return rest;
+            }
+            List<Integer> companyIds = Lists.newArrayList();
+            List<String> companyParam = Lists.newArrayList();
+            for (DeveloperValid valid : developerValidList) {
+                companyIds.add(valid.getCompanyId());
+                companyParam.add(valid.getUserName());
+            }
             Map<String, String> header = Maps.newHashMap();
-            header.put("userId", developerValid.getUserName());
-            header.put("token", developerValid.getToken());
-            String url = environment.getProperty(CodeUtil.DEVELOPER_VALID_URL) + CodeUtil.API_SERVICETREE_URL + "?companyId=" + developerValid.getCompanyId();
+            header.put("userId", developerValidList.get(0).getUserName());
+            header.put("token", developerValidList.get(0).getToken());
+            String url = environment.getProperty(CodeUtil.DEVELOPER_VALID_URL) + CodeUtil.API_SERVICETREE_URL + "?companyIds=" + StringUtils.join(companyIds.toArray(), ",");
             ResultData resultData = HttpConnection.httpRequest(url, CodeUtil.METHOD_GET, null, null, null, header);
             if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
                 JSONObject jsonObject = JSONObject.parseObject(resultData.getResult());
@@ -164,6 +185,7 @@ public class AppInfoController extends BaseController {
                     return rest;
                 }
                 rest.setData(JSONArray.parseArray(jsonObject.getString("data")));
+                rest.setAny("companyParam", companyParam);
             } else {
                 LOGGER.error("resultData:{}", resultData.getResult());
             }

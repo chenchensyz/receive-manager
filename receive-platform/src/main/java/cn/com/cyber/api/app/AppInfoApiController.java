@@ -29,10 +29,10 @@ public class AppInfoApiController extends BaseController {
 
     //查询用户可见的应用及接口
     @RequestMapping("appServiceTree")
-    public RestResponse getAppServiceTree(Long companyId) {
+    public RestResponse getAppServiceTree(String companyIds) {
         int code = CodeUtil.BASE_SUCCESS;
         RestResponse rest = new RestResponse();
-        rest.setData(appInfoService.getAppServiceTree(companyId));
+        rest.setData(appInfoService.getAppServiceTree(companyIds));
         rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));
         return rest;
     }

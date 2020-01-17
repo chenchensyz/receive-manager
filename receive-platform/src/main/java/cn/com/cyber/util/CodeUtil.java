@@ -145,6 +145,8 @@ public class CodeUtil {
     public static final int USERINFO_ERR_VALIED = 20105; //用户校验失败，请确认用户信息是否正确
     public static final int USERINFO_ERR_LOGIN = 20106; //用户登陆失败
     public static final int USERINFO_ERR_DEVELOPER_BIND = 20107; //开发者绑定失败
+    public static final int USERINFO_ERR_DEVELOPER_DEL = 20108; //开发者绑定记录删除失败
+    public static final int USERINFO_NULL_DEVELOPER_BIND = 20109; //请先绑定开发者
     //公司
     public static final int COMPANYINFO_ERR_SELECT = 30101; //未查到公司
     public static final int COMPANYINFO_ERR_OPERATION = 30102; //添加或修改公司失败

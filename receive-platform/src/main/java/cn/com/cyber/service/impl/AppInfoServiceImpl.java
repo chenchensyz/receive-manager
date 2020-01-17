@@ -3,6 +3,7 @@ package cn.com.cyber.service.impl;
 import cn.com.cyber.dao.AppInfoMapper;
 import cn.com.cyber.dao.AppServiceMapper;
 import cn.com.cyber.dao.AppServiceRecordMapper;
+import cn.com.cyber.dao.DeveloperValidMapper;
 import cn.com.cyber.model.*;
 import cn.com.cyber.service.AppInfoService;
 import cn.com.cyber.util.CodeUtil;
@@ -32,6 +33,9 @@ public class AppInfoServiceImpl implements AppInfoService {
 
     @Autowired
     private AppServiceMapper appServiceMapper;
+
+    @Autowired
+    private DeveloperValidMapper developerValidMapper;
 
     @Autowired
     private Environment environment;
@@ -78,9 +82,13 @@ public class AppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public List<TreeModel> getAppServiceTree(Long companyId) {
-        List<TreeModel> appServiceList = appInfoMapper.getAppServiceTree(companyId);
-        List<TreeModel> onlyServiceList = appInfoMapper.getOnlyServiceTree(companyId);
+    public List<TreeModel> getAppServiceTree(String companyIds) {
+        String[] comp = null;
+        if (StringUtils.isNotBlank(companyIds)) {
+            comp = companyIds.split(",");
+        }
+        List<TreeModel> appServiceList = appInfoMapper.getAppServiceTree(comp);
+        List<TreeModel> onlyServiceList = appInfoMapper.getOnlyServiceTree(comp);
         appServiceList.addAll(onlyServiceList);
         return appServiceList;
     }

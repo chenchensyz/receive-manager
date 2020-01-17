@@ -68,4 +68,12 @@ public class DeveloperValidServiceImpl implements DeveloperValidService {
         }
         return localValid;
     }
+
+    @Override
+    public void validDelete(Integer id) {
+        int count = developerValidMapper.deleteDeveloperValid(id);
+        if (count == 0) {
+            throw new ValueRuntimeException(CodeUtil.USERINFO_ERR_DEVELOPER_DEL);  //开发者绑定记录删除失败
+        }
+    }
 }

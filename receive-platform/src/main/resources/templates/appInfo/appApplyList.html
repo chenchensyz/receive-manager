@@ -52,36 +52,15 @@
                             </div>
                             <div class="layui-tab-item">
                                 <div  class="developerValidDiv">
-                                    <fieldset class="layui-elem-field layuimini-search">
-                                        <legend>账号绑定</legend>
-                                        <form class="layui-form" action="">
-                                            <div class="layui-form-item">
-                                                <div class="layui-inline">
-                                                    <label class="layui-form-label">开发者账号</label>
-                                                    <div class="layui-input-inline">
-                                                        <input  autocomplete="off" class="layui-input userName"
-                                                               type="text" style=" height: 26px;margin-top: 6px"/>
-                                                    </div>
-                                                </div>
-                                                <div class="layui-inline">
-                                                    <label class="layui-form-label">开发者密钥</label>
-                                                    <div class="layui-input-inline">
-                                                        <input  autocomplete="off" class="layui-input companyKey"
-                                                               type="text" style=" height: 26px;margin-top: 6px"/>
-                                                    </div>
-                                                </div>
-                                                <div class="layui-inline">
-                                                    <button class="layui-btn layui-btn-xs loginSubmit"  type="button">登陆
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </fieldset>
+                                    <button class="layui-btn layui-btn-xs addLogin"  type="button">添加</button>
+                                    <button class="layui-btn layui-btn-xs login-developer"  type="button">登陆</button>
                                     <table id="developerValidList" lay-filter="developerValidTable"></table>
                                 </div>
 
                                 <div class="interfaceApiDiv">
-                                    <button class="layui-btn layui-btn-primary layui-btn-xs developer-change"><i class="layui-icon layui-icon-util"></i> 切换</button>
+                                    <p style="color: #0264ff" class="localName"></p>
+                                    <button class="layui-btn layui-btn-primary layui-btn-xs developer-change"><i class="layui-icon layui-icon-util"></i> 返回</button>
+
                                     <ul id="interfaceApiSelect" class="ztree"></ul>
                                 </div>
                             </div>
@@ -91,6 +70,31 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="loginDialog" class="layer_self_wrap" style="margin-top: 20px;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">开发者账号</label>
+                <div class="layui-input-inline">
+                    <input  autocomplete="off" class="layui-input userName"
+                            type="text" style=" height: 26px;margin-top: 6px"/>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">开发者密钥</label>
+                <div class="layui-input-inline">
+                    <input  autocomplete="off" class="layui-input companyKey"
+                            type="text" style=" height: 26px;margin-top: 6px"/>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-xs loginSubmit"  type="button">登陆
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 <div th:include="head :: commonjs"></div>
 <script th:src="@{/js/lay-config.js?v=1.0.4}"></script>

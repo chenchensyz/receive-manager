@@ -7,6 +7,7 @@
         <result column="company_key" property="companyKey"/>
         <result column="user_name" property="userName"/>
         <result column="token" property="token"/>
+        <result column="company_id" property="companyId"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -36,6 +37,10 @@
         <include refid="sql_where" />
     </select>
 
+    <select id="getDeveloperValidById" resultMap="BaseResultMap" parameterType="int">
+        select * from se_company_valid where id = #{id}
+    </select>
+
     <delete id="deleteDeveloperValid" parameterType="int">
      delete from se_company_valid where id = #{id}
   </delete>
@@ -44,8 +49,8 @@
         <selectKey keyProperty="id" order="BEFORE" resultType="int">
             SELECT SEQ_SE_COMPANY_VALID.NEXTVAL AS VALUE FROM DUAL
         </selectKey>
-        insert into se_company_valid (id, user_id , company_key, user_name, token)
-        values (#{id},#{userId},#{companyKey},#{userName},#{token})
+        insert into se_company_valid (id, user_id , company_key, user_name, token, company_id)
+        values (#{id},#{userId},#{companyKey},#{userName},#{token},#{companyId})
     </insert>
 
     <update id="updateDeveloperValid" parameterType="cn.com.cyber.model.DeveloperValid">

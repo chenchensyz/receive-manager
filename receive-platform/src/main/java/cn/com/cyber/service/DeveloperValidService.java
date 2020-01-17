@@ -10,4 +10,6 @@ public interface DeveloperValidService {
 
     DeveloperValid validLogin(DeveloperValid developerValid);
 
+    void validDelete(Integer id);
+
 }
