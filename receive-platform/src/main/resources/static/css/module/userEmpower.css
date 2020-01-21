@@ -5,3 +5,8 @@
 .interfaceApiDiv{
     display: none;
 }
+
+.layer_self_wrap {
+    /*width: 580px;*/
+    display: none;
+}

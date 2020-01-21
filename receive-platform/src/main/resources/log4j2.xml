@@ -8,8 +8,8 @@
         </console>
 
         <!-- fileName：输出路径  filePattern：命名规则 -->
-        <RollingFile name="all" fileName="logs/receive-platform.log"
-                     filePattern="logs/receive-platform-$${date:yyyy-MM-dd}-%i.log">
+        <RollingFile name="all" fileName="/home/logs/receive-platform/receive-platform.log"
+                     filePattern="/home/logs/receive-platform/receive-platform-$${date:yyyy-MM-dd}-%i.log">
             <Filters>
                 <ThresholdFilter level="all" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
@@ -24,18 +24,18 @@
         </RollingFile>
 
         <!--<RollingFile name="err" fileName="../logs/receive-platform.log"-->
-                     <!--filePattern="../logs/receive-platform-$${date:yyyy-MM-dd}-%i.log">-->
-            <!--<Filters>-->
-                <!--<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>-->
-            <!--</Filters>-->
-            <!--&lt;!&ndash; 输出格式 &ndash;&gt;-->
-            <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
-            <!--<Policies>-->
-                <!--&lt;!&ndash; SizeBasedTriggeringPolicy单个文件的大小限制 &ndash;&gt;-->
-                <!--<SizeBasedTriggeringPolicy size="10MB"/>-->
-            <!--</Policies>-->
-            <!--&lt;!&ndash; DefaultRolloverStrategy同一个文件下的最大文件数 &ndash;&gt;-->
-            <!--<DefaultRolloverStrategy max="50"/>-->
+        <!--filePattern="../logs/receive-platform-$${date:yyyy-MM-dd}-%i.log">-->
+        <!--<Filters>-->
+        <!--<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>-->
+        <!--</Filters>-->
+        <!--&lt;!&ndash; 输出格式 &ndash;&gt;-->
+        <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
+        <!--<Policies>-->
+        <!--&lt;!&ndash; SizeBasedTriggeringPolicy单个文件的大小限制 &ndash;&gt;-->
+        <!--<SizeBasedTriggeringPolicy size="10MB"/>-->
+        <!--</Policies>-->
+        <!--&lt;!&ndash; DefaultRolloverStrategy同一个文件下的最大文件数 &ndash;&gt;-->
+        <!--<DefaultRolloverStrategy max="50"/>-->
         <!--</RollingFile>-->
     </appenders>
 

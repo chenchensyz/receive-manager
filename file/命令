@@ -1,0 +1,3 @@
+maven
+mvn clean package -P oracle
+mvn clean package -P mysql

@@ -21,7 +21,7 @@ developerList.prototype = {
         var that = this;
         that.tableIns = that.layTable.render({
             elem: '#developerList'
-            , url: getRootPath() + '/developer/queryDeveloperListData'
+            , url: getRootPath() + '/developer/list'
             , method: 'post' //默认：get请求
             , cellMinWidth: 80
             , page: true,

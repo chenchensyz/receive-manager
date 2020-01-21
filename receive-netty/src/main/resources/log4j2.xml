@@ -8,8 +8,8 @@
         </console>
 
         <!-- fileName：输出路径  filePattern：命名规则 -->
-        <RollingFile name="all" fileName="logs/receive-netty.log"
-                     filePattern="logs/receive-netty-$${date:yyyy-MM-dd}-%i.log">
+        <RollingFile name="all" fileName="/home/logs/receive-netty/receive-netty.log"
+                     filePattern="/home/logs/receive-netty/receive-netty-$${date:yyyy-MM-dd}-%i.log">
             <Filters>
                 <ThresholdFilter level="all" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>

@@ -39,6 +39,7 @@ public class CodeUtil {
     public static final String RESPONSE_TEXT_TYPE = "text";
 
     public static final int HTTP_OK = 200;
+    public static final int HTTP_VALID_ERR = 401;
     public static final String METHOD_POST = "POST";
     public static final String METHOD_GET = "GET";
     public static final String MODEL_REQUSET_URL = "/netty/modelRedirect";

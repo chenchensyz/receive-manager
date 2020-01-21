@@ -112,11 +112,11 @@ appServiceList.prototype = {
         var that = this;
         layer.open({
             type: 1,
-            title: "审核接口",
+            title: "服务监控",
             fixed: false,
             resize: false,
             shadeClose: true,
-            area: ['600px'],
+            area: ['643px'],
             maxmin: true, //开启最大化最小化按钮
             content: $('#serviceDialog'),
             end: function () {

@@ -52,7 +52,7 @@ serviceRegister.prototype = {
             data.field.appId = $('.appId').val();
             data.field.serviceName = $('.serviceName').val();
             data.field.introduce = $('.introduce').val();
-            data.field.filePath = $('.serviceFileText').text();
+            data.field.isOpen = $("input[name='isOpen']:checked").val();
             $.post(getRootPath() + '/appService/addOrEdit', data.field).then(function (res) {
                 if (res.code == 0) {
                     that.layStep.next('#stepForm');

@@ -26,9 +26,11 @@
 hs_err_pid*
 
 .idea
-.iml
+*.iml
 target
-.gitignore
 receive-netty/src/test/
 receive-web/src/test/
 
+/receive-platform/receive-platform.iml
+/receive-netty/receive-platform.iml
+/receive-web/receive-platform.iml

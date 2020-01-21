@@ -122,16 +122,16 @@ appServiceList.prototype = {
                     , 'urlSuffix': data.urlSuffix
                     , 'serviceRule': data.serviceRule
                     , 'sourceType': data.sourceType
+                    , 'isOpen': data.isOpen
                 })
                 layer.open({
-                    type: 1,
-                    title: "接口编辑",
-                    fixed: false,
-                    resize: false,
-                    shadeClose: true,
-                    maxmin: true, //开启最大化最小化按钮
-                    area: ['600px'], //宽高
-                    content: $("#serviceDialog")
+                    type: 1
+                    ,title: "接口编辑"
+                    ,area: ['100%', '100%']
+                    ,content: $("#serviceDialog")
+                    ,success: function(layero, index){
+                        layer.tips('点击此处关闭', '.layui-layer-setwin', {tips: 4});
+                    }
                 });
             } else if (obj.event === 'view') {
                 layer.alert(data.refuseMsg, {

@@ -119,7 +119,7 @@ appServiceList.prototype = {
             fixed: false,
             resize: false,
             shadeClose: true,
-            area: ['600px', '400px'],
+            area: ['642px'],
             maxmin: true, //开启最大化最小化按钮
             content: $('#serviceDialog'),
             end: function () {

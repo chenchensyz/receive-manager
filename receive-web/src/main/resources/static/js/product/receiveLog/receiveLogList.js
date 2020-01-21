@@ -1,5 +1,5 @@
 /**
- * 应用管理
+ * 日志列表
  */
 function receiveLogList() {
     var that = this;

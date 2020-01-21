@@ -185,6 +185,27 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <!-- oracle版 -->
+            <id>oracle</id>
+            <properties>
+                <env.devMode>oracle</env.devMode>
+                <skipAssemblyMysql>true</skipAssemblyMysql>
+                <skipAssemblyOracle>false</skipAssemblyOracle>
+            </properties>
+        </profile>
+        <profile>
+            <!-- mysql版 -->
+            <id>mysql</id>
+            <properties>
+                <env.devMode>mysql</env.devMode>
+                <skipAssemblyMysql>false</skipAssemblyMysql>
+                <skipAssemblyOracle>true</skipAssemblyOracle>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <finalName>receive-platform</finalName>
         <!--<finalName>receive-msjw</finalName>-->
@@ -221,20 +242,37 @@
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <!-- not append assembly id in release file name -->
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>src/main/resources/package.xml</descriptor>
-                    </descriptors>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>make-assembly-mysql</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <!-- not append assembly id in release file name -->
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <skipAssembly>${skipAssemblyMysql}</skipAssembly>
+                            <descriptors>
+                                <descriptor>src/main/resources/source/mysql-package.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>make-assembly-oracle</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <!-- not append assembly id in release file name -->
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <skipAssembly>${skipAssemblyOracle}</skipAssembly>
+                            <descriptors>
+                                <descriptor>src/main/resources/source/oracle-package.xml</descriptor>
+                            </descriptors>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

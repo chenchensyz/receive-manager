@@ -33,10 +33,10 @@ permList.prototype = {
             page: false,
             cols: [[
                 {type: 'numbers'},
-                {field: 'name', minWidth: 200, title: '权限名称'},
+                {field: 'name', title: '权限名称'},
                 {field: 'code', title: '权限标识'},
                 {field: 'url', title: '菜单url'},
-                {templet: '#auth-state', width: 174, title: '操作'}
+                {field: 'right', templet: '#auth-state', title: '操作', width: 202.8}
             ]],
             done: function () {
                 layer.closeAll('loading');
@@ -60,7 +60,7 @@ permList.prototype = {
                 that.delPerm(data.id, data.parentId);
             } else if (layEvent === 'edit') {
                 location.href = getRootPath() + "/permission/getPermission?permId=" + data.id + "&parentId=" + data.parentId;
-            }  else if (layEvent === 'child') {
+            } else if (layEvent === 'child') {
                 that.getChildPerm(data.id);
             }
         });
@@ -74,34 +74,34 @@ permList.prototype = {
 
     //打开子节点弹窗
     getChildPerm: function (id) {
-            $.ajax({
-                "type": 'get',
-                "url": getRootPath() + '/permission/getAddCilidPerm?permId=' + id,
-                "dataType": "json",
-                "success": function (res) {
-                    if (res.code == 0) {
-                        $('.parentId').val(res.data.id);
-                        $('.parentName').val(res.data.name).addClass('input-disabled').attr('disabled', true);
-                        layer.open({
-                            type: 1,
-                            title: "添加子节点",
-                            fixed: false,
-                            resize: false,
-                            shadeClose: true,
-                            area: ['600px'],
-                            maxmin: true, //开启最大化最小化按钮
-                            content: $('#permChild'),
-                            end: function () {
-                                $('#permChild').css("display", "none");
-                                $('.layui-hide').removeClass('layui-hide');
-                                $('input').not('.layui-hide').val("");
-                            }
-                        });
-                    } else {
+        $.ajax({
+            "type": 'get',
+            "url": getRootPath() + '/permission/getAddCilidPerm?permId=' + id,
+            "dataType": "json",
+            "success": function (res) {
+                if (res.code == 0) {
+                    $('.parentId').val(res.data.id);
+                    $('.parentName').val(res.data.name).addClass('input-disabled').attr('disabled', true);
+                    layer.open({
+                        type: 1,
+                        title: "添加子节点",
+                        fixed: false,
+                        resize: false,
+                        shadeClose: true,
+                        area: ['600px'],
+                        maxmin: true, //开启最大化最小化按钮
+                        content: $('#permChild'),
+                        end: function () {
+                            $('#permChild').css("display", "none");
+                            $('.layui-hide').removeClass('layui-hide');
+                            $('input').not('.layui-hide').val("");
+                        }
+                    });
+                } else {
 
-                    }
                 }
-            });
+            }
+        });
     },
 
     //重置

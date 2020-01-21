@@ -20,7 +20,6 @@ appValidList.prototype = {
 
     initData: function () {
         var that = this;
-        var source = localStorage.getItem("source")
         that.tableIns = that.layTable.render({
             id: 'appServiceTable',
             elem: '#appServiceList'
@@ -40,15 +39,6 @@ appValidList.prototype = {
             , cols: [[
                 {type: 'numbers'}
                 , {field: 'approveAppName', title: '授权应用'}
-                , {
-                    field: 'appName', templet: function (d) {
-                        if (d.appName) {
-                            return '<span>' + d.appName + '</span>'
-                        } else {
-                            return '<span>无</span>';
-                        }
-                    }, title: '调用应用'
-                }
                 , {field: 'appKey', title: '应用密钥(appKey)'}
                 , {field: 'serviceName', title: '调用接口'}
                 , {field: 'serviceKey', title: '接口密钥(serviceKey)'}
@@ -56,7 +46,7 @@ appValidList.prototype = {
                     field: 'right', align: 'center', templet: function (d) {
                         var span = ' <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>';
                         return span;
-                    }, title: '操作', width: 80
+                    }, title: '操作', width: 100
                 }
             ]]
             , done: function (res, curr, count) {
@@ -94,7 +84,7 @@ appValidList.prototype = {
             fixed: false,
             resize: false,
             shadeClose: true,
-            area: ['600px', '300px'],
+            area: ['642px', '300px'],
             maxmin: true, //开启最大化最小化按钮
             content: $('#serviceDialog'),
             end: function () {

@@ -237,7 +237,6 @@ appApplyList.prototype = {
             elem: '#developerValidList'
             , size: 'sm' //小尺寸的表格
             , url: getRootPath() + '/developer/valid/list'
-            , cellMinWidth: 80
             , page: true,
             request: {
                 pageName: 'pageNum' //页码的参数名称，默认：page
