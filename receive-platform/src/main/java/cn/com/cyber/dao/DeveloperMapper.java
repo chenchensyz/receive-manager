@@ -13,4 +13,9 @@ public interface DeveloperMapper {
 
     Developer getDeveloperByCompanyKey(@Param("userName") String userName, @Param("companyKey") String companyKey);
 
+    int insertDeveloper(Developer developer);
+
+    int changePwd(Developer developer);
+
+
 }

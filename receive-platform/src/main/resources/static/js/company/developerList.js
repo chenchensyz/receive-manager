@@ -39,7 +39,7 @@ developerList.prototype = {
                 , {field: 'userName', title: '用户名', unresize: true}
                 , {field: 'name', title: '昵称'}
                 , {field: 'status', title: '状态', width: 95, align: 'center', templet: '#stateJob'}
-                , {field: 'createTimeStr', title: '创建时间', minWidth: 80}
+                , {field: 'createTime', title: '创建时间', minWidth: 80}
                 // , {fixed: 'right', title: '操作', width: 194, align: 'center', toolbar: '#optBar'}
             ]]
             , done: function (res, curr, count) {

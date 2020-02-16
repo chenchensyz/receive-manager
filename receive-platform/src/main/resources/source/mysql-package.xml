@@ -14,13 +14,18 @@
         <fileSet>
             <directory>src/main/resources</directory>
             <outputDirectory>/</outputDirectory>
-            <excludes>
-<!--                <exclude>application-*.properties</exclude>-->
-                <exclude>source/**</exclude>
-                <exclude>generatorConfig.xml</exclude>
-                <exclude>mapper/**</exclude>
-                <exclude>mybatis-config.xml</exclude>
-            </excludes>
+            <includes>
+                <include>ehcache/**</include>
+                <include>i18n/**</include>
+                <include>ehcache/**</include>
+                <include>static/**</include>
+                <include>templates/**</include>
+                <include>application.properties</include>
+                <include>application-${source}.properties</include>
+                <include>log4j2.xml</include>
+                <include>mapper-mysql/**</include>
+                <include>mybatis-mysql-config.xml</include>
+            </includes>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}</directory>

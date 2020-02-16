@@ -16,6 +16,16 @@
   </sql>
 
 
+    <insert id="insertDeveloper" parameterType="cn.com.cyber.model.Developer">
+        <selectKey keyProperty="id" order="BEFORE" resultType="int">
+            SELECT SEQ_SE_TD_COMPANY.NEXTVAL AS VALUE FROM DUAL
+        </selectKey>
+        insert into td_company
+        (id, name, username, password, status ,create_time)
+        VALUES(#{id},#{name},#{userName},#{password}, 1,sysdate)
+    </insert>
+
+
   <sql id="sql_where" >
       <if test="id != null" >
         and id = #{id}

@@ -36,7 +36,7 @@ public class DeveloperValidServiceImpl implements DeveloperValidService {
     @Transactional
     public DeveloperValid validLogin(DeveloperValid developerValid) {
         if (developerValid.getId() == null
-                && (StringUtils.isBlank(developerValid.getUserName()) || StringUtils.isBlank(developerValid.getCompanyKey()))) {
+                && (StringUtils.isBlank(developerValid.getUserId()) || StringUtils.isBlank(developerValid.getCompanyKey()))) {
             throw new ValueRuntimeException(CodeUtil.REQUEST_PARAM_NULL); //缺少查询条件
         }
         List<DeveloperValid> valids = developerValidMapper.getDeveloperValidList(developerValid);

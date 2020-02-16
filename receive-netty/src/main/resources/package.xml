@@ -14,9 +14,12 @@
         <fileSet>
             <directory>src/main/resources</directory>
             <outputDirectory>/</outputDirectory>
-            <excludes>
-                <exclude>application-*.properties</exclude>
-            </excludes>
+            <includes>
+                <include>i18n/**</include>
+                <include>application.properties</include>
+                <include>application-${source}.properties</include>
+                <include>log4j2.xml</include>
+            </includes>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}</directory>

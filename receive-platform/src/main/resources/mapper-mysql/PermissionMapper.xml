@@ -174,7 +174,7 @@
   </select>
 
   <select id="getMaxChildId" resultType="long" parameterType="long" >
-    SELECT nvl((SELECT max(id) FROM se_permission WHERE parent_id = #{parentId}),0) id from dual
+    SELECT IFNULL((SELECT max(id) FROM se_permission WHERE parent_id = #{parentId}),0) id from dual
   </select>
 
   <delete id="delPermission"  parameterType="map">

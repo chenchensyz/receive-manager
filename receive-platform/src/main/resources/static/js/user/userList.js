@@ -40,7 +40,7 @@ userList.prototype = {
                 , {field: 'userId', title: '用户名', unresize: true}
                 , {field: 'nickName', title: '昵称'}
                 , {field: 'telephone', title: '联系电话', minWidth: 80}
-                , {field: 'createTimeStr', title: '创建时间', minWidth: 80}
+                , {field: 'createTime', title: '创建时间', minWidth: 80}
                 , {field: 'state', title: '状态', width: 95, align: 'center', templet: '#stateJob'}
                 , {fixed: 'right', title: '操作', width: 194, align: 'center', toolbar: '#optBar'}
             ]]

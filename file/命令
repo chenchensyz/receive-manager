@@ -1,3 +1,6 @@
 maven
-mvn clean package -P oracle
-mvn clean package -P mysql
+[platform]
+mvn clean package -P oracle -Dsource=dalian
+mvn clean package -P mysql -Dsource=dalian
+[netty]
+mvn clean package -Dsource=dalian

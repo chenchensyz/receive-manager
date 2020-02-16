@@ -50,7 +50,7 @@ img {
 }
 
 .login {
-    height: 360px;
+    height: 425px;
     width: 400px;
     padding: 50px;
     background-color: #ffffff;
@@ -59,7 +59,7 @@ img {
     float: right;
     margin-right: 50px;
     position: relative;
-    margin-top: 50px;
+    margin-top: 8px;
 }
 
 .login_logo {
@@ -70,11 +70,11 @@ img {
     right: 140px;
 }
 
-.login_name {
+.register_name {
     width: 100%;
     float: left;
     text-align: center;
-    margin-top: 20px;
+    margin-top: -26px;
 }
 
 .login_name p {
@@ -154,12 +154,6 @@ input[type=submit], input[type=button] {
     padding: 8px 15px;
     height: 36px;
     line-height: 18px;
-}
-
-.login-btn{
-    height: 41px;
-    line-height: 38px;
-    padding: 2px 126px;
 }
 
 .login-operation{

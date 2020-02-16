@@ -57,6 +57,7 @@ public class IndexController extends BaseController {
     @RequestMapping("/getPermMenu")
     @ResponseBody
     public RestResponse getPermMenu() {
+        RestResponse rest = new RestResponse();
         int code = CodeUtil.BASE_SUCCESS;
         Map<String, Object> resultMap = Maps.newHashMap();
         List<PermModel> permissons = Lists.newArrayList();
@@ -77,8 +78,13 @@ public class IndexController extends BaseController {
         }
         resultMap.put("permissons", permissons);
         String title = getApplication(environment, CodeUtil.PLATFORM_TITLE);
-        return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(resultMap)
-                .setAny("title", title).setAny("userId", getShiroUser().userId).setAny("source", getShiroUser().source);
+        rest.setCode(code).setMessage(messageCodeUtil.getMessage(code)).setData(resultMap);
+        rest.setAny("title", title);
+        rest.setAny("userId", getShiroUser().userId);
+        rest.setAny("source", getShiroUser().source);
+        int edit = environment.getProperty(CodeUtil.USER_EDIT) != null && Integer.valueOf(environment.getProperty(CodeUtil.USER_EDIT)) == 1 ? 1 : 0;
+        rest.setAny("user_edit", edit);
+        return rest;
     }
 
     //修改密码

@@ -7,7 +7,8 @@
 layui.define(["element", "jquery"], function (exports) {
     var element = layui.element,
         $ = layui.$,
-        layer = layui.layer;
+        layer = layui.layer,
+        layForm = layui.form;
 
     // 判断是否在web容器中打开
     if (!/http(s*):\/\//.test(location.href)) {
@@ -52,11 +53,12 @@ layui.define(["element", "jquery"], function (exports) {
                         if (res.data == null) {
                             layuimini.msg_error('暂无菜单信息');
                         } else {
+                            $('.user-id').text(res.userId);
                             layuimini.initHome(res.data.homeInfo);
                             layuimini.initLogo(res.title);
                             layuimini.initMenu(res.data);
                             layuimini.initTab();
-                            $('.user-id').text(res.userId);
+                            layuimini.initUserEdit(res.user_edit);
                             if (!localStorage.getItem('userId')) {
                                 localStorage.setItem("userId", res.userId)
                             }
@@ -84,6 +86,55 @@ layui.define(["element", "jquery"], function (exports) {
                 $('.layuimini-tool i').attr('data-side-fold', 0);
                 $('.layuimini-tool i').attr('class', 'fa fa-indent');
                 $('.layui-layout-body').attr('class', 'layui-layout-body layuimini-mini');
+            }
+        };
+
+        /**
+         * 初始化设备端
+         */
+        this.initUserEdit = function (user_edit) {
+            if (user_edit == 1) {
+                $('.change-pwd').show();
+                $('.change-pwd').off('click').on('click', function () {
+                    layer.open({
+                        type: 1,
+                        title: "修改密码",
+                        fixed: false,
+                        resize: false,
+                        shadeClose: true,
+                        area: ['500px'],
+                        content: $('#changePwdDialog'),
+                        end: function () {
+                            $('#loginDialog').css("display", "none");
+                            $('#changePwdDialog input').val('')
+                        }
+                    });
+                });
+
+                layForm.verify({
+                    cofirmPwd: function (value, item) { //value：表单的值、item：表单的DOM对象
+                        if (value === '') {
+                            return '请再次输入密码';
+                        }
+                        var password = $('.change-input').val();
+                        if (password != value) {
+                            return '两次输入密码不一致';
+                        }
+                    }
+                });
+
+                layForm.on('submit(changePwd-btn)', function (data) {
+                    $.post(getRootPath() + '/developer/changePwd', data.field).then(function (res) {
+                        if (res.code == 0) {
+                            layer.alert(res.message, function () {
+                                top.location = getRootPath() + '/login/toLogin';
+                            });
+                        } else {
+                            layer.alert(res.message);
+                        }
+                    });
+                    return false;
+                });
             }
         };
 
@@ -785,7 +836,7 @@ layui.define(["element", "jquery"], function (exports) {
      */
     $('body').on('click', '[data-download]', function () {
         var loading = layer.load(0, {shade: false, time: 2 * 1000});
-        var url=getRootPath() + '/file/model/' + localStorage.getItem('platform_title') + '说明文档(app调用版).docx';
+        var url = getRootPath() + '/file/model/' + localStorage.getItem('platform_title') + '说明文档(app调用版).docx';
         window.open(url);
         layer.close(loading);
     });

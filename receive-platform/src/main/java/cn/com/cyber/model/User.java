@@ -1,11 +1,10 @@
 package cn.com.cyber.model;
 
 
-import cn.com.cyber.util.DateUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 public class User extends BaseEntity implements Serializable {
 
@@ -31,11 +30,7 @@ public class User extends BaseEntity implements Serializable {
 
     private Date createTime;
 
-    private String createTimeStr;
-
     private Date updateTime;
-
-    private String updateTimeStr;
 
     public Long getId() {
         return id;
@@ -93,6 +88,7 @@ public class User extends BaseEntity implements Serializable {
         this.state = state;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public Date getCreateTime() {
         return createTime;
     }
@@ -101,28 +97,13 @@ public class User extends BaseEntity implements Serializable {
         this.createTime = createTime;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public Date getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getCreateTimeStr() {
-        return createTime == null ? null : DateUtil.format(createTime, DateUtil.YMD_DASH_WITH_TIME);
-    }
-
-    public void setCreateTimeStr(String createTimeStr) {
-        this.createTimeStr = createTimeStr;
-    }
-
-    public String getUpdateTimeStr() {
-        return updateTime == null ? null : DateUtil.format(updateTime, DateUtil.YMD_DASH_WITH_TIME);
-    }
-
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
     }
 
     public Long getCompanyId() {

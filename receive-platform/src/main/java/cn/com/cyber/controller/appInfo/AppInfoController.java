@@ -157,6 +157,7 @@ public class AppInfoController extends BaseController {
 //        }
         if (area == 0) {
             rest.setData(appInfoService.getAppServiceTree(companyId));
+            rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));
         } else {
             DeveloperValid developerValid = new DeveloperValid();
             developerValid.setUserId(getShiroUser().userId);
@@ -173,21 +174,35 @@ public class AppInfoController extends BaseController {
                 companyParam.add(valid.getUserName());
             }
             Map<String, String> header = Maps.newHashMap();
-            header.put("userId", developerValidList.get(0).getUserName());
+            header.put("userId", developerValid.getUserId());
             header.put("token", developerValidList.get(0).getToken());
             String url = environment.getProperty(CodeUtil.DEVELOPER_VALID_URL) + CodeUtil.API_SERVICETREE_URL + "?companyIds=" + StringUtils.join(companyIds.toArray(), ",");
             ResultData resultData = HttpConnection.httpRequest(url, CodeUtil.METHOD_GET, null, null, null, header);
             if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
                 JSONObject jsonObject = JSONObject.parseObject(resultData.getResult());
-                if (jsonObject.getInteger("code") != 0) {
+                if (jsonObject.getInteger("code") == 0) {
+                    rest.setData(JSONArray.parseArray(jsonObject.getString("data")));
+                    rest.setAny("companyParam", companyParam);
+                } else {
                     code = CodeUtil.APPSERVICE_ERR_OPTION;
-                    rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));
-                    return rest;
                 }
-                rest.setData(JSONArray.parseArray(jsonObject.getString("data")));
-                rest.setAny("companyParam", companyParam);
+            } else if (resultData != null && CodeUtil.HTTP_VALID_ERR == resultData.getCode()) {
+                developerValid.setCompanyKey(developerValidList.get(0).getCompanyKey());
+                DeveloperValid valid = developerValidService.validLogin(developerValid);
+                header.put("token", valid.getToken());
+                resultData = HttpConnection.httpRequest(url, CodeUtil.METHOD_GET, null, null, null, header);
+                if (resultData != null && CodeUtil.HTTP_OK == resultData.getCode()) {
+                    JSONObject jsonObject = JSONObject.parseObject(resultData.getResult());
+                    if (jsonObject.getInteger("code") == 0) {
+                        rest.setData(JSONArray.parseArray(jsonObject.getString("data")));
+                        rest.setAny("companyParam", companyParam);
+                    } else {
+                        code = CodeUtil.APPSERVICE_ERR_OPTION;
+                    }
+                }
             } else {
                 LOGGER.error("resultData:{}", resultData.getResult());
+                rest.setData(resultData.getResult());
             }
         }
         rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));

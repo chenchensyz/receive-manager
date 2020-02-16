@@ -65,6 +65,7 @@ public class CodeUtil {
     public static final String FILE_ROOT_PATH = "file_root_path";
     public static final String DEFAULT_DEPARTMENT = "default_department";  //顶层机构
     public static final String DEVELOPER_VALID_URL = "developer_valid_url";  //跨区域开发者验证ip
+    public static final String USER_EDIT = "user_edit";  //用户是否可操作，修改密码
 
     public static final String UP_FILE_PATH = "upload";  //接口附件
     public static final String SERVICE_FILE_PATH = "service";  //接口附件
@@ -148,6 +149,11 @@ public class CodeUtil {
     public static final int USERINFO_ERR_DEVELOPER_BIND = 20107; //开发者绑定失败
     public static final int USERINFO_ERR_DEVELOPER_DEL = 20108; //开发者绑定记录删除失败
     public static final int USERINFO_NULL_DEVELOPER_BIND = 20109; //请先绑定开发者
+    public static final int USERINFO_EXIST = 20110; //用户已存在
+    public static final int USERINFO_OLDPWD_NOT_EQUALS = 20111; //原密码不匹配
+    public static final int USERINFO_ERR_CHANGE_PWD = 20112; //修改密码失败
+
+
     //公司
     public static final int COMPANYINFO_ERR_SELECT = 30101; //未查到公司
     public static final int COMPANYINFO_ERR_OPERATION = 30102; //添加或修改公司失败

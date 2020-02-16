@@ -193,7 +193,7 @@ public class AppServiceController extends BaseController {
     public RestResponse searchData(AppService appService) {
         PageHelper.startPage(appService.getPageNum(), appService.getPageSize());
         List<AppService> appServices = appServiceService.getList(appService);
-        PageInfo<AppService> appServicePage = new PageInfo<AppService>(appServices);
+        PageInfo<AppService> appServicePage = new PageInfo<>(appServices);
         int code = CodeUtil.BASE_SUCCESS;
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(appServices)
                 .setTotal(appServicePage.getTotal()).setPage(appServicePage.getLastPage());

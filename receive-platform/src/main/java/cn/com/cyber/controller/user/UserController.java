@@ -2,7 +2,6 @@ package cn.com.cyber.controller.user;
 
 
 import cn.com.cyber.controller.BaseController;
-import cn.com.cyber.controller.manager.filter.UserInfoFilter;
 import cn.com.cyber.model.User;
 import cn.com.cyber.service.UserService;
 import cn.com.cyber.util.CodeUtil;
@@ -56,8 +55,7 @@ public class UserController extends BaseController {
         PageHelper.startPage(user.getPageNum(), user.getPageSize());
         List<User> users = userService.getList(user);
         PageInfo<User> usersPage = new PageInfo<User>(users);
-        Object parseUserInfos = filterParam(users, UserInfoFilter.INFO_FILTER);
-        return RestResponse.success().setData(parseUserInfos)
+        return RestResponse.success().setData(users)
                 .setTotal(usersPage.getTotal()).setPage(usersPage.getLastPage());
     }
 

@@ -11,7 +11,7 @@ login.prototype = {
     init: function () {
         this.initData();
         this.loginForm();
-        this.toRegiest();
+        this.toRegister();
     },
 
     initData: function () {
@@ -66,9 +66,9 @@ login.prototype = {
         });
     },
 
-    toRegiest: function () {
-        $('.regiest a').off('click').on('click', function () {
-            location.href = getRootPath() + "/regiest/toRegiest";
+    toRegister: function () {
+        $('.register a').off('click').on('click',function () {
+            location.href = getRootPath() + "/register/toRegister";
         });
     }
 

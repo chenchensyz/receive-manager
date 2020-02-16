@@ -33,8 +33,8 @@ userInfo.prototype = {
                     $('.password,.confirm-password').parents('.layui-form-item').remove();
                     $('.userId').val(user.userId).addClass('input-disabled');
                     $('.state').val(user.state == 0 ? '禁用' : '可用').addClass('input-disabled');
-                    $('.createTime').val(user.createTimeStr).addClass('input-disabled');
-                    $('.updateTime').val(user.updateTimeStr).addClass('input-disabled');
+                    $('.createTime').val(user.createTime).addClass('input-disabled');
+                    $('.updateTime').val(user.updateTime).addClass('input-disabled');
                     $('.input-disabled').attr('disabled', true).removeAttr('name');
                 }
             });

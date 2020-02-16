@@ -1,7 +1,8 @@
 package cn.com.cyber.model;
 
 
-import cn.com.cyber.util.DateUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,7 +23,9 @@ public class Developer extends BaseEntity implements Serializable {
 
     private Integer roleId;
 
-    private String createTimeStr;
+    private String companyPhone;
+
+    private String email;
 
     private String companyKey;
 
@@ -43,6 +46,7 @@ public class Developer extends BaseEntity implements Serializable {
         this.userName = userName;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -67,20 +71,13 @@ public class Developer extends BaseEntity implements Serializable {
         this.status = status;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public Date getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    public String getCreateTimeStr() {
-        return createTime == null ? null : DateUtil.format(createTime, DateUtil.YMD_DASH_WITH_TIME);
-    }
-
-    public void setCreateTimeStr(String createTimeStr) {
-        this.createTimeStr = createTimeStr;
     }
 
     public Integer getRoleId() {
@@ -97,5 +94,22 @@ public class Developer extends BaseEntity implements Serializable {
 
     public void setCompanyKey(String companyKey) {
         this.companyKey = companyKey;
+    }
+
+
+    public String getCompanyPhone() {
+        return companyPhone;
+    }
+
+    public void setCompanyPhone(String companyPhone) {
+        this.companyPhone = companyPhone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -15,6 +15,30 @@
     id, name , username, password, status
   </sql>
 
+    <insert id="insertDeveloper" parameterType="cn.com.cyber.model.Developer">
+        insert into td_company
+        (name, username, password,
+        <if test="companyPhone != null and companyPhone !=''" >
+            company_phone,
+        </if>
+        <if test="email != null and email !=''" >
+            email,
+        </if>
+        status ,create_time)
+        VALUES(#{name},#{userName},#{password},
+        <if test="companyPhone != null and companyPhone !=''" >
+            #{companyPhone},
+        </if>
+        <if test="email != null and email !=''" >
+            #{email},
+        </if>
+        1, sysdate())
+    </insert>
+
+    <update id="changePwd" parameterType="cn.com.cyber.model.Developer">
+        update td_company  set password =#{password}, STATUS_TIME=sysdate() where username= #{userName}
+    </update>
+
 
   <sql id="sql_where" >
       <if test="id != null" >

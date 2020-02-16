@@ -46,6 +46,9 @@
                         <!--<a href="javascript:;" data-iframe-tab="page/user-password.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>-->
                     <!--</dd>-->
                     <dd>
+                        <a href="javascript:;" style="display: none" class="change-pwd">修改密码</a>
+                    </dd>
+                    <dd>
                         <a href="javascript:;" class="login-out">退出登录</a>
                     </dd>
                 </dl>
@@ -81,6 +84,37 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="changePwdDialog" class="layer_self_wrap" style="display:none; margin-top: 20px;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">原密码</label>
+                <div class="layui-input-inline">
+                    <input  autocomplete="off" class="layui-input" name="old" type="password"  lay-verify="required"
+                            style=" height: 26px;margin-top: 6px"/>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">新密码</label>
+                <div class="layui-input-inline">
+                    <input  autocomplete="off" class="layui-input change-input" name="password" type="password" lay-verify="required"
+                            style="height: 26px;margin-top: 6px"/>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">确认密码</label>
+                <div class="layui-input-inline">
+                    <input  autocomplete="off" class="layui-input"  name="confirm" type="password" lay-verify="cofirmPwd"
+                            style="height: 26px;margin-top: 6px"/>
+                </div>
+            </div>
+            <div class="layui-inline">
+               <button class="layui-btn layui-btn-xs" lay-submit="" lay-filter="changePwd-btn">提交</button>
+            </div>
+        </div>
+    </form>
 </div>
 <div th:include="head :: commonjs"></div>
 <script th:src="@{/js/lay-config.js?v=1.0.4}"></script>

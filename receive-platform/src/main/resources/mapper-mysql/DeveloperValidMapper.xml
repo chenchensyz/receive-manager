@@ -54,9 +54,4 @@
         update se_company_valid set token = #{token}  where id = #{id}
     </update>
 
-    <delete id="deleteDeveloperValid" parameterType="int">
-       delete from se_company_valid where id = #{id}
-   </delete>
-
-
 </mapper>
