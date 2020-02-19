@@ -7,7 +7,6 @@ import cn.com.cyber.socket.SpringUtil;
 import cn.com.cyber.util.CodeUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.core.env.Environment;
 
 

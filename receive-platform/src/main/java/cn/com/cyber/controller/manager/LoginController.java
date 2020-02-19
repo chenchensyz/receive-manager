@@ -42,7 +42,8 @@ public class LoginController extends BaseController {
     @ResponseBody
     public RestResponse config() {
         String title = getApplication(environment, CodeUtil.PLATFORM_TITLE);
-        return RestResponse.success().setData(title);
+        String down_url = getApplication(environment, CodeUtil.FILE_DOWN_URL);
+        return RestResponse.success().setData(title).setAny("down_url", down_url);
     }
 
     //跳转登录页

@@ -40,5 +40,4 @@ public interface AppInfoMapper {
 
     int approveAppServiceMore(List<AppModel> appModelList);
 
-    int deleteServiceRequestByAppId(Integer appId);
 }

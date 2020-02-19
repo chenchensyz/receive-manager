@@ -35,6 +35,12 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 应用程序信息的控制器
+ *
+ * @author chenchen
+ * @date 2020/02/18
+ */
 @Controller
 @RequestMapping("/appInfo")
 public class AppInfoController extends BaseController {
@@ -52,6 +58,13 @@ public class AppInfoController extends BaseController {
     @Autowired
     private MessageCodeUtil messageCodeUtil;
 
+    /**
+     * 获取应用信息列表
+     *
+     * @param model 模型
+     * @param state 状态
+     * @return {@link String}
+     */
     @RequestMapping("list")
     public String getAppInfoList(Model model, @RequestParam(value = "state", defaultValue = "1") int state) {
         model.addAttribute("state", state);

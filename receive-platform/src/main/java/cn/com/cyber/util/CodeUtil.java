@@ -63,9 +63,11 @@ public class CodeUtil {
     public static final String FILE_SEVER_PORT = "file_sever_port";
     public static final String SOCKET_OPEN = "socket_open";
     public static final String FILE_ROOT_PATH = "file_root_path";
+    public static final String FILE_DOWN_URL = "file_down_url";
     public static final String DEFAULT_DEPARTMENT = "default_department";  //顶层机构
     public static final String DEVELOPER_VALID_URL = "developer_valid_url";  //跨区域开发者验证ip
     public static final String USER_EDIT = "user_edit";  //用户是否可操作，修改密码
+    public static final String PUSH_AREA = "push_area";  //发布区域
 
     public static final String UP_FILE_PATH = "upload";  //接口附件
     public static final String SERVICE_FILE_PATH = "service";  //接口附件

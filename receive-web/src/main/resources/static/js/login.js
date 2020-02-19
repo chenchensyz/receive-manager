@@ -48,8 +48,8 @@ login.prototype = {
     },
 
     toRegiest: function () {
-        $('.regiest a').off('click').on('click',function () {
-            location.href = getRootPath() + "/regiest/toRegiest";
+        $('.register a').off('click').on('click',function () {
+            location.href = getRootPath() + "/register/toRegister";
         });
     }
 

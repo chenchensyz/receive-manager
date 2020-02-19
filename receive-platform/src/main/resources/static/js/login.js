@@ -20,12 +20,15 @@ login.prototype = {
             type: 'get',
             success: function (res) {
                 var title = '统一资源服务管理平台';
+                var down_url = getRootPath();
                 if (res.code == 0) {
                     title = res.data;
+                    down_url = res.down_url;
                     localStorage.setItem('upUrl', res.upUrl);
                 }
                 $('.login_name p').text(title);
                 localStorage.setItem('platform_title', title);
+                localStorage.setItem('down_url', down_url);
             },
             error: function (err) {
                 layer.alert(JSON.stringify(err), function () {
@@ -67,7 +70,7 @@ login.prototype = {
     },
 
     toRegister: function () {
-        $('.register a').off('click').on('click',function () {
+        $('.register a').off('click').on('click', function () {
             location.href = getRootPath() + "/register/toRegister";
         });
     }

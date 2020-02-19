@@ -48,6 +48,14 @@
                                         </div>
                                     </div>
 
+                                    <div class="layui-form-item" th:if="${push_area != '3'}">
+                                        <label class="layui-form-label">发布区域：</label>
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="pushArea" value="2" title="二类" checked="" lay-verify="required">
+                                            <input type="radio" name="pushArea" value="3" title="三类" lay-verify="required">
+                                        </div>
+                                    </div>
+
                                     <div class="layui-form-item layui-form-text">
                                         <label class="layui-form-label">服务描述：</label>
                                         <div class="layui-input-block">
