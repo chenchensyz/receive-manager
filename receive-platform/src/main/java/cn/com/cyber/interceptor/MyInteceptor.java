@@ -24,7 +24,7 @@ public class MyInteceptor implements WebMvcConfigurer {
         //api后台接口拦截器
         String webExcludePath = messageCodeUtil.getMessage("interceptor.apiExcludePath");
         String[] apiExcludeArr = webExcludePath.split(",");
-        registry.addInterceptor(new ApiInterceptor()).addPathPatterns("/api/**").excludePathPatterns(apiExcludeArr);
+        registry.addInterceptor(new ApiInterceptor()).addPathPatterns("/api1/**").excludePathPatterns(apiExcludeArr);
     }
 
     @Override

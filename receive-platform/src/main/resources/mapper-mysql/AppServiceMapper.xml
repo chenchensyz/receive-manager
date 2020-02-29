@@ -152,6 +152,9 @@
 
     <sql id="sql_where">
         <where>
+            <if test="appKey != null and appKey !=''" >
+                and ta.APP_UUID = #{appKey}
+            </if>
             <if test="appName != null and appName !=''" >
                 <bind name="appNameSec" value=" '%' + appName + '%' "/>
                 and ta.name like #{appNameSec}

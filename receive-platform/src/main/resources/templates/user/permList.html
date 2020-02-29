@@ -9,9 +9,8 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
         <div>
-            <div class="layui-btn-group">
-                <button class="layui-btn add-btn">新增权限</button>
-            </div>
+            <button class="layui-btn add-btn">新增权限</button>
+            <button id="btn-fold" class="layui-btn layui-btn-warm">排序</button>
             <table id="munu-table" lay-filter="munu-table"></table>
         </div>
     </div>
@@ -29,11 +28,12 @@
     <form id="permChildForm" class="layui-form layui-form-pane" method="post" action=""
           style="margin-top: 20px;margin-left: 44px;">
         <input class="parentId" type="hidden" name="parentId"/>
-        <div class="layui-form-item">
+        <input class="id" type="hidden" name="id"/>
+        <div class="layui-form-item parent-div" style="display: none">
             <div class="layui-inline">
                 <label class="layui-form-label">上级权限名称</label>
                 <div class="layui-input-inline">
-                    <input class="layui-input parentName" type="text" lay-verify="required"/>
+                    <input class="layui-input parentName" type="text" disabled/>
                 </div>
             </div>
         </div>

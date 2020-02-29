@@ -76,7 +76,7 @@ public class PermissionController extends BaseController {
     @ResponseBody
     public RestResponse addOrEditPermission(Permission sysPermission) {
         int count = 0;
-        if (sysPermission.getId() > 0) {
+        if (sysPermission.getId() != null) {
             sysPermission.setUpdateTime(new Date());
             count = permissionService.update(sysPermission);
         } else {
@@ -100,17 +100,6 @@ public class PermissionController extends BaseController {
             return RestResponse.failure("新增或编辑权限失败");
         }
         return RestResponse.success();
-    }
-
-    //获取权限编辑数据
-    @RequestMapping("/getAddCilidPerm")
-    @ResponseBody
-    public RestResponse getAddCilidPerm(@RequestParam("permId") long permId) {
-        Permission permission = permissionService.getById(permId);
-        if (permission == null) {
-            return RestResponse.failure("获取权限失败");
-        }
-        return RestResponse.success().setData(permission);
     }
 
     //删除权限

@@ -1,4 +1,4 @@
-package cn.com.cyber.api.developer;
+package cn.com.cyber.controller.api.developer;
 
 /**
  * 应用权限分配

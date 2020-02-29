@@ -1,6 +1,6 @@
 package cn.com.cyber.model;
 
-import cn.com.cyber.util.DateUtil;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -19,13 +19,11 @@ public class Permission {
 
     private Integer type;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    private String createTimeStr;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
-
-    private String updateTimeStr;
 
     private Permission parentPerm;
 
@@ -99,22 +97,6 @@ public class Permission {
 
     public void setParentPerm(Permission parentPerm) {
         this.parentPerm = parentPerm;
-    }
-
-    public String getCreateTimeStr() {
-        return createTime == null ? "" : DateUtil.format(createTime, DateUtil.YMD_DASH_WITH_TIME);
-    }
-
-    public void setCreateTimeStr(String createTimeStr) {
-        this.createTimeStr = createTimeStr;
-    }
-
-    public String getUpdateTimeStr() {
-        return updateTime == null ? "" : DateUtil.format(updateTime, DateUtil.YMD_DASH_WITH_TIME);
-    }
-
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
     }
 
     public Integer getType() {
