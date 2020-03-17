@@ -20,10 +20,9 @@ appApplyList.prototype = {
     init: function () {
         this.initTab();
         this.initData();
-        this.developerValid();
         this.getAppServiceList();
         this.saveAppService();
-        this.loginSubmit();
+        this.getAppApiServiceList();
     },
 
 
@@ -229,125 +228,6 @@ appApplyList.prototype = {
         })
     },
 
-    //开发者绑定关系记录
-    developerValid: function () {
-        var that = this;
-        that.tableIns = that.layTable.render({
-            id: 'developerValidTable',
-            elem: '#developerValidList'
-            , size: 'sm' //小尺寸的表格
-            , url: getRootPath() + '/developer/valid/list'
-            , page: true,
-            request: {
-                pageName: 'pageNum' //页码的参数名称，默认：page
-                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
-            }, response: {
-                statusName: 'code' //数据状态的字段名称，默认：code
-                , statusCode: 0 //成功的状态码，默认：0
-                , countName: 'total' //数据总数的字段名称，默认：count
-                , dataName: 'data' //数据列表的字段名称，默认：data
-            }
-            , cols: [[
-                {type: 'numbers'}
-                , {field: 'userName', title: '开发者账号 ', align: 'center'}
-                , {
-                    field: 'right', align: 'center', templet: function (d) {
-                        var span = ' <a class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="del">删除</a>';
-                        return span;
-                    }, title: '操作', align: 'center'
-                }
-            ]]
-            , done: function (res, curr, count) {
-                that.pageCurr = curr;
-            }
-        });
-
-        //监听工具条
-        that.layTable.on('tool(developerValidTable)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'del') {//登陆
-                that.delValid(data);
-            }
-        });
-    },
-
-    delValid: function (data) {
-        var that = this;
-        var data = {'id': data.id};
-        layer.confirm('您确定要删除吗？', {
-            btn: ['确认', '返回'] //按钮
-        }, function () {
-            $.get(getRootPath() + '/developer/valid/delete', data, function (res) {
-                if (res.code == 0) {
-                    layer.msg(res.message);
-                    that.developerValid();
-                } else {
-                    layer.alert(res.message, function () {
-                        layer.closeAll();
-                    });
-                }
-            });
-        }, function () {
-            layer.closeAll();
-        });
-    },
-
-    loginSubmit: function () {
-        var that = this;
-        $('.addLogin').off('click').on('click', function () {
-            layer.open({
-                type: 1,
-                title: "账号绑定",
-                fixed: false,
-                resize: false,
-                shadeClose: true,
-                area: ['500px'],
-                maxmin: true, //开启最大化最小化按钮
-                content: $('#loginDialog'),
-                end: function () {
-                    $('#loginDialog').css("display", "none");
-                    $('.companyKey').val('')
-                }
-            });
-        });
-        $('.loginSubmit').off('click').on('click', function () {
-            var data = {'companyKey': $('.companyKey').val(), 'userName': $('.userName').val()};
-            that.loginValid(data);
-        });
-
-        $('.login-developer').off('click').on('click', function () {
-            that.getAppApiServiceList();
-        });
-        $('.developer-change').off('click').on('click', function () {
-            $('.interfaceApiDiv').hide();
-            $('.developerValidDiv').show();
-            that.developerValid();
-        });
-    },
-
-    loginValid: function (data) {
-        var that = this;
-        $.ajax({
-            url: getRootPath() + '/developer/valid/login',
-            type: 'post',
-            contentType: 'application/json',
-            "data": JSON.stringify(data),
-            success: function (res) {
-                if (res.code == 0) {
-                    layer.closeAll();
-                    that.getAppApiServiceList();
-                } else {
-                    layer.alert(res.message);
-                }
-            },
-            error: function (err) {
-                layer.alert(err.message, function () {
-                    layer.closeAll();
-                });
-            }
-        });
-    },
-
     getAppApiServiceList: function () {
         var that = this;
         var zTreeObj;
@@ -374,7 +254,6 @@ appApplyList.prototype = {
                     $('.localName').text(res.companyParam);
                     that.zTreeObj = $.fn.zTree.init($("#interfaceApiSelect"), setting, res.data);
                     $('.interfaceApiDiv').show();
-                    $('.developerValidDiv').hide();
                 } else {
                     layer.alert(res.message, function () {
                         layer.closeAll();

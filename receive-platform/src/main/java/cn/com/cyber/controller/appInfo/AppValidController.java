@@ -13,7 +13,9 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,8 +33,12 @@ public class AppValidController extends BaseController {
     @Autowired
     private MessageCodeUtil messageCodeUtil;
 
+    @Autowired
+    private Environment environment;
+
     @RequestMapping("/applyList")
-    public String getAppInfoList() {
+    public String getAppInfoList(Model model) {
+        model.addAttribute("push_area", environment.getProperty(CodeUtil.PUSH_AREA));
         return "appInfo/appApplyList";
     }
 

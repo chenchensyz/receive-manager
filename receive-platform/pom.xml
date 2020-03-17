@@ -13,6 +13,10 @@
 
     <packaging>jar</packaging>
 
+    <properties>
+        <skipTests>true</skipTests>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -57,8 +61,8 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <!--<scope>runtime</scope>-->
-            <version>8.0.17</version>
+            <scope>runtime</scope>
+<!--            <version>8.0.17</version>-->
         </dependency>
 
         <dependency>
@@ -223,16 +227,14 @@
                                 in this field -->
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <!--<classpathLayoutType>custom</classpathLayoutType> <customClasspathLayout>
-                                lib/$${artifact.groupId}.$${artifact.artifactId}.$${artifact.extension} </customClasspathLayout> -->
                         </manifest>
                         <manifestEntries>
                             <Class-Path>./</Class-Path>
                         </manifestEntries>
                     </archive>
-                    <!--<excludes>-->
-                    <!--<exclude>/**</exclude>-->
-                    <!--</excludes>-->
+<!--                    <excludes>-->
+<!--                      <exclude>cn/com/cyber/test/**</exclude>-->
+<!--                    </excludes>-->
                     <includes>引入
                         <include>cn/**</include>
                     </includes>

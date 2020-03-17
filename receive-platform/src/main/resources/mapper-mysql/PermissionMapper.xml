@@ -125,32 +125,24 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
   <sql id="sql_where" >
     <where >
       and state = 1
-      <if test="id != null" >
-         and id = #{id,jdbcType=BIGINT}
-      </if>
       <if test="name != null and name !=''" >
-         and name = #{name,jdbcType=VARCHAR}
+         and name = #{name}
       </if>
       <if test="code != null and code !=''" >
-         and code = #{code,jdbcType=VARCHAR}
+         and code = #{code}
       </if>
       <if test="parentId != null" >
-         and parent_id = #{parentId,jdbcType=BIGINT}
+         and parent_id = #{parentId}
       </if>
       <if test="url != null and url !=''" >
-         and url = #{url,jdbcType=VARCHAR}
+         and url = #{url}
       </if>
       <if test="type != null" >
-         and type = #{type,jdbcType=INTEGER}
-      </if>
-      <if test="createTime != null" >
-         and create_time = #{createTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="updateTime != null" >
-         and update_time = #{updateTime,jdbcType=TIMESTAMP}
+         and type = #{type}
       </if>
     </where>
   </sql>

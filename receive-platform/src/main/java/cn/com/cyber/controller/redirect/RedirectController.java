@@ -62,15 +62,22 @@ public class RedirectController extends BaseController {
 
             String params = null;
             Map<String, String> serviceHeader = null;
+            String serviceSuffix = null;
+
             if (StringUtils.isNotBlank(jsonData)) {
                 JSONObject jsonObject = JSONObject.parseObject(jsonData);
                 params = jsonObject.getString("params");
                 serviceHeader = JSON.parseObject(jsonObject.getString("serviceHeader"), new TypeReference<Map<String, String>>() {
                 });
+                serviceSuffix = jsonObject.getString("serviceSuffix");
+            }
+            String realUrl = appService.getUrlSuffix();
+            if (serviceSuffix != null) {  //get请求地址栏拼接
+                realUrl += serviceSuffix;
             }
             //发送请求
 //            LOGGER.info("params:{}", params);
-            ResultData resultData = HttpConnection.requestNewParams(params, appService.getMethod(), appService.getContentType(), appService.getUrlSuffix(), serviceHeader);
+            ResultData resultData = HttpConnection.requestNewParams(params, appService.getMethod(), appService.getContentType(), realUrl, serviceHeader);
             receiveLog.setResponseTime(new Date());
             if (resultData != null && resultData.getCode() != null) {
                 //日志

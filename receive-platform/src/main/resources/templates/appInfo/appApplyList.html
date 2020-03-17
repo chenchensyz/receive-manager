@@ -43,7 +43,7 @@
                     <input type="hidden" class="pushArea"/>
                     <div class="layui-tab layui-tab-brief" lay-filter="pushAreaFilter">
                         <ul class="layui-tab-title">
-                            <li class="layui-this">二类区</li>
+                            <li th:if="${push_area != '3'}" class="layui-this">二类区</li>
                             <li>三类区</li>
                         </ul>
                         <div class="layui-tab-content" style="overflow: auto;">
@@ -51,16 +51,7 @@
                                 <ul id="interfaceSelect" class="ztree"></ul>
                             </div>
                             <div class="layui-tab-item">
-                                <div  class="developerValidDiv">
-                                    <button class="layui-btn layui-btn-xs addLogin"  type="button">添加</button>
-                                    <button class="layui-btn layui-btn-xs login-developer"  type="button">登陆</button>
-                                    <table id="developerValidList" lay-filter="developerValidTable"></table>
-                                </div>
-
                                 <div class="interfaceApiDiv">
-                                    <p style="color: #0264ff" class="localName"></p>
-                                    <button class="layui-btn layui-btn-primary layui-btn-xs developer-change"><i class="layui-icon layui-icon-util"></i> 返回</button>
-
                                     <ul id="interfaceApiSelect" class="ztree"></ul>
                                 </div>
                             </div>

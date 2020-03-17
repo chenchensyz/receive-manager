@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -133,6 +134,14 @@ public class RedirectTcpController extends BaseController {
                 jedis.close();
             }
         }
+    }
+
+
+    @RequestMapping("/getTest")
+    @ResponseBody
+    public RestResponse getTest() {
+        LOGGER.info("测试连接:{}");
+        return RestResponse.success().setData("连接成功");
     }
 
 

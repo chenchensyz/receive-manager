@@ -28,6 +28,7 @@ hs_err_pid*
 .idea
 *.iml
 target
+receive-platform/src/test/
 receive-netty/src/test/
 receive-web/src/test/
 

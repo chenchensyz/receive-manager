@@ -55,6 +55,8 @@ public class WorkerThread implements Runnable {
             String appKey = json.getString("appKey");
             String serviceKey = json.getString("serviceKey");
             String responseType = json.getString("responseType");
+            String serviceHeader = json.getString("serviceHeader"); //第三方头消息
+            String serviceSuffix = json.getString("serviceSuffix"); //第三方请求地址后缀
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("messageId", messageId);
             if (StringUtils.isNoneBlank(appKey, serviceKey)) {
@@ -74,6 +76,12 @@ public class WorkerThread implements Runnable {
                 paramHeader.put("serviceKey", serviceKey);
                 JSONObject jsonParams = new JSONObject();
                 jsonParams.put("params", params);
+                if(StringUtils.isNotBlank(serviceHeader)){
+                    jsonParams.put("serviceHeader", serviceHeader);
+                }
+                if(StringUtils.isNotBlank(serviceSuffix)){
+                    jsonParams.put("serviceSuffix", serviceSuffix);
+                }
 //                LOGGER.info("移动网发送内网appKey:{},serviceKey:{},jsonParams:{}", appKey, serviceKey, jsonParams);
                 ResultData resultData = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonParams.toString(), responseType, paramHeader);
 
