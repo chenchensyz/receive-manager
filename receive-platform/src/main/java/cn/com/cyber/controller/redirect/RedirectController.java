@@ -49,16 +49,14 @@ public class RedirectController extends BaseController {
     public String redirect(HttpServletRequest request, HttpServletResponse response, @RequestBody(required = false) String jsonData) {
         ReceiveLog receiveLog = new ReceiveLog(); //日志
         receiveLog.setRequestTime(new Date());
-        String appKey = request.getHeader("appKey");
-        String serviceKey = request.getHeader("serviceKey");
         int msgCode;
         String result = "";
         try {
             //appKey,serviceKey
-            AppService appService = validParams(appKey, serviceKey);
+            AppService appService = validParams(request);
             //appKey,serviceKey写入日志
-            receiveLog.setAppKey(appKey);
-            receiveLog.setServiceKey(serviceKey);
+            receiveLog.setAppKey(appService.getAppKey());
+            receiveLog.setServiceKey(appService.getServiceKey());
 
             String params = null;
             Map<String, String> serviceHeader = null;
@@ -116,7 +114,7 @@ public class RedirectController extends BaseController {
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(service.getUrlSuffix());
     }
 
-    @RequestMapping("fileUp")
+    @RequestMapping("/fileUp")
     @ResponseBody
     public RestResponse multifileUpload(HttpServletRequest request,
                                         @RequestParam("appKey") String appKey,
@@ -166,6 +164,28 @@ public class RedirectController extends BaseController {
         }
         return RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode));
     }
+
+    @RequestMapping("/fileDown")
+    public void fileDown(HttpServletRequest request, HttpServletResponse response, @RequestBody String jsonData) {
+        try {
+            JSONObject jsonObject = JSONObject.parseObject(jsonData);
+            String serviceSuffix = jsonObject.getString("serviceSuffix");
+            if (StringUtils.isBlank(serviceSuffix)) {  //没有后缀，路径不完整
+                throw new ValueRuntimeException(CodeUtil.BASE_FILE_PATH_NULL);
+            }
+            AppService appService = validParams(request);
+            String url = appService.getUrlSuffix() + serviceSuffix;  //文件地址
+            byte[] fileBytes = FileUtil.getFileBytes(url);
+            String fileName = serviceSuffix.substring(serviceSuffix.lastIndexOf("/") + 1);
+            FileUtil.setResponseBytes(response, fileName, fileBytes);
+            LOGGER.info("发送完毕");
+
+        } catch (ValueRuntimeException e) {
+            int code = (Integer) e.getValue();
+            setResponseJson(response, JSON.toJSONString(RestResponse.res(code, messageCodeUtil.getMessage(code))));
+        }
+    }
+
 
     @RequestMapping("/getTest")
     @ResponseBody

@@ -48,6 +48,7 @@ public class CodeUtil {
     public static final String VALID_TOKEN = "valid_token";
     public static final String PLATFORM_APP_VALID_URL = "/validAppAndService";
     public static final String PLATFORM_FILEUP_URL = "http://56.3.0.79:8081/platform/redirect/fileUp";
+    public static final String PLATFORM_FILEDOWN_URL = "/fileDown";
 
 
 
@@ -68,6 +69,8 @@ public class CodeUtil {
     public static final int REQUEST_TOKEN_NULL = 99110;//头信息中缺少 token 信息
     public static final int REQUEST_USER_NULL = 99111;//头信息中缺少 用户 信息
     public static final int REQUEST_TOKEN_ERR = 99112;//token验证失败，请重新获取
+    public static final int BASE_FILE_PATH_NULL = 99120; //请填写文件路径
+
 
 
     /**

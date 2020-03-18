@@ -105,7 +105,7 @@ public class BaseController {
      *
      * @param response
      */
-    protected void responseOutWithJson(HttpServletResponse response, String responseObject) {
+    public void setResponseJson(HttpServletResponse response, String responseObject) {
         //将实体对象转换为JSON Object转换
         JSONObject responseJSONObject = JSONObject.parseObject(responseObject);
         response.setCharacterEncoding("UTF-8");

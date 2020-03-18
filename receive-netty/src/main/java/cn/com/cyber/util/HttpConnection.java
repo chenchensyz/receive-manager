@@ -149,4 +149,84 @@ public class HttpConnection {
         String encode = new String(Base64.encodeBase64(data), CodeUtil.cs);
         return encode;
     }
+
+
+    public static byte[] httpRequestBytes(String requestUrl, String method, String contentType, String outputStr, Map<String, String> paramHeader) {
+        HttpURLConnection conn = null;
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
+        DataInputStream dataInputStream = null;
+        ByteArrayOutputStream byteArrayoutput = null;
+        byte[] context = new byte[0];
+
+        int code = 402;  //内网返回错误
+        try {
+            URL url = new URL(null, requestUrl, new Handler());
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            //设置超时
+            MessageCodeUtil messageCodeUtil = SpringUtil.getBean(MessageCodeUtil.class);
+            int maxTime = Integer.valueOf(messageCodeUtil.getMessage(CodeUtil.REQUEST_MAXTIME));
+            conn.setConnectTimeout(maxTime);
+            conn.setReadTimeout(maxTime);
+            // 设置请求方式（GET/POST）
+            conn.setRequestMethod(method);
+            if (StringUtils.isNotBlank(contentType)) {
+                conn.setRequestProperty("Content-type", contentType);
+            }
+            if (paramHeader != null && !paramHeader.isEmpty()) {  //传输头消息
+                for (Map.Entry<String, String> entry : paramHeader.entrySet()) {
+                    conn.setRequestProperty(entry.getKey(), entry.getValue());
+                }
+            }
+            // 当outputStr不为null时向输出流写数据
+            if (StringUtils.isNotBlank(outputStr)) {
+                outputStream = conn.getOutputStream();
+                outputStream.write(outputStr.getBytes("UTF-8"));// 注意编码格式
+            }
+
+            int responseCode = conn.getResponseCode();
+            if (CodeUtil.HTTP_OK == responseCode) {
+                inputStream = conn.getInputStream();
+            } else {
+                inputStream = conn.getErrorStream();
+            }
+            dataInputStream = new DataInputStream(inputStream);
+            byteArrayoutput = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[1024];
+            int length;
+
+            while ((length = dataInputStream.read(buffer)) > 0) {
+                byteArrayoutput.write(buffer, 0, length);
+            }
+            context = byteArrayoutput.toByteArray();
+        } catch (Exception e) {
+            LOGGER.error("请求异常 requestUrl:{},error:{}", requestUrl, e);
+        } finally {
+            // 释放资源
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (dataInputStream != null) {
+                    dataInputStream.close();
+                }
+                if (byteArrayoutput != null) {
+                    byteArrayoutput.close();
+                }
+                if (conn != null) {
+                    conn.disconnect();
+                }
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
+        return context;
+    }
 }

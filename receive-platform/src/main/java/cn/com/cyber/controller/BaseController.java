@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -30,6 +31,51 @@ public class BaseController {
 
     @Autowired
     private AppServiceService appServiceService;
+
+    public AppService validParams(HttpServletRequest request) {
+        String appKey = request.getHeader("appKey");
+        String serviceKey = request.getHeader("serviceKey");
+        if (StringUtils.isBlank(appKey)) {
+            appKey = request.getHeader("appkey");
+        }
+        if (StringUtils.isBlank(serviceKey)) {
+            serviceKey = request.getHeader("servicekey");
+        }
+        //根据appKey和serviceKey查询appinfo信息
+        if (StringUtils.isBlank(appKey) ) {
+            throw new ValueRuntimeException(CodeUtil.REQUEST_APPKEY_NULL); //请求的参数中缺少查询条件
+        }
+        if (StringUtils.isBlank(serviceKey)) {
+            throw new ValueRuntimeException(CodeUtil.REQUEST_SERVICEKEY_NULL); //请求的参数中缺少查询条件
+        }
+
+        AppService appService;
+        if (appKey.equals(serviceKey)) { //独立接口
+            appService = appServiceService.getByServiceKey(serviceKey);
+            if (appService != null && appService.getServiceType() != 1) {  //不是独立接口
+                throw new ValueRuntimeException(CodeUtil.REQUEST_KEY_NOT_ONLY);
+            }
+        } else { //应用接口
+            appService = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
+            if (appService == null) {  //应用接口需授权
+                appService = appServiceService.getValidAppAndService(appKey, serviceKey);
+            }
+        }
+
+        if (appService == null) {
+            throw new ValueRuntimeException(CodeUtil.REQUEST_KEY_FILED);
+        }
+
+        if (appService.getAppState() != null && CodeUtil.APP_STATE_ENABLE != appService.getAppState()) {
+            throw new ValueRuntimeException(CodeUtil.APPINFO_ERR_UNENABLE);
+        }
+        if (CodeUtil.APP_STATE_ENABLE != appService.getState()) {
+            throw new ValueRuntimeException(CodeUtil.APPINFO_REFUSE_SERVICE);
+        }
+        appService.setAppKey(appKey);
+        appService.setServiceKey(serviceKey);
+        return appService;
+    }
 
     protected Object filterParam(Object o, String filters) {
         SimplePropertyPreFilter filter = new SimplePropertyPreFilter();
@@ -172,39 +218,6 @@ public class BaseController {
                 out.close();
             }
         }
-    }
-
-    public AppService validParams(String appKey, String serviceKey) {
-        int msgCode;
-        //根据appKey和serviceKey查询appinfo信息
-        if (StringUtils.isBlank(appKey) || StringUtils.isBlank(serviceKey)) {
-            throw new ValueRuntimeException(CodeUtil.REQUEST_PARAM_NULL); //请求的参数中缺少查询条件
-        }
-
-        AppService appService;
-        if (appKey.equals(serviceKey)) { //独立接口
-            appService = appServiceService.getByServiceKey(serviceKey);
-            if (appService != null && appService.getServiceType() != 1) {  //不是独立接口
-                throw new ValueRuntimeException(CodeUtil.REQUEST_KEY_NOT_ONLY);
-            }
-        } else { //应用接口
-            appService = appServiceService.getByAppKeyAndServiceKey(appKey, serviceKey);
-            if (appService == null) {  //应用接口需授权
-                appService = appServiceService.getValidAppAndService(appKey, serviceKey);
-            }
-        }
-
-        if (appService == null) {
-            throw new ValueRuntimeException(CodeUtil.REQUEST_KEY_FILED);
-        }
-
-        if (appService.getAppState() != null && CodeUtil.APP_STATE_ENABLE != appService.getAppState()) {
-            throw new ValueRuntimeException(CodeUtil.APPINFO_ERR_UNENABLE);
-        }
-        if (CodeUtil.APP_STATE_ENABLE != appService.getState()) {
-            throw new ValueRuntimeException(CodeUtil.APPINFO_REFUSE_SERVICE);
-        }
-        return appService;
     }
 
 }

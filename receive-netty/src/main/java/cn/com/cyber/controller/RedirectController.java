@@ -103,7 +103,7 @@ public class RedirectController extends BaseController {
         }
         LOGGER.info("本次请求结束 result:{}", result);
         if (ifJson(result)) {
-            responseOutWithJson(response, result);   //返回json
+            setResponseJson(response, result);   //返回json
         } else {
             setResponseText(response, result); //返回text
         }
@@ -266,5 +266,55 @@ public class RedirectController extends BaseController {
 
         }
         return RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode)).setData("你好");
+    }
+
+    @RequestMapping("/fileDown")
+    public void fileDown(HttpServletRequest request, HttpServletResponse response, @RequestBody String jsonData) {
+        try {
+            JSONObject jsonObject = JSONObject.parseObject(jsonData);
+            String serviceSuffix = jsonObject.getString("serviceSuffix");
+            if (StringUtils.isBlank(serviceSuffix)) {  //没有后缀，路径不完整
+                throw new ValueRuntimeException(CodeUtil.BASE_FILE_PATH_NULL);
+            }
+            String appKey = request.getHeader("appKey");
+            String serviceKey = request.getHeader("serviceKey");
+            if (StringUtils.isBlank(appKey)) {
+                appKey = request.getHeader("appkey");
+            }
+            if (StringUtils.isBlank(serviceKey)) {
+                serviceKey = request.getHeader("servicekey");
+            }
+            String url = env.getProperty(CodeUtil.PLATFORM_URL) + CodeUtil.PLATFORM_FILEDOWN_URL;  //转发地址
+            Map<String, String> headMap = Maps.newHashMap();
+            headMap.put("appKey", appKey);
+            headMap.put("serviceKey", serviceKey);
+            byte[] bytes = HttpConnection.httpRequestBytes(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonObject.toJSONString(), headMap);
+            String fileName = serviceSuffix.substring(serviceSuffix.lastIndexOf("/") + 1);
+            FileUtil.setResponseBytes(response, fileName, bytes);
+            LOGGER.info("发送完毕");
+        } catch (ValueRuntimeException e) {
+            int code = (Integer) e.getValue();
+            setResponseJson(response, JSON.toJSONString(RestResponse.res(code, messageCodeUtil.getMessage(code))));
+        }
+    }
+
+    @RequestMapping("/fileDown/test")
+    public void fileDown1(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String url = "http://localhost:8088/platform/redirect/fileDown";  //文件地址
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("serviceSuffix", "/apk/1.87-an.apk");
+            Map<String, String> headMap = Maps.newHashMap();
+            headMap.put("appKey", "BLISHHGKSNU1123");
+            headMap.put("serviceKey", "bca2475800c643e699f179f7e228fc52");
+            byte[] bytes = HttpConnection.httpRequestBytes(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonObject.toJSONString(), headMap);
+            String fileName = url.substring(url.lastIndexOf("/") + 1);
+            FileUtil.setResponseBytes(response, fileName, bytes);
+            LOGGER.info("发送完毕");
+
+        } catch (ValueRuntimeException e) {
+            int code = (Integer) e.getValue();
+            setResponseJson(response, JSON.toJSONString(RestResponse.res(code, messageCodeUtil.getMessage(code))));
+        }
     }
 }

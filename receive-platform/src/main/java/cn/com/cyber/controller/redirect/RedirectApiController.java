@@ -55,7 +55,7 @@ public class RedirectApiController extends BaseController {
         String result = "";
         try {
             //appKey,serviceKey
-            AppService appService = validParams(appKey, serviceKey);
+            AppService appService = validParams(request);
             //appKey,serviceKey写入日志
             receiveLog.setAppKey(appKey);
             receiveLog.setServiceKey(serviceKey);

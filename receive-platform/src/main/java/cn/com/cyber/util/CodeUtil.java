@@ -111,6 +111,7 @@ public class CodeUtil {
     public static final int BASE_FILE_COPY_ERR = 99117;       //文件拷贝失败
     public static final int REQUEST_KEY_NOT_ONLY = 99118;    //当前接口不是独立接口，请填写正确的appKey
     public static final int REQUEST_TOKEN_USER_FILED = 99119; //用户验证失败
+    public static final int BASE_FILE_PATH_NULL = 99120; //请填写文件路径
 
 
     //管理平台状态码

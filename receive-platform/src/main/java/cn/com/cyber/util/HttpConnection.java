@@ -12,8 +12,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,7 +31,7 @@ public class HttpConnection {
     }
 
     public static ResultData httpRequest(String requestUrl, String method, String contentType, String outputStr, String responseType, Map<String, String> serviceHeader) {
-        ResultData resultData=new ResultData();
+        ResultData resultData = new ResultData();
         String result = null;
         HttpURLConnection conn = null;
         OutputStream outputStream = null;
@@ -175,47 +173,6 @@ public class HttpConnection {
         return resultData;
     }
 
-    public static String newParams(Map<String, Object> paramMap, String method, String contentType, String
-            requestUrl) throws UnsupportedEncodingException {
-        String newParam = "";
-        if (CodeUtil.METHOD_POST.equals(method)) {
-            if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
-                newParam = JSONObject.toJSON(paramMap).toString();
-            } else {
-                int i = 1;
-                for (String key : paramMap.keySet()) {
-                    String value = paramMap.get(key).toString();
-                    newParam += key + "=" + URLEncoder.encode(value, "UTF-8");
-                    if (i < paramMap.size()) {
-                        newParam += "&";
-                    }
-                    i++;
-                }
-            }
-        } else if (CodeUtil.METHOD_GET.equals(method)) {
-            if (requestUrl.contains("{")) { //拼在地址栏
-                for (String key : paramMap.keySet()) {
-                    String value = paramMap.get(key).toString();
-                    String replace = requestUrl.replace("{" + key + "}", value);
-                    requestUrl = replace;
-                }
-            } else {
-                requestUrl = requestUrl + "?";
-                int i = 1;
-                for (String key : paramMap.keySet()) {
-                    String value = paramMap.get(key).toString();
-                    requestUrl += key + "=" + URLEncoder.encode(value, "UTF-8");
-                    if (i < paramMap.size()) {
-                        requestUrl += "&";
-                    }
-                    i++;
-                }
-            }
-        }
-        return newParam;
-    }
-
-
     public static String getBase64FromInputStream(InputStream in) {
         // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
         byte[] data = null;
@@ -242,32 +199,5 @@ public class HttpConnection {
 
         String encode = new String(Base64.encodeBase64(data), CodeUtil.cs);
         return encode;
-    }
-
-    // 获得本周一0点时间
-    public static Date getTimesWeekmorning() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONDAY), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        return cal.getTime();
-    }
-
-    // 获得本周日24点时间
-    public static Date getTimesWeeknight() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(getTimesWeekmorning());
-        cal.add(Calendar.DAY_OF_WEEK, 7);
-        return cal.getTime();
-    }
-
-    public static void main(String[] args) {
-        Date s = getTimesWeekmorning();
-        for (int i = 0; i < 7; i++) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(getTimesWeekmorning());
-            cal.add(Calendar.DAY_OF_WEEK, i);
-            String format = DateUtil.format(cal.getTime(), DateUtil.YMD_DASH);
-            System.out.println(format);
-        }
     }
 }
