@@ -53,6 +53,7 @@ serviceRegister.prototype = {
             data.field.serviceName = $('.serviceName').val();
             data.field.introduce = $('.introduce').val();
             data.field.isOpen = $("input[name='isOpen']:checked").val();
+            data.field.pushArea =  $("input[name='pushArea']:checked").val();
             $.post(getRootPath() + '/appService/addOrEdit', data.field).then(function (res) {
                 if (res.code == 0) {
                     that.layStep.next('#stepForm');

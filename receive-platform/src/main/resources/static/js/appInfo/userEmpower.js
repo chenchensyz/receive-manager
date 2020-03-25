@@ -17,7 +17,7 @@ function userEmpower() {
 userEmpower.prototype = {
     init: function () {
         this.userTree();
-        this.getAppServiceList();
+        this.getResourceList();
         this.saveAppService();
     },
 
@@ -56,42 +56,7 @@ userEmpower.prototype = {
         $("#search_btn").click(that.filterAppInfo);
     },
 
-    getAppServiceList: function () {
-        var that = this;
-        var zTreeObj;
-        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
-        var setting = {
-            view: {
-                selectedMulti: true, //设置是否能够同时选中多个节点
-                showIcon: true, //设置是否显示节点图标
-                showLine: true, //设置是否显示节点与节点之间的连线
-                showTitle: true, //设置是否显示节点的title提示信息
-            },
-            check: {
-                enable: true, //设置是否显示checkbox复选框
-                chkStyle: "checkbox",
-                chkboxType: {"Y": "ps", "N": "ps"},
-                nocheckInherit: true
-            },
-            data: {
-                key: {
-                    name: "title"
-                }
-            }
-        };
-        $.ajax({
-            url: getRootPath() + '/appInfo/appServiceTree',
-            type: 'get',
-            success: function (res) {
-                that.zTreeObj = $.fn.zTree.init($("#interfaceSelect"), setting, res.data);
-            },
-            error: function (err) {
-                layer.alert(err.message, function () {
-                    layer.closeAll();
-                });
-            }
-        });
-    },
+
 
     getCheckedService: function (event, treeId, treeNode) {
         var that = this;
@@ -119,6 +84,63 @@ userEmpower.prototype = {
             });
         }
 
+    },
+
+    getSecond(setting) {
+        var that = this;
+        $.ajax({
+            url: getRootPath() + '/appInfo/appServiceTree/2',
+            type: 'GET',
+            success: function (res) {
+                that.zTreeObj = $.fn.zTree.init($("#interfaceSelect"), setting, res.data);
+            },
+            error: function (err) {
+                layer.alert(err.message, function () {
+                    layer.closeAll();
+                });
+            }
+        });
+    },
+
+    getThrid(setting) {
+        var that = this;
+        $.ajax({
+            url: getRootPath() + '/appInfo/appServiceTree/3',
+            type: 'GET',
+            success: function (res) {
+                that.zTreeObj = $.fn.zTree.init($("#interfaceApiSelect"), setting, res.data);
+            },
+            error: function (err) {
+                layer.alert(err.message, function () {
+                    layer.closeAll();
+                });
+            }
+        });
+    },
+
+    getResourceList() {
+        var that = this;
+        var setting = {
+            view: {
+                selectedMulti: true, //设置是否能够同时选中多个节点
+                showIcon: true, //设置是否显示节点图标
+                showLine: true, //设置是否显示节点与节点之间的连线
+                showTitle: true, //设置是否显示节点的title提示信息
+            },
+            check: {
+                enable: true, //设置是否显示checkbox复选框
+                chkStyle: "checkbox",
+                chkboxType: {"Y": "ps", "N": "ps"},
+                nocheckInherit: true
+            },
+            data: {
+                key: {
+                    name: "title"
+                }
+            }
+        };
+        that.getSecond(setting);
+        that.getThrid(setting);
     },
 
     saveAppService: function () {

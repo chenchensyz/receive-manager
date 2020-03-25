@@ -35,9 +35,23 @@
                     <button type="button" class="layui-btn layui-btn-xs add-btn" style="float:right;margin-top: 10px">提交</button>
                 </div>
                 <div class="layui-card-body">
-                    <input type="hidden" class="userName">
-                    <div style="overflow: auto;">
-                        <ul id="interfaceSelect" class="ztree"></ul>
+                    <input type="hidden" class="userName"/>
+                    <input type="hidden" class="pushArea"/>
+                    <div class="layui-tab layui-tab-brief" lay-filter="pushAreaFilter">
+                        <ul class="layui-tab-title">
+                            <li th:if="${push_area != '3'}" lay-id="2" class="layui-this">二类区</li>
+                            <li lay-id="3">三类区</li>
+                        </ul>
+                        <div class="layui-tab-content" style="overflow: auto;">
+                            <div class="layui-tab-item layui-show">
+                                <ul id="interfaceSelect" class="ztree"></ul>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div>
+                                    <ul id="interfaceApiSelect" class="ztree"></ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

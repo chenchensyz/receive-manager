@@ -42,7 +42,8 @@ public class AppServiceController extends BaseController {
     private Environment environment;
 
     @RequestMapping("list")
-    public String getAppInfoList() {
+    public String getAppInfoList(Model model) {
+        model.addAttribute("push_area", environment.getProperty(CodeUtil.PUSH_AREA));
         return "appInfo/appServiceList";
     }
 
@@ -169,7 +170,8 @@ public class AppServiceController extends BaseController {
 
     //我的服务
     @RequestMapping("/onlyList")
-    public String onlyList() {
+    public String onlyList(Model model) {
+        model.addAttribute("push_area", environment.getProperty(CodeUtil.PUSH_AREA));
         return "appInfo/serviceOnlyList";
     }
 

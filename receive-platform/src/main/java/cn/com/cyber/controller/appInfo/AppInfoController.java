@@ -26,10 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -159,16 +156,16 @@ public class AppInfoController extends BaseController {
     }
 
     //查询用户可见的应用及接口
-    @RequestMapping("appServiceTree")
+    @RequestMapping("appServiceTree/{pushArea}")
     @ResponseBody
-    public RestResponse getAppServiceTree(Integer area) {
+    public RestResponse getAppServiceTree(@PathVariable("pushArea") Integer pushArea) {
         int code = CodeUtil.BASE_SUCCESS;
         RestResponse rest = new RestResponse();
-        String companyId = null;
-//        if (getShiroUser().source == 1) {
-//            companyId = getShiroUser().id;
-//        }
-        rest.setData(appInfoService.getAppServiceTree(companyId));
+        Long companyId=null;
+        if (getShiroUser().source == 1) {
+            companyId = getShiroUser().id;
+        }
+        rest.setData(appInfoService.getAppServiceTree(companyId,pushArea));
         rest.setCode(code).setMessage(messageCodeUtil.getMessage(code));
         return rest;
     }

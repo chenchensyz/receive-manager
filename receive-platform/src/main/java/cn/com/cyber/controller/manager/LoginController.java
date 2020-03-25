@@ -169,8 +169,8 @@ public class LoginController extends BaseController {
         user.setUserId(userId);
         user.setPassword(password);
         try {
-            int i = userService.selectAdmin(user);
-            if (i > 0) {
+            Integer i = userService.selectAdmin(user);
+            if (i != null && i > 0) {
                 User localUser = userService.getByUserId(userId);
                 String newPass = EncryptUtils.MD5Encode(password);
                 int count;

@@ -20,19 +20,20 @@ appApplyList.prototype = {
     init: function () {
         this.initTab();
         this.initData();
-        this.getAppServiceList();
         this.saveAppService();
-        this.getAppApiServiceList();
+        this.getResourceList();
     },
 
 
     initTab: function () {
         var that = this;
         that.element.on('tab(pushAreaFilter)', function (data) {
-            $('.pushArea').val(data.index);
+            console.log($(this).attr('lay-id')); //区域属性
+            $('.pushArea').val($(this).attr('lay-id'));
         });
     },
 
+    //应用列表
     initData: function () {
         var that = this;
         // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
@@ -109,7 +110,7 @@ appApplyList.prototype = {
         }, function (res) {
             if (res.code == 0) {
                 var treeObj;
-                if (pushArea == 0) {
+                if (!pushArea || pushArea == '2') {
                     treeObj = $.fn.zTree.getZTreeObj("interfaceSelect");
                 } else {
                     treeObj = $.fn.zTree.getZTreeObj("interfaceApiSelect");
@@ -118,6 +119,7 @@ appApplyList.prototype = {
                 treeObj.expandAll(false);  //收缩节点
                 if (res.data) {
                     for (var i = 0; i < res.data.length; i++) {
+                        debugger
                         var node = treeObj.getNodeByParam("parentId", res.data[i]);
                         treeObj.cancelSelectedNode();//先取消所有的选中状态
                         treeObj.checkNode(node, true, true); //将指定ID的checkbox勾选
@@ -133,44 +135,6 @@ appApplyList.prototype = {
         });
     },
 
-    getAppServiceList: function () {
-        var that = this;
-        var zTreeObj;
-        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
-        var setting = {
-            view: {
-                selectedMulti: true, //设置是否能够同时选中多个节点
-                showIcon: true, //设置是否显示节点图标
-                showLine: true, //设置是否显示节点与节点之间的连线
-                showTitle: true, //设置是否显示节点的title提示信息
-            },
-            check: {
-                enable: true, //设置是否显示checkbox复选框
-                chkStyle: "checkbox",
-                chkboxType: {"Y": "ps", "N": "ps"},
-                nocheckInherit: true
-            },
-            data: {
-                key: {
-                    name: "title"
-                }
-            }
-        };
-        $.ajax({
-            url: getRootPath() + '/appInfo/appServiceTree',
-            type: 'POST',
-            data: {'area': 0},
-            success: function (res) {
-                that.zTreeObj = $.fn.zTree.init($("#interfaceSelect"), setting, res.data);
-            },
-            error: function (err) {
-                layer.alert(err.message, function () {
-                    layer.closeAll();
-                });
-            }
-        });
-    },
-
     saveAppService: function () {
         var that = this;
         $(".add-btn").click(function () {
@@ -180,7 +144,7 @@ appApplyList.prototype = {
 
             // var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
             var treeObj; //ztree的id
-            if (pushArea == 0) {
+            if (!pushArea || pushArea == '2') {
                 treeObj = $.fn.zTree.getZTreeObj("interfaceSelect");
             } else {
                 treeObj = $.fn.zTree.getZTreeObj("interfaceApiSelect");
@@ -228,11 +192,47 @@ appApplyList.prototype = {
         })
     },
 
-    getAppApiServiceList: function () {
+    getSecond(setting) {
         var that = this;
-        var zTreeObj;
-        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        $.ajax({
+            url: getRootPath() + '/appInfo/appServiceTree/2',
+            type: 'GET',
+            success: function (res) {
+                that.zTreeObj = $.fn.zTree.init($("#interfaceSelect"), setting, res.data);
+            },
+            error: function (err) {
+                layer.alert(err.message, function () {
+                    layer.closeAll();
+                });
+            }
+        });
+    },
+
+    getThrid(setting) {
+        var that = this;
+        $.ajax({
+            url: getRootPath() + '/appInfo/appServiceTree/3',
+            type: 'GET',
+            success: function (res) {
+                that.zTreeObj = $.fn.zTree.init($("#interfaceApiSelect"), setting, res.data);
+            },
+            error: function (err) {
+                layer.alert(err.message, function () {
+                    layer.closeAll();
+                });
+            }
+        });
+    },
+
+    getResourceList() {
+        var that = this;
         var setting = {
+            view: {
+                selectedMulti: true, //设置是否能够同时选中多个节点
+                showIcon: true, //设置是否显示节点图标
+                showLine: true, //设置是否显示节点与节点之间的连线
+                showTitle: true, //设置是否显示节点的title提示信息
+            },
             check: {
                 enable: true, //设置是否显示checkbox复选框
                 chkStyle: "checkbox",
@@ -245,27 +245,8 @@ appApplyList.prototype = {
                 }
             }
         };
-        $.ajax({
-            url: getRootPath() + '/appInfo/appServiceTree',
-            type: 'POST',
-            data: {'area': 1},
-            success: function (res) {
-                if (res.code == 0) {
-                    $('.localName').text(res.companyParam);
-                    that.zTreeObj = $.fn.zTree.init($("#interfaceApiSelect"), setting, res.data);
-                    $('.interfaceApiDiv').show();
-                } else {
-                    layer.alert(res.message, function () {
-                        layer.closeAll();
-                    });
-                }
-            },
-            error: function (err) {
-                layer.alert(err, function () {
-                    layer.closeAll();
-                });
-            }
-        });
+        that.getSecond(setting);
+        that.getThrid(setting);
     }
 };
 new appApplyList();

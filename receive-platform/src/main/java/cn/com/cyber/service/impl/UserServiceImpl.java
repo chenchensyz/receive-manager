@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int selectAdmin(User user) {
+    public Integer selectAdmin(User user) {
         return userMapper.selectAdmin(user);
     }
 }

@@ -24,9 +24,9 @@ public interface AppInfoMapper {
 
     int getCountAppInfoByState(@Param("companyId") Long companyId, @Param("state") int state);
 
-    List<TreeModel> getAppServiceTree(@Param("companyIds") String[] companyIds);
+    List<TreeModel> getAppServiceTree(@Param("companyId") Long companyId, @Param("pushArea") Integer pushArea);
 
-    List<TreeModel> getOnlyServiceTree(@Param("companyIds") String[] companyIds);
+    List<TreeModel> getOnlyServiceTree(@Param("companyId") Long companyId, @Param("pushArea") Integer pushArea);
 
     List<TreeModel> getAppListTree(@Param("companyId") Long companyId, @Param("state") int state);
 

@@ -82,19 +82,18 @@ public class AppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public List<TreeModel> getAppServiceTree(String companyIds) {
-        String[] comp = null;
-        if (StringUtils.isNotBlank(companyIds)) {
-            comp = companyIds.split(",");
-        }
-        List<TreeModel> appServiceList = appInfoMapper.getAppServiceTree(comp);
-        List<TreeModel> onlyServiceList = appInfoMapper.getOnlyServiceTree(comp);
+    public List<TreeModel> getAppServiceTree(Long companyId, Integer pushArea) {
+        List<TreeModel> appServiceList = appInfoMapper.getAppServiceTree(companyId, pushArea);
+        List<TreeModel> onlyServiceList = appInfoMapper.getOnlyServiceTree(companyId, pushArea);
         appServiceList.addAll(onlyServiceList);
         return appServiceList;
     }
 
     @Override
     public List<String> getCheckedService(Integer appId, Integer pushArea) {
+        if (pushArea == null) {
+            pushArea = Integer.parseInt(environment.getProperty(CodeUtil.PUSH_AREA));
+        }
         return appInfoMapper.getCheckedService(appId, pushArea);
     }
 
@@ -120,6 +119,9 @@ public class AppInfoServiceImpl implements AppInfoService {
         Integer appId = jsonObject.getInteger("appId");
         String appKey = jsonObject.getString("appKey");
         Integer pushArea = jsonObject.getInteger("pushArea");
+        if (pushArea == null) {
+            pushArea = Integer.valueOf(environment.getProperty(CodeUtil.PUSH_AREA));
+        }
         List<TreeModel> params = JSONArray.parseArray(jsonObject.getString("params"), TreeModel.class);
         AppServiceRecord appServiceRecode = new AppServiceRecord();
         if (CodeUtil.MAPPER_DB_ORACLE.equals(environment.getProperty(CodeUtil.MAPPER_DB))) { //oracle数据库
@@ -189,10 +191,14 @@ public class AppInfoServiceImpl implements AppInfoService {
         JSONObject jsonObject = JSONObject.parseObject(param);
         Integer appId = jsonObject.getInteger("appId");
         String appKey = jsonObject.getString("appKey");
+        Integer pushArea = jsonObject.getInteger("pushArea");
+        if (pushArea == null) {
+            pushArea = Integer.valueOf(environment.getProperty(CodeUtil.PUSH_AREA));
+        }
         List<TreeModel> params = JSONArray.parseArray(jsonObject.getString("params"), TreeModel.class);
         List<AppModel> appModelList = Lists.newArrayList();
         if (params.size() == 0) {
-            appInfoMapper.deleteAppServiceByAppId(appId,null);
+            appInfoMapper.deleteAppServiceByAppId(appId, pushArea);
         } else {
             for (TreeModel model : params) {
                 if (StringUtils.isBlank(model.getParentId())) {
@@ -204,9 +210,10 @@ public class AppInfoServiceImpl implements AppInfoService {
                 appModel.setApply(creator);
                 appModel.setAppId(appId);
                 appModel.setRecordId(0);
+                appModel.setPushArea(pushArea);
                 appModelList.add(appModel);
             }
-            appInfoMapper.deleteAppServiceByAppId(appId,null);
+            appInfoMapper.deleteAppServiceByAppId(appId, pushArea);
             int save = appInfoMapper.approveAppServiceMore(appModelList);
             if (save != appModelList.size()) {
                 throw new ValueRuntimeException(CodeUtil.SERVICE_RECORD_ERR_SAVE);

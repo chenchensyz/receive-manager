@@ -17,7 +17,9 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,8 +41,12 @@ public class AppEmpowerController extends BaseController {
     @Autowired
     private MessageCodeUtil messageCodeUtil;
 
+    @Autowired
+    private Environment environment;
+
     @RequestMapping("list")
-    public String getAppInfoList() {
+    public String getAppInfoList(Model model) {
+        model.addAttribute("push_area", environment.getProperty(CodeUtil.PUSH_AREA));
         return "appInfo/appEmpower";
     }
 
@@ -59,9 +65,9 @@ public class AppEmpowerController extends BaseController {
     //获取选中接口
     @RequestMapping("getCheckedService")
     @ResponseBody
-    public RestResponse getCheckedService(@RequestParam("appId") Integer appId,@RequestParam("pushArea") Integer pushArea) {
+    public RestResponse getCheckedService(@RequestParam("appId") Integer appId, @RequestParam("pushArea") Integer pushArea) {
         int code = CodeUtil.BASE_SUCCESS;
-        List<String> checkedService = appInfoService.getCheckedService(appId,pushArea);
+        List<String> checkedService = appInfoService.getCheckedService(appId, pushArea);
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(checkedService);
     }
 

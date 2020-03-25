@@ -24,5 +24,5 @@ public interface UserService {
 
     User getValiedUser(String userName);
 
-    int selectAdmin(User user);
+    Integer selectAdmin(User user);
 }

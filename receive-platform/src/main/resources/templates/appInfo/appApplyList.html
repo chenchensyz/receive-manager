@@ -16,8 +16,7 @@
             <div class="layui-card">
                 <div class="layui-card-header">应用列表
                     <div class="layui-input-inline" style="margin-left: 10px">
-                        <input class="layui-input" id="searchInput" value="" placeholder="输入应用"
-                               style=" height: 26px;width: 200px;">
+                        <input class="layui-input" id="searchInput" value="" placeholder="输入应用" style=" height: 26px;width: 200px;">
                     </div>
                     <div class="layui-input-inline">
                         <button class="layui-btn layui-btn-normal layui-btn-xs" id="search_btn">查询</button>
@@ -43,15 +42,15 @@
                     <input type="hidden" class="pushArea"/>
                     <div class="layui-tab layui-tab-brief" lay-filter="pushAreaFilter">
                         <ul class="layui-tab-title">
-                            <li th:if="${push_area != '3'}" class="layui-this">二类区</li>
-                            <li>三类区</li>
+                            <li th:if="${push_area != '3'}" lay-id="2" class="layui-this">二类区</li>
+                            <li lay-id="3">三类区</li>
                         </ul>
                         <div class="layui-tab-content" style="overflow: auto;">
                             <div class="layui-tab-item layui-show">
                                 <ul id="interfaceSelect" class="ztree"></ul>
                             </div>
                             <div class="layui-tab-item">
-                                <div class="interfaceApiDiv">
+                                <div>
                                     <ul id="interfaceApiSelect" class="ztree"></ul>
                                 </div>
                             </div>

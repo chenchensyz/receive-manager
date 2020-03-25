@@ -14,7 +14,7 @@ public interface AppInfoService {
 
     int getCountAppInfoByState(Long companyId, int state);
 
-    List<TreeModel> getAppServiceTree(String companyIds);
+    List<TreeModel> getAppServiceTree(Long companyId, Integer pushArea);
 
     List<TreeModel> getAppListTree(Long companyId, int state);
 

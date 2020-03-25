@@ -123,6 +123,7 @@ appServiceList.prototype = {
                     , 'serviceRule': data.serviceRule
                     , 'sourceType': data.sourceType
                     , 'isOpen': data.isOpen
+                    , 'pushArea': data.pushArea
                 })
                 layer.open({
                     type: 1

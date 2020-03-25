@@ -68,6 +68,8 @@ public class CodeUtil {
     public static final String DEVELOPER_VALID_URL = "developer_valid_url";  //跨区域开发者验证ip
     public static final String USER_EDIT = "user_edit";  //用户是否可操作，修改密码
     public static final String PUSH_AREA = "push_area";  //发布区域
+    public static final String PLATFORM_URL = "platform_url";  //跨域接口地址
+
 
     public static final String UP_FILE_PATH = "upload";  //接口附件
     public static final String SERVICE_FILE_PATH = "service";  //接口附件

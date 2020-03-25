@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,9 +26,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/redirect")
@@ -43,6 +42,9 @@ public class RedirectController extends BaseController {
 
     @Autowired
     private AppServiceService appServiceService;
+
+    @Autowired
+    private Environment environment;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
@@ -62,20 +64,32 @@ public class RedirectController extends BaseController {
             Map<String, String> serviceHeader = null;
             String serviceSuffix = null;
 
+            JSONObject jsonObject = new JSONObject();
             if (StringUtils.isNotBlank(jsonData)) {
-                JSONObject jsonObject = JSONObject.parseObject(jsonData);
+                jsonObject = JSONObject.parseObject(jsonData);
                 params = jsonObject.getString("params");
                 serviceHeader = JSON.parseObject(jsonObject.getString("serviceHeader"), new TypeReference<Map<String, String>>() {
                 });
                 serviceSuffix = jsonObject.getString("serviceSuffix");
             }
-            String realUrl = appService.getUrlSuffix();
-            if (serviceSuffix != null) {  //get请求地址栏拼接
-                realUrl += serviceSuffix;
-            }
+
             //发送请求
 //            LOGGER.info("params:{}", params);
-            ResultData resultData = HttpConnection.requestNewParams(params, appService.getMethod(), appService.getContentType(), realUrl, serviceHeader);
+            ResultData resultData = null;
+            Integer pushArea = Integer.parseInt(environment.getProperty(CodeUtil.PUSH_AREA));
+            if (appService.getPushArea() != pushArea && pushArea != 3) {  //需要跨域访问的
+                Map<String, String> headMap = new HashMap<>();
+                headMap.put("appKey", appService.getAppKey());
+                headMap.put("serviceKey", appService.getServiceKey());
+                resultData = HttpConnection.httpRequest(environment.getProperty(CodeUtil.PLATFORM_URL),
+                        CodeUtil.METHOD_POST, CodeUtil.CONTEXT_JSON, jsonObject.toString(), null, headMap);
+            } else {  //本区域
+                String realUrl = appService.getUrlSuffix();
+                if (serviceSuffix != null) {  //get请求地址栏拼接
+                    realUrl += serviceSuffix;
+                }
+                resultData = HttpConnection.requestNewParams(params, appService.getMethod(), appService.getContentType(), realUrl, serviceHeader);
+            }
             receiveLog.setResponseTime(new Date());
             if (resultData != null && resultData.getCode() != null) {
                 //日志

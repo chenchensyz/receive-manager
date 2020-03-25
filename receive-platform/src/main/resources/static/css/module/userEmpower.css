@@ -2,9 +2,7 @@
     height: 650px;
     overflow: auto;
 }
-.interfaceApiDiv{
-    display: none;
-}
+
 
 .layer_self_wrap {
     /*width: 580px;*/

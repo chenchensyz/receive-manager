@@ -72,6 +72,8 @@ public class AppService extends BaseEntity {
 
     private Integer isOpen;  //接口权限 0：公开 1：私有
 
+    private Integer pushArea;  //发布区域
+
     public Long getId() {
         return id;
     }
@@ -335,5 +337,13 @@ public class AppService extends BaseEntity {
 
     public void setIsOpen(Integer isOpen) {
         this.isOpen = isOpen;
+    }
+
+    public Integer getPushArea() {
+        return pushArea;
+    }
+
+    public void setPushArea(Integer pushArea) {
+        this.pushArea = pushArea;
     }
 }

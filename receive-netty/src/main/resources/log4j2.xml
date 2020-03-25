@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+    <Properties>
+        <Property name="source">${bundle:application:spring.profiles.active}</Property>
+        <Property name="log_filepath">${bundle:application-${source}:log_filepath}</Property>
+    </Properties>
+
     <appenders>
         <!-- 控制台输出 -->
         <console name="Console" target="SYSTEM_OUT">
@@ -8,8 +13,8 @@
         </console>
 
         <!-- fileName：输出路径  filePattern：命名规则 -->
-        <RollingFile name="all" fileName="/home/logs/receive-netty/receive-netty.log"
-                     filePattern="/home/logs/receive-netty/receive-netty-$${date:yyyy-MM-dd}-%i.log">
+        <RollingFile name="all" fileName="${log_filepath}/receive-netty.log"
+                     filePattern="${log_filepath}/receive-netty-$${date:yyyy-MM-dd}-%i.log">
             <Filters>
                 <ThresholdFilter level="all" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>

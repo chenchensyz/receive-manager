@@ -77,6 +77,9 @@ public class AppServiceServiceImpl implements AppServiceService {
             } while (serviceKey > 0);
             appService.setServiceKey(CodeUtil.getUUID());
             appService.setCreator(userId);
+            if (appService.getPushArea() == null) {  //默认当前区域
+                appService.setPushArea(Integer.valueOf(environment.getProperty(CodeUtil.PUSH_AREA)));
+            }
             count = appServiceMapper.insertService(appService);
         }
         if (count == 0) {

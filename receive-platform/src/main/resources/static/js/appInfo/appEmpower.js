@@ -5,18 +5,28 @@ function appEmpower() {
     var that = this;
     var pageCurr;
     var interfaceTree;
-    layui.use(['table', 'form'], function () {
+    layui.use(['table', 'form', 'element'], function () {
         that.layTable = layui.table;
         that.layForm = layui.form;
+        that.element = layui.element;
         that.init();
     });
 }
 
 appEmpower.prototype = {
     init: function () {
+        this.initTab();
         this.initData();
-        this.getAppServiceList();
         this.saveAppService();
+        this.getResourceList();
+    },
+
+    initTab: function () {
+        var that = this;
+        that.element.on('tab(pushAreaFilter)', function (data) {
+            console.log($(this).attr('lay-id')); //区域属性
+            $('.pushArea').val($(this).attr('lay-id'));
+        });
     },
 
     initData: function () {
@@ -88,9 +98,18 @@ appEmpower.prototype = {
         var that = this;
         $('.appId').val(treeNode.id);
         $('.appKey').val(treeNode.parentId);
-        $.get(getRootPath() + "/appEmpower/getCheckedService", {'appId': treeNode.id}, function (res) {
+        var pushArea = $('.pushArea').val();
+        $.get(getRootPath() + "/appEmpower/getCheckedService", {
+            'appId': treeNode.id,
+            'pushArea': pushArea
+        }, function (res) {
             if (res.code == 0) {
-                var treeObj = $.fn.zTree.getZTreeObj("interfaceSelect");
+                var treeObj;
+                if (!pushArea || pushArea == '2') {
+                    treeObj = $.fn.zTree.getZTreeObj("interfaceSelect");
+                } else {
+                    treeObj = $.fn.zTree.getZTreeObj("interfaceApiSelect");
+                }
                 treeObj.checkAllNodes(false);
                 treeObj.expandAll(false);  //收缩节点
                 if (res.data) {
@@ -110,10 +129,40 @@ appEmpower.prototype = {
         });
     },
 
-    getAppServiceList: function () {
+    getSecond(setting) {
         var that = this;
-        var zTreeObj;
-        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        $.ajax({
+            url: getRootPath() + '/appInfo/appServiceTree/2',
+            type: 'GET',
+            success: function (res) {
+                that.zTreeObj = $.fn.zTree.init($("#interfaceSelect"), setting, res.data);
+            },
+            error: function (err) {
+                layer.alert(err.message, function () {
+                    layer.closeAll();
+                });
+            }
+        });
+    },
+
+    getThrid(setting) {
+        var that = this;
+        $.ajax({
+            url: getRootPath() + '/appInfo/appServiceTree/3',
+            type: 'GET',
+            success: function (res) {
+                that.zTreeObj = $.fn.zTree.init($("#interfaceApiSelect"), setting, res.data);
+            },
+            error: function (err) {
+                layer.alert(err.message, function () {
+                    layer.closeAll();
+                });
+            }
+        });
+    },
+
+    getResourceList() {
+        var that = this;
         var setting = {
             view: {
                 selectedMulti: true, //设置是否能够同时选中多个节点
@@ -133,18 +182,8 @@ appEmpower.prototype = {
                 }
             }
         };
-        $.ajax({
-            url: getRootPath() + '/appInfo/appServiceTree',
-            type: 'get',
-            success: function (res) {
-                that.zTreeObj = $.fn.zTree.init($("#interfaceSelect"), setting, res.data);
-            },
-            error: function (err) {
-                layer.alert(err.message, function () {
-                    layer.closeAll();
-                });
-            }
-        });
+        that.getSecond(setting);
+        that.getThrid(setting);
     },
 
     saveAppService: function () {
@@ -152,10 +191,16 @@ appEmpower.prototype = {
         $(".add-btn").click(function () {
             var appId = $('.appId').val();
             var appKey = $('.appKey').val();
-            // var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
-            var treeObj = $.fn.zTree.getZTreeObj("interfaceSelect"); //ztree的id
-            var params = treeObj.getCheckedNodes();
+            var pushArea = $('.pushArea').val();
 
+            // var params = that.layDtree.getCheckbarNodesParam("interfaceSelect");
+            var treeObj; //ztree的id
+            if (!pushArea || pushArea == '2') {
+                treeObj = $.fn.zTree.getZTreeObj("interfaceSelect");
+            } else {
+                treeObj = $.fn.zTree.getZTreeObj("interfaceApiSelect");
+            }
+            var params = treeObj.getCheckedNodes();
             if (!appId) {
                 layer.alert('请选择应用后重试', function () {
                     layer.closeAll();
@@ -169,7 +214,7 @@ appEmpower.prototype = {
             layer.confirm(message, {
                 btn: ['确认', '返回'] //按钮
             }, function () {
-                var data = {'appId': appId, 'appKey': appKey, "params": params};
+                var data = {'appId': appId, 'appKey': appKey, 'pushArea': pushArea, "params": params};
                 $.ajax({
                     url: getRootPath() + "/appEmpower/saveAppService",
                     type: 'post',

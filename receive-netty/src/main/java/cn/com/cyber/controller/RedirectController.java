@@ -60,6 +60,7 @@ public class RedirectController extends BaseController {
     @ResponseBody
     public void redirect(HttpServletRequest request, HttpServletResponse response,
                          @RequestBody(required = false) String jsonData) {
+        LOGGER.info("接收请求 jsonData:{}", jsonData);
         String appKey = request.getHeader("appKey");
         String serviceKey = request.getHeader("serviceKey");
         if (StringUtils.isBlank(appKey)) {
@@ -89,7 +90,11 @@ public class RedirectController extends BaseController {
             Map<String, String> paramHeader = Maps.newHashMap();
             paramHeader.put("appKey", appKey);
             paramHeader.put("serviceKey", serviceKey);
+            LOGGER.info("转发请求 param:{}", jsonObject.toString());
+            LOGGER.info("头消息 paramHeader:{}", paramHeader);
             ResultData resultData = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonObject.toString(), null, paramHeader);
+            LOGGER.info("接口返回 resultData:{}", resultData);
+
             if (resultData.getCode() != null) {
                 result = resultData.getResult();
                 if (CodeUtil.HTTP_OK != resultData.getCode()) { //组装错误返回

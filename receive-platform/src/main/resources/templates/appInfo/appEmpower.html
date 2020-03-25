@@ -37,8 +37,22 @@
                 <div class="layui-card-body">
                     <input type="hidden" class="appId"/>
                     <input type="hidden" class="appKey"/>
-                    <div style="overflow: auto;width: 400px">
-                        <ul id="interfaceSelect" class="ztree"></ul>
+                    <input type="hidden" class="pushArea"/>
+                    <div class="layui-tab layui-tab-brief" lay-filter="pushAreaFilter">
+                        <ul class="layui-tab-title">
+                            <li th:if="${push_area != '3'}" lay-id="2" class="layui-this">二类区</li>
+                            <li lay-id="3">三类区</li>
+                        </ul>
+                        <div class="layui-tab-content" style="overflow: auto;">
+                            <div class="layui-tab-item layui-show">
+                                <ul id="interfaceSelect" class="ztree"></ul>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div>
+                                    <ul id="interfaceApiSelect" class="ztree"></ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
