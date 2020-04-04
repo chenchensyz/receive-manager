@@ -77,34 +77,29 @@
     </sql>
 
     <select id="getReceiveLogListCount" resultType="int" parameterType="cn.com.cyber.model.ReceiveLog">
-        select count(rl.id) from se_receive_log rl
+        select count(rl.*) from se_receive_log rl
         LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
-        LEFT JOIN td_company tc on tc.id = ai.company_id
         LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
         <include refid="sql_where"/>
     </select>
 
     <select id="getReceiveLogList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.ReceiveLog">
-        SELECT rl.*, ai.name app_name, ais.service_name, ais.url_suffix url
-        FROM se_receive_log rl
-        LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
+        select * from(
+        SELECT rl.*,
+        ai.NAME app_name,
+        ais.service_name,
+        ais.url_suffix url
+        from (select * from se_receive_log ORDER BY request_time DESC) rl
+        LEFT JOIN  td_app ai ON rl.app_key = ai.app_uuid
         LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
-        where rl.id in(
-            select t.id from (
-                SELECT rl.id FROM se_receive_log rl
-                LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
-                LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
-                LEFT JOIN td_company tc ON tc.id = ais.creator
-                <include refid="sql_where"/>
-                ORDER BY rl.response_time DESC LIMIT #{pageNum},#{pageSize}
-            ) t
-        )
-        ORDER BY rl.response_time DESC
+        <include refid="sql_where"/>
+        LIMIT  #{pageNum},#{pageSize}
+        ) rr ORDER BY rr.RESPONSE_TIME DESC
     </select>
 
 
     <select id="getReceiveLogCount" resultType="int" parameterType="long">
-        select count(rl.id) from se_receive_log rl
+        select count(rl.*) from se_receive_log rl
         LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
         LEFT JOIN td_company tc on tc.id = ai.company_id
         LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key

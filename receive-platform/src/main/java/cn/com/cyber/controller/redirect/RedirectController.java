@@ -99,7 +99,7 @@ public class RedirectController extends BaseController {
                 //返回值
                 result = resultData.getResult();
             }
-            receiveLogService.saveReceiveLog(receiveLog); //保存日志
+//            receiveLogService.saveReceiveLog(receiveLog); //保存日志
             response.setStatus(resultData.getCode());
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();
