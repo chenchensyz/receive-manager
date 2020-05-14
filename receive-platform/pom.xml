@@ -61,8 +61,8 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-<!--            <scope>runtime</scope>-->
-            <version>8.0.17</version>
+            <scope>runtime</scope>
+<!--            <version>8.0.17</version>-->
         </dependency>
 
         <dependency>
@@ -183,6 +183,7 @@
     </dependencies>
 
     <profiles>
+
         <profile>
             <!-- oracle版 -->
             <id>oracle</id>
@@ -271,15 +272,15 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <fork>true</fork>
-                    <source>7</source>
-                    <target>7</target>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <fork>true</fork>-->
+<!--                    <source>8</source>-->
+<!--                    <target>8</target>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

@@ -51,7 +51,6 @@ public class CodeUtil {
     public static final String PLATFORM_FILEDOWN_URL = "/fileDown";
 
 
-
     public static final int USERINFO_ERR_CONNECT = 20104; //连接用户查询服务器失败
     public static final int USERINFO_ERR_VALIED = 20105; //用户校验失败，请确认用户信息是否正确
 
@@ -70,7 +69,6 @@ public class CodeUtil {
     public static final int REQUEST_USER_NULL = 99111;//头信息中缺少 用户 信息
     public static final int REQUEST_TOKEN_ERR = 99112;//token验证失败，请重新获取
     public static final int BASE_FILE_PATH_NULL = 99120; //请填写文件路径
-
 
 
     /**

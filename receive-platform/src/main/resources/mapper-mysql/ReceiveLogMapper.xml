@@ -77,29 +77,28 @@
     </sql>
 
     <select id="getReceiveLogListCount" resultType="int" parameterType="cn.com.cyber.model.ReceiveLog">
-        select count(rl.*) from se_receive_log rl
+        select count(*) from se_receive_log rl
         LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
         LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
         <include refid="sql_where"/>
     </select>
 
     <select id="getReceiveLogList" resultMap="BaseResultMap" parameterType="cn.com.cyber.model.ReceiveLog">
-        select * from(
         SELECT rl.*,
         ai.NAME app_name,
         ais.service_name,
         ais.url_suffix url
-        from (select * from se_receive_log ORDER BY request_time DESC) rl
+        from se_receive_log rl
         LEFT JOIN  td_app ai ON rl.app_key = ai.app_uuid
         LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
         <include refid="sql_where"/>
+        ORDER BY request_time DESC
         LIMIT  #{pageNum},#{pageSize}
-        ) rr ORDER BY rr.RESPONSE_TIME DESC
     </select>
 
 
     <select id="getReceiveLogCount" resultType="int" parameterType="long">
-        select count(rl.*) from se_receive_log rl
+        select count(*) from se_receive_log rl
         LEFT JOIN td_app ai ON rl.app_key = ai.app_uuid
         LEFT JOIN td_company tc on tc.id = ai.company_id
         LEFT JOIN se_service_info ais ON rl.service_key = ais.service_key
