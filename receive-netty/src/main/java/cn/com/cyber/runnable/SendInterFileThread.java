@@ -45,17 +45,12 @@ public class SendInterFileThread implements Runnable {
                                 jedis.hmset(key, map);  //修改状态，保存到redis
                                 jedis.expire(key, 604800);
                                 int i = 0;
-                                long maxTime = (uploadFile.getFileSize() / 1000000) * 30 * 1000;
-                                long defaultTime = 3 * 60 * 1000;
-                                if (maxTime < defaultTime) {
-                                    maxTime = defaultTime;
-                                }
-                                LOGGER.info("等待时间:{}", maxTime);
+                                long maxTime = 3 * 60 * 1000;
                                 Map<String, String> success;
                                 do {
                                     success = jedis.hgetAll(key);
-                                    Thread.sleep(500);
-                                    i += 500;
+                                    Thread.sleep(1000);
+                                    i += 1000;
                                 } while (!"2".equals(success.get("state")) && i < maxTime);
                                 LOGGER.info("结束循环i:{}", i);
                                 Integer times = Integer.valueOf(success.get("times")) + 1;
