@@ -60,6 +60,7 @@ public class UploadMsgServerHandler extends ChannelInboundHandlerAdapter {
                 Map<String, String> map = jedis.hgetAll(key);
                 map.put("state", object.get("state").toString());
                 jedis.hmset(key, map);
+                jedis.expire(key, 60);
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

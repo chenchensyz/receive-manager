@@ -56,7 +56,7 @@ public class SendMobileFileThread implements Runnable {
                     LOGGER.error(e.getMessage(), e);
                     continue;
                 }
-                Thread.sleep(300 * 1000);
+                Thread.sleep(10 * 1000);
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -67,9 +67,11 @@ public class SendMobileFileThread implements Runnable {
 
     private void mobileFileUp(Jedis jedis, String key) throws FileNotFoundException {
         Map<String, String> map = jedis.hgetAll(key);
-        if (Integer.valueOf(map.get("state")) < 2 && Integer.valueOf(map.get("times")) < 3) {
-            if ((StringUtils.isNotBlank(map.get("times")) && Integer.valueOf(map.get("times")) < 3) || StringUtils.isBlank(map.get("times"))) {
-                String state = "1";
+        int times = StringUtils.isBlank(map.get("times")) ? 0 : Integer.valueOf(map.get("times"));
+        int state = Integer.valueOf(map.get("state"));
+        long sendTime = StringUtils.isBlank(map.get("sendTime")) ? System.currentTimeMillis() : Long.valueOf(map.get("sendTime"));
+        if (times < 3) {
+            if (state == 0 || (System.currentTimeMillis() - sendTime > 1000 * 60 * 20 && state == 1)) {
                 Map<String, InputStream> fileMap = Maps.newHashMap();
                 File file = new File(map.get("filePath"));
 
@@ -85,20 +87,19 @@ public class SendMobileFileThread implements Runnable {
                     JSONObject object = JSONObject.parseObject(resultData.getResult());
                     LOGGER.info("请求内网返回值uuid:{},object:{}", map.get("uuid"), object);
                     if (object != null && CodeUtil.BASE_SUCCESS == object.getInteger("code")) {
-                        state = "2"; //上传成功
+                        jedis.del(key); //上传成功
+                    } else {
+                        map.put("state",  "1");
+                        map.put("times", times + 1 + "");
+                        map.put("sendTime", System.currentTimeMillis() + "");
+                        jedis.hmset(key, map);
                     }
                 }
-                map.put("state", state);
-                int times = 0;
-                if (StringUtils.isNotBlank(map.get("times"))) {
-                    times = Integer.valueOf(map.get("times"));
-                }
-                map.put("times", times + 1 + "");
-                jedis.hmset(key, map);
-            } else {
-                map.put("state", "3"); //上传失败
-                jedis.hmset(key, map);
             }
+        } else {
+            map.put("state", "3"); //上传失败
+            jedis.hmset(key, map);
+            jedis.expire(key, 259200); //3天
         }
     }
 }

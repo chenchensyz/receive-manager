@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -69,6 +70,9 @@ public class FileUpController extends BaseController {
 //            }
 
             List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+            if(CollectionUtils.isEmpty(files)){
+                return RestResponse.failure("请添加文件后重试");
+            }
 
             for (MultipartFile file : files) {
                 String fileName = file.getOriginalFilename();
@@ -118,7 +122,7 @@ public class FileUpController extends BaseController {
         String upUrl = jedis.get(getVcCode(appKey, serviceKey));
         if (StringUtils.isBlank(upUrl)) {
             String url = env.getProperty(CodeUtil.PLATFORM_URL) + CodeUtil.PLATFORM_APP_VALID_URL;
-            JSONObject jsonParam=new JSONObject();
+            JSONObject jsonParam = new JSONObject();
             jsonParam.put("appKey", appKey);
             jsonParam.put("serviceKey", serviceKey);
             ResultData resultData = HttpConnection.httpRequest(url, CodeUtil.RESPONSE_POST, CodeUtil.CONTEXT_JSON, jsonParam.toString(), null, null);

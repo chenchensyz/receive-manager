@@ -124,6 +124,7 @@ public class RedirectTcpController extends BaseController {
                     setResponseText(response, cacheable); //返回text
                 }
             }
+            jedis.del(messageId);
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();
             setResponseJson(response, JSON.toJSONString(RestResponse.res(msgCode, messageCodeUtil.getMessage(msgCode))));

@@ -40,7 +40,7 @@ public class FileUpConnection {
         try {
             URL uri = new URL(actionUrl);
             HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
-            conn.setReadTimeout(240 * 1000); // 缓存的最长时间
+            conn.setReadTimeout(3 * 60 * 1000); // 缓存的最长时间
             conn.setDoInput(true);// 允许输入
             conn.setDoOutput(true);// 允许输出
             conn.setUseCaches(false); // 不允许使用缓存
