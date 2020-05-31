@@ -26,7 +26,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/redirect")
@@ -99,7 +102,11 @@ public class RedirectController extends BaseController {
                 //返回值
                 result = resultData.getResult();
             }
-            receiveLogService.saveReceiveLog(receiveLog); //保存日志
+
+            String logOpen = environment.getProperty(CodeUtil.LOG_OPEN);
+            if (StringUtils.isNotBlank(logOpen) && Boolean.valueOf(logOpen)) {
+                receiveLogService.saveReceiveLog(receiveLog); //保存日志
+            }
             response.setStatus(resultData.getCode());
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();

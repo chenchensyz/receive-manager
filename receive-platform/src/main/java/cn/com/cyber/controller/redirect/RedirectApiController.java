@@ -6,7 +6,10 @@ import cn.com.cyber.model.AppService;
 import cn.com.cyber.model.ReceiveLog;
 import cn.com.cyber.service.AppServiceService;
 import cn.com.cyber.service.ReceiveLogService;
-import cn.com.cyber.util.*;
+import cn.com.cyber.util.CodeUtil;
+import cn.com.cyber.util.FileUpConnection;
+import cn.com.cyber.util.HttpConnection;
+import cn.com.cyber.util.MessageCodeUtil;
 import cn.com.cyber.util.common.RestResponse;
 import cn.com.cyber.util.common.ResultData;
 import cn.com.cyber.util.exception.ValueRuntimeException;
@@ -18,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +47,9 @@ public class RedirectApiController extends BaseController {
 
     @Autowired
     private AppServiceService appServiceService;
+
+    @Autowired
+    private Environment environment;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
@@ -80,7 +87,10 @@ public class RedirectApiController extends BaseController {
                 //返回值
                 result = resultData.getResult();
             }
-            receiveLogService.saveReceiveLog(receiveLog); //保存日志
+            String logOpen = environment.getProperty(CodeUtil.LOG_OPEN);
+            if (StringUtils.isNotBlank(logOpen) && Boolean.valueOf(logOpen)) {
+                receiveLogService.saveReceiveLog(receiveLog); //保存日志
+            }
             response.setStatus(resultData.getCode());
         } catch (ValueRuntimeException e) {
             msgCode = (Integer) e.getValue();

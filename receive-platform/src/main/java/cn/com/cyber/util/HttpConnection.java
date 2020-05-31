@@ -10,6 +10,7 @@ import sun.net.www.protocol.http.Handler;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
@@ -90,7 +91,9 @@ public class HttpConnection {
                 result = buffer.toString();
             }
             code = responseCode;
-        } catch (Exception e) {
+        }catch (SocketTimeoutException ste){
+            result = "内网响应超时";
+        }catch (Exception e) {
             LOGGER.error("请求异常 requestUrl:{},error:{}", requestUrl, e);
             result = e.toString();
         } finally {

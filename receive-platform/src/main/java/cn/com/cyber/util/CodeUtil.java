@@ -69,6 +69,7 @@ public class CodeUtil {
     public static final String USER_EDIT = "user_edit";  //用户是否可操作，修改密码
     public static final String PUSH_AREA = "push_area";  //发布区域
     public static final String PLATFORM_URL = "platform_url";  //跨域接口地址
+    public static final String LOG_OPEN = "log_open";  //跨域接口地址
 
 
     public static final String UP_FILE_PATH = "upload";  //接口附件
