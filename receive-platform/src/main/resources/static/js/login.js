@@ -71,7 +71,7 @@ login.prototype = {
 
     toRegister: function () {
         $('.register a').off('click').on('click', function () {
-            location.href = getRootPath() + "/register/toRegister";
+            location.href = getRootPath() + "/register";
         });
     }
 

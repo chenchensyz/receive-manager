@@ -28,13 +28,13 @@
                 </div>
                 <label class="layui-form-label">密码</label>
                 <div class="layui-input-inline">
-                    <input  name="password" lay-verify="password" class="layui-input" type="password"/>
+                    <input name="password" lay-verify="password" class="layui-input" type="password"/>
                 </div>
                 <button class="layui-btn login-btn" lay-submit="" lay-filter="login-btn">登陆</button>
             </div>
             <div class="login-operation">
                 <!--<span class="forget"><a href="">忘记密码</a></span>-->
-<!--                <span class="register"><a >立即注册</a></span>-->
+                <span th:if="${user_edit != '0'}" class="register"><a >立即注册</a></span>
             </div>
         </form>
     </div>

@@ -164,6 +164,7 @@ input[type=submit], input[type=button] {
 
 .login-operation{
     width: 279px;
+    margin-top: -8px;
 }
 .register{
     float: right;

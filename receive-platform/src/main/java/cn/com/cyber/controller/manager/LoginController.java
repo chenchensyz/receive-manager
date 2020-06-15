@@ -48,7 +48,9 @@ public class LoginController extends BaseController {
 
     //跳转登录页
     @RequestMapping("toLogin")
-    public String toLogin() {
+    public String toLogin(Model model) {
+        String user_edit = getApplication(environment, CodeUtil.USER_EDIT);
+        model.addAttribute("user_edit", user_edit);
         return "login";
     }
 
