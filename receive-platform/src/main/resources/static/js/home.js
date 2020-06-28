@@ -25,9 +25,17 @@ home.prototype = {
         $.get(getRootPath() + '/ranking/inlet').then(function (res) {
             if (res.code == 0) {
                 var inletDivList = [];
-                var inletNum = res.data.countAppInfo;
-                var inletTitle = '应用数量(个)';
+                var inletNum = res.data.countDeveloper;
+                var inletTitle = '开发者(个)';
                 var bg = 'layui-bg-blue';
+
+                if (res.data.source == 0) {
+                    inletDivList.push(that.addInlet(inletNum, inletTitle, bg));
+                }
+
+                inletNum = res.data.countAppInfo;
+                inletTitle = '应用数量(个)';
+                bg = 'layui-bg-red';
                 inletDivList.push(that.addInlet(inletNum, inletTitle, bg));
 
                 inletNum = res.data.countService;

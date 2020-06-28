@@ -2,6 +2,7 @@ package cn.com.cyber.service.impl;
 
 import cn.com.cyber.dao.AppInfoMapper;
 import cn.com.cyber.dao.AppServiceMapper;
+import cn.com.cyber.dao.DeveloperMapper;
 import cn.com.cyber.dao.ReceiveLogMapper;
 import cn.com.cyber.model.AppInfo;
 import cn.com.cyber.model.AppService;
@@ -25,6 +26,9 @@ public class RankingServiceImpl implements RankingService {
     @Autowired
     private ReceiveLogMapper receiveLogMapper;
 
+    @Autowired
+    private DeveloperMapper developerMapper;
+
     @Override
     public List<AppInfo> getReceiveAppRanking() {
         return appInfoMapper.getReceiveAppRanking();
@@ -32,10 +36,12 @@ public class RankingServiceImpl implements RankingService {
 
     @Override
     public Map<String, Object> inletCount(Long creator) {
+        int countDeveloper = developerMapper.countDeveloper();
         int countAppInfo = appInfoMapper.getCountAppInfoByState(creator, 1);
         int countService = appServiceMapper.getCountServiceKey(null, 1, creator);
         int receiveLogCount = receiveLogMapper.getReceiveLogCount(creator);
         Map<String, Object> map = Maps.newHashMap();
+        map.put("countDeveloper", countDeveloper);
         map.put("countAppInfo", countAppInfo);
         map.put("countService", countService);
         map.put("receiveLogCount", receiveLogCount);

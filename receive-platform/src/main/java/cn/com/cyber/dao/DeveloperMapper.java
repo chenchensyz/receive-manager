@@ -17,5 +17,5 @@ public interface DeveloperMapper {
 
     int changePwd(Developer developer);
 
-
+    int countDeveloper();
 }

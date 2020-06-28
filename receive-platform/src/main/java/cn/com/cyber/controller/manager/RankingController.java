@@ -59,6 +59,7 @@ public class RankingController extends BaseController {
             creator = getShiroUser().id;
         }
         Map<String, Object> map = rankingService.inletCount(creator);
+        map.put("source", getShiroUser().source);
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(map);
     }
 
@@ -75,7 +76,7 @@ public class RankingController extends BaseController {
         if (getShiroUser().source == 1) {
             creator = getShiroUser().id;
         }
-        Map<String, Object> map = rankingService.receiveLogRanking(creator,startTime, endTime, dateList.toJavaList(String.class));
+        Map<String, Object> map = rankingService.receiveLogRanking(creator, startTime, endTime, dateList.toJavaList(String.class));
         return RestResponse.res(code, messageCodeUtil.getMessage(code)).setData(map);
     }
 }

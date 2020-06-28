@@ -68,4 +68,8 @@
     <select id="getDeveloperByCompanyKey" resultMap="BaseResultMap" parameterType="map" >
     select tc.id,tc.username from td_company tc  where tc.username= #{userName} and  tc.company_key= #{companyKey}
   </select>
+
+    <select id="countDeveloper"  resultType="int">
+        select count(*) from td_company tc  where tc.status= 1
+    </select>
 </mapper>
