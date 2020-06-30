@@ -71,6 +71,13 @@ public class CodeUtil {
     public static final String PLATFORM_URL = "platform_url";  //跨域接口地址
     public static final String LOG_OPEN = "log_open";  //跨域接口地址
 
+    public static final String SUB_PUSH_OPEN = "sub_push_open";  //跨域接口地址
+    public static final String SUB_PUSH_URL = "sub_push_url";  //跨域接口地址
+    public static final String SUB_PUSH_APPID = "sub_push_appid";  //跨域接口地址
+    public static final String SUB_PUSH_USERS = "sub_push_users";  //跨域接口地址
+
+
+
 
     public static final String UP_FILE_PATH = "upload";  //接口附件
     public static final String SERVICE_FILE_PATH = "service";  //接口附件

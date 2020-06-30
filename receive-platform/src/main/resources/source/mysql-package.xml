@@ -9,11 +9,11 @@
     <fileSets>
         <fileSet>
             <directory>bin</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>./</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>src/main/resources</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>./</outputDirectory>
             <includes>
                 <include>ehcache/**</include>
                 <include>i18n/**</include>
@@ -29,7 +29,7 @@
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>./</outputDirectory>
             <includes>
                 <include>*.jar</include>
             </includes>
