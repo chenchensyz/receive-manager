@@ -67,7 +67,7 @@ public class ConnectThread implements Runnable {
 
                     Environment env = SpringUtil.getBean(Environment.class);
 
-                    if (Boolean.valueOf(env.getProperty(CodeUtil.SUB_PUSH_OPEN))) { //推送订阅号
+                    if (Boolean.valueOf(env.getProperty(CodeUtil.SUB_PUSH_OPEN)) && leaveRecordStr.length() > 0) { //推送订阅号
                         Map<String, String> headers = Maps.newHashMap();
                         headers.put("appId", env.getProperty(CodeUtil.SUB_PUSH_APPID));
                         headers.put("servicenoticetype", "subscription_text");
