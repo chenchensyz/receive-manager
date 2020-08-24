@@ -125,7 +125,7 @@ public class NettyIoHandler extends ChannelInboundHandlerAdapter {
             Environment env = SpringUtil.getBean(Environment.class);
             jedis.setex(messageId, Integer.valueOf(env.getProperty(CodeUtil.CACHE_TIME)), params);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e.toString());
         } finally {
             jedis.close();
         }
