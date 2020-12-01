@@ -22,8 +22,10 @@ import java.util.Map;
 
 /**
  * 服务端处理器 . <br>
+ * 处理的请求是：客户端向服务端发起送数据，先把数据放在缓冲区，服务器端再从缓冲区读取，类似于[ 入栈, 入境 ]
  *
- * @author hkb
+ * @author chenchen
+ * @date 2020/11/18
  */
 public class NettyIoHandler extends ChannelInboundHandlerAdapter {
 
@@ -41,9 +43,11 @@ public class NettyIoHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();//打印异常
-        ctx.close();// 当出现异常就关闭连接
+    //channel发生异常，若不关闭，随着异常channel的逐渐增多，性能也就随之下降
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+//        cause.printStackTrace();//打印异常
+//        ctx.close();// 当出现异常就关闭连接
+        super.exceptionCaught(ctx, cause);
     }
 
     @Override
@@ -125,7 +129,7 @@ public class NettyIoHandler extends ChannelInboundHandlerAdapter {
             Environment env = SpringUtil.getBean(Environment.class);
             jedis.setex(messageId, Integer.valueOf(env.getProperty(CodeUtil.CACHE_TIME)), params);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e.toString());
+            LOGGER.error(e.toString());
         } finally {
             jedis.close();
         }

@@ -1,6 +1,6 @@
 maven
 [platform]
 mvn clean package -P oracle -Dsource=dalian
-mvn clean package -P mysql -Dsource=dalian
+mvn clean package -P mysql -Dsource=dev
 [netty]
 mvn clean package -Dsource=dalian
